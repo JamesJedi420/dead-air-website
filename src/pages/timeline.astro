@@ -1,0 +1,41 @@
+---
+import SiteLayout from "../layouts/SiteLayout.astro";
+import { formatDate, normalizeEntry } from "../lib/archive";
+import { getPublishedCollection } from "../lib/loadArchive";
+
+const cases = (await getPublishedCollection("cases"))
+  .map((entry) => ({ raw: entry, entry: normalizeEntry("cases", entry) }))
+  .sort((a, b) => {
+    const aDate = Number(a.raw.data.publicationDate ?? a.raw.data.date ?? 0);
+    const bDate = Number(b.raw.data.publicationDate ?? b.raw.data.date ?? 0);
+    if (aDate !== bDate) return aDate - bDate;
+    return (a.raw.data.timelineOrder ?? 0) - (b.raw.data.timelineOrder ?? 0);
+  });
+---
+
+<SiteLayout title="Timeline" description="Chronological public case timeline for The Dead Air Archive.">
+  <section class="section">
+    <div class="section-header">
+      <p class="eyebrow">Timeline</p>
+      <h1>Timeline</h1>
+      <p>Published cases are ordered chronologically from frontmatter. Future story-linked cases will appear automatically.</p>
+    </div>
+    {cases.length > 0 ? (
+      <ol class="timeline-list">
+        {cases.map(({ raw, entry }) => (
+          <li>
+            <time datetime={(raw.data.publicationDate ?? raw.data.date)?.toISOString()}>
+              {formatDate(raw.data.publicationDate ?? raw.data.date) ?? "Undated"}
+            </time>
+            <h2><a href={entry.url}>{entry.title}</a></h2>
+            <p>{entry.summary}</p>
+          </li>
+        ))}
+      </ol>
+    ) : (
+      <div class="callout">
+        <p>No published cases have been dated for the public timeline yet.</p>
+      </div>
+    )}
+  </section>
+</SiteLayout>

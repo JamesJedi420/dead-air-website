@@ -1,0 +1,20 @@
+---
+import { getCollection } from "astro:content";
+import ArchiveBrowser from "../components/ArchiveBrowser.astro";
+import SiteLayout from "../layouts/SiteLayout.astro";
+import { normalizeEntry, sortEntries } from "../lib/archive";
+
+const characters = sortEntries((await getCollection("characters")).filter((entry) => !entry.data.draft));
+const entries = characters.map((entry) => normalizeEntry("characters", entry));
+---
+
+<SiteLayout title="Characters" description="Public character records in The Dead Air Archive.">
+  <section class="section">
+    <div class="section-header">
+      <p class="eyebrow">Characters</p>
+      <h1>Characters</h1>
+      <p>Public character records will connect appearances, cases, and locations.</p>
+    </div>
+    <ArchiveBrowser entries={entries} emptyMessage="No public character records have been opened yet." />
+  </section>
+</SiteLayout>

@@ -1,0 +1,17 @@
+---
+import { render } from "astro:content";
+import ArchiveEntryPage from "../../components/ArchiveEntryPage.astro";
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import { getEntryStaticPaths } from "../../lib/loadArchive";
+
+export const getStaticPaths = () => getEntryStaticPaths("locations");
+
+const { collection, entry, relatedEntries } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<SiteLayout title={entry.data.title} description={entry.data.summary}>
+  <ArchiveEntryPage collection={collection} entry={entry} relatedEntries={relatedEntries}>
+    <Content />
+  </ArchiveEntryPage>
+</SiteLayout>

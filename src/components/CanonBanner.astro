@@ -1,0 +1,13 @@
+---
+interface Props {
+  warnings: string[];
+}
+
+const { warnings } = Astro.props;
+---
+
+{warnings.length > 0 && (
+  <aside class="canon-banner" aria-label="Archive status notice">
+    {warnings.map((warning) => <span>{warning}</span>)}
+  </aside>
+)}

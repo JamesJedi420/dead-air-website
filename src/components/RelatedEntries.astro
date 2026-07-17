@@ -1,0 +1,29 @@
+---
+import type { NormalizedEntry } from "../lib/archive";
+import { collectionLabels, formatLabel } from "../lib/archive";
+
+interface Props {
+  entries: NormalizedEntry[];
+}
+
+const { entries } = Astro.props;
+---
+
+{entries.length > 0 && (
+  <section class="section related-section" aria-labelledby="related-title">
+    <div class="section-header">
+      <p class="eyebrow">Cross-References</p>
+      <h2 id="related-title">Related Entries</h2>
+    </div>
+    <div class="grid">
+      {entries.map((entry) => (
+        <article class="archive-card">
+          <p class="eyebrow">{collectionLabels[entry.collection]}</p>
+          <h2><a href={entry.url}>{entry.title}</a></h2>
+          <p>{entry.summary}</p>
+          <p class="card-meta">{formatLabel(entry.status)} / {formatLabel(entry.canonicalStatus)}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+)}

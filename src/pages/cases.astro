@@ -1,0 +1,20 @@
+---
+import { getCollection } from "astro:content";
+import ArchiveBrowser from "../components/ArchiveBrowser.astro";
+import SiteLayout from "../layouts/SiteLayout.astro";
+import { normalizeEntry, sortEntries } from "../lib/archive";
+
+const cases = sortEntries((await getCollection("cases")).filter((entry) => !entry.data.draft));
+const entries = cases.map((entry) => normalizeEntry("cases", entry));
+---
+
+<SiteLayout title="Cases" description="Public paranormal case records in The Dead Air Archive.">
+  <section class="section">
+    <div class="section-header">
+      <p class="eyebrow">Cases</p>
+      <h1>Cases</h1>
+      <p>Public case records will be indexed by code, status, location, and provenance.</p>
+    </div>
+    <ArchiveBrowser entries={entries} emptyMessage="No public case files have been opened yet." />
+  </section>
+</SiteLayout>

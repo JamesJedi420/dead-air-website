@@ -1,0 +1,112 @@
+---
+import type { NormalizedEntry } from "../lib/archive";
+import { collectionLabels, formatLabel, taxonomyOptions } from "../lib/archive";
+import ArchiveCard from "./ArchiveCard.astro";
+
+interface Props {
+  entries: NormalizedEntry[];
+  emptyMessage: string;
+  showCollection?: boolean;
+}
+
+const { entries, emptyMessage, showCollection = false } = Astro.props;
+const options = taxonomyOptions(entries);
+const filterGroups = [
+  ["phenomenon", "Phenomenon", options.phenomenon],
+  ["entity", "Entity", options.entity],
+  ["location", "Location", options.location],
+  ["evidenceType", "Evidence Type", options.evidenceType],
+  ["caseStatus", "Case Status", options.caseStatus],
+  ["publicationYear", "Publication Year", options.publicationYear],
+  ["tags", "Tags", options.tags],
+] as const;
+---
+
+{entries.length > 0 ? (
+  <div class="archive-browser" data-archive-browser>
+    <form class="filter-panel" aria-label="Archive filters">
+      <label>
+        Search this list
+        <input type="search" name="q" data-filter-search autocomplete="off" />
+      </label>
+      <div class="filter-grid">
+        {filterGroups.map(([key, label, values]) => (
+          values.length > 0 && (
+            <label>
+              {label}
+              <select data-filter={key}>
+                <option value="">All</option>
+                {values.map((value) => <option value={value}>{formatLabel(value)}</option>)}
+              </select>
+            </label>
+          )
+        ))}
+      </div>
+    </form>
+    <p class="result-count" data-result-count>{entries.length} entries</p>
+    <div class="grid" data-results>
+      {entries.map((entry) => (
+        <div
+          data-entry
+          data-title={entry.title.toLowerCase()}
+          data-summary={entry.summary.toLowerCase()}
+          data-phenomenon={entry.phenomenon.join("|")}
+          data-entity={entry.entity.join("|")}
+          data-location={entry.locations.join("|")}
+          data-evidence-type={entry.evidenceType.join("|")}
+          data-case-status={entry.caseStatus}
+          data-publication-year={entry.publicationYear ?? ""}
+          data-tags={entry.tags.join("|")}
+        >
+          <ArchiveCard
+            href={entry.url}
+            eyebrow={showCollection ? collectionLabels[entry.collection] : formatLabel(entry.status)}
+            title={entry.title}
+            summary={entry.summary}
+            meta={[entry.classification, entry.publicationYear, formatLabel(entry.canonicalStatus)].filter(Boolean).join(" / ")}
+          />
+        </div>
+      ))}
+    </div>
+  </div>
+) : (
+  <div class="callout">
+    <p>{emptyMessage}</p>
+  </div>
+)}
+
+<script>
+  const browsers = document.querySelectorAll<HTMLElement>("[data-archive-browser]");
+
+  for (const browser of browsers) {
+    const search = browser.querySelector<HTMLInputElement>("[data-filter-search]");
+    const selects = [...browser.querySelectorAll<HTMLSelectElement>("[data-filter]")];
+    const entries = [...browser.querySelectorAll<HTMLElement>("[data-entry]")];
+    const count = browser.querySelector<HTMLElement>("[data-result-count]");
+
+    const matchesValue = (entry: HTMLElement, key: string, value: string) => {
+      if (!value) return true;
+      return (entry.dataset[key as keyof DOMStringMap] ?? "")
+        .split("|")
+        .includes(value);
+    };
+
+    const update = () => {
+      const query = search?.value.trim().toLowerCase() ?? "";
+      let visible = 0;
+
+      for (const entry of entries) {
+        const textMatches = !query || `${entry.dataset.title ?? ""} ${entry.dataset.summary ?? ""}`.includes(query);
+        const filtersMatch = selects.every((select) => matchesValue(entry, select.dataset.filter ?? "", select.value));
+        const show = textMatches && filtersMatch;
+        entry.hidden = !show;
+        if (show) visible += 1;
+      }
+
+      if (count) count.textContent = `${visible} ${visible === 1 ? "entry" : "entries"}`;
+    };
+
+    search?.addEventListener("input", update);
+    for (const select of selects) select.addEventListener("change", update);
+  }
+</script>

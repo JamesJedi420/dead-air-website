@@ -1,0 +1,30 @@
+---
+import { primaryNav } from "../data/navigation";
+
+const currentPath = Astro.url.pathname.replace(/\/$/, "");
+---
+
+<header class="site-header">
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <nav class="site-nav" aria-label="Primary navigation">
+    <a class="brand" href="/" aria-label="The Dead Air Archive home">
+      <span class="brand-mark" aria-hidden="true">DA</span>
+      <span>
+        <span class="brand-title">The Dead Air Archive</span>
+        <span class="brand-kicker">Paranormal literary records</span>
+      </span>
+    </a>
+    <ul class="nav-list">
+      {primaryNav.map((item) => {
+        const isCurrent = currentPath === item.href.replace(/\/$/, "");
+        return (
+          <li>
+            <a href={item.href} aria-current={isCurrent ? "page" : undefined}>
+              {item.label}
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+  </nav>
+</header>

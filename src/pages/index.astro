@@ -1,0 +1,60 @@
+---
+import ArchiveCard from "../components/ArchiveCard.astro";
+import SiteLayout from "../layouts/SiteLayout.astro";
+---
+
+<SiteLayout
+  title="The Dead Air Archive"
+  description="A restrained public archive for literary paranormal horror stories, cases, and provenance."
+>
+  <section class="hero" aria-labelledby="home-title">
+    <div class="hero-copy">
+      <p class="eyebrow">Public Reading Room</p>
+      <h1 id="home-title">The Dead Air Archive</h1>
+      <p>
+        A literary paranormal horror archive for finished stories, case files, recovered
+        objects, and the institutional notes safe enough to leave under glass.
+      </p>
+    </div>
+    <aside class="hero-panel" aria-label="Archive notice">
+      <p>
+        This public catalogue contains edited, publishable materials only. Raw transcripts,
+        real identities, hidden continuity, and private development records are excluded.
+      </p>
+    </aside>
+  </section>
+
+  <section class="section" aria-labelledby="index-title">
+    <div class="section-header">
+      <p class="eyebrow">Initial Index</p>
+      <h2 id="index-title">Rooms Open to the Public</h2>
+      <p>
+        The foundation is ready for stories and cases, but the first narrative entry has not
+        been imported yet.
+      </p>
+    </div>
+    <div class="grid">
+      <ArchiveCard
+        href="/stories/"
+        eyebrow="Stories"
+        title="Narrative Files"
+        summary="Published horror fiction and related serial entries will be indexed here."
+        meta="DA-001 intentionally withheld for the foundation pass."
+      />
+      <ArchiveCard
+        href="/cases/"
+        eyebrow="Cases"
+        title="Case Catalogue"
+        summary="Public-facing case summaries, artifact chains, and cross-references."
+        meta="Structured for future content collection entries."
+      />
+      <ArchiveCard
+        href="/research-and-provenance/"
+        eyebrow="Provenance"
+        title="Source Discipline"
+        summary="Editorial standards for evidence, attribution, redaction, and publication boundaries."
+        meta="No internal source material is published here."
+      />
+    </div>
+  </section>
+</SiteLayout>

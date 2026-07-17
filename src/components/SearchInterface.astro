@@ -1,0 +1,102 @@
+---
+---
+
+<section class="section">
+  <div class="section-header">
+    <p class="eyebrow">Search</p>
+    <h1>Search the Archive</h1>
+    <p>Search public stories, cases, characters, locations, objects, and mysteries. Results are generated from static archive metadata.</p>
+  </div>
+  <div class="archive-browser search-panel" data-search-app>
+    <label>
+      Archive search
+      <input type="search" data-search-input autocomplete="off" />
+    </label>
+    <p class="result-count" data-search-count>Enter a term to search the public archive.</p>
+    <div class="grid" data-search-results></div>
+  </div>
+</section>
+
+<script>
+  interface SearchEntry {
+    collection: string;
+    title: string;
+    summary: string;
+    url: string;
+    tags: string[];
+    phenomenon: string[];
+    entity: string[];
+    locations: string[];
+    evidenceType: string[];
+    status: string;
+    canonicalStatus: string;
+  }
+
+  const app = document.querySelector<HTMLElement>("[data-search-app]");
+  const input = app?.querySelector<HTMLInputElement>("[data-search-input]");
+  const count = app?.querySelector<HTMLElement>("[data-search-count]");
+  const results = app?.querySelector<HTMLElement>("[data-search-results]");
+  let index: SearchEntry[] = [];
+
+  const render = (entries: SearchEntry[]) => {
+    if (!results || !count) return;
+    count.textContent = `${entries.length} ${entries.length === 1 ? "result" : "results"}`;
+    results.replaceChildren(
+      ...entries.map((entry) => {
+        const article = document.createElement("article");
+        const eyebrow = document.createElement("p");
+        const heading = document.createElement("h2");
+        const link = document.createElement("a");
+        const summary = document.createElement("p");
+        const meta = document.createElement("p");
+
+        article.className = "archive-card";
+        eyebrow.className = "eyebrow";
+        eyebrow.textContent = entry.collection;
+        link.href = entry.url;
+        link.textContent = entry.title;
+        heading.append(link);
+        summary.textContent = entry.summary;
+        meta.className = "card-meta";
+        meta.textContent = `${entry.status} / ${entry.canonicalStatus}`;
+        article.append(eyebrow, heading, summary, meta);
+        return article;
+      }),
+    );
+  };
+
+  const search = () => {
+    const query = input?.value.trim().toLowerCase() ?? "";
+    if (!query) {
+      if (results) results.replaceChildren();
+      if (count) count.textContent = "Enter a term to search the public archive.";
+      return;
+    }
+
+    render(index.filter((entry) => [
+      entry.collection,
+      entry.title,
+      entry.summary,
+      entry.status,
+      entry.canonicalStatus,
+      ...entry.tags,
+      ...entry.phenomenon,
+      ...entry.entity,
+      ...entry.locations,
+      ...entry.evidenceType,
+    ].join(" ").toLowerCase().includes(query)));
+  };
+
+  if (input) {
+    fetch("/search.json")
+      .then((response) => response.json())
+      .then((entries: SearchEntry[]) => {
+        index = entries;
+        search();
+      })
+      .catch(() => {
+        if (count) count.textContent = "Search index unavailable.";
+      });
+    input.addEventListener("input", search);
+  }
+</script>

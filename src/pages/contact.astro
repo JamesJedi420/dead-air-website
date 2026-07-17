@@ -1,0 +1,32 @@
+---
+import SiteLayout from "../layouts/SiteLayout.astro";
+---
+
+<SiteLayout title="Contact" description="Contact The Dead Air Archive.">
+  <section class="section">
+    <div class="section-header">
+      <p class="eyebrow">Contact</p>
+      <h1>Contact</h1>
+      <p>Use this form for public archive correspondence. Do not submit private source material.</p>
+    </div>
+    <form class="form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+      <input type="hidden" name="form-name" value="contact" />
+      <p style="display: none;">
+        <label>Do not fill this out: <input name="bot-field" /></label>
+      </p>
+      <label>
+        Name
+        <input name="name" autocomplete="name" required />
+      </label>
+      <label>
+        Email
+        <input type="email" name="email" autocomplete="email" required />
+      </label>
+      <label>
+        Message
+        <textarea name="message" rows="7" required></textarea>
+      </label>
+      <button type="submit">Send</button>
+    </form>
+  </section>
+</SiteLayout>

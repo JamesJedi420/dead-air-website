@@ -1,0 +1,16 @@
+node_modules/
+dist/
+.astro/
+.netlify/
+.env
+.env.*
+!.env.example
+
+# Keep private development material outside this public website repo.
+research/
+transcripts/
+canon/
+private/
+participants/
+continuity/
+notes/internal/

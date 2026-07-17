@@ -1,0 +1,20 @@
+---
+import { getCollection } from "astro:content";
+import ArchiveBrowser from "../components/ArchiveBrowser.astro";
+import SiteLayout from "../layouts/SiteLayout.astro";
+import { normalizeEntry, sortEntries } from "../lib/archive";
+
+const stories = sortEntries((await getCollection("stories")).filter((entry) => !entry.data.draft));
+const entries = stories.map((entry) => normalizeEntry("stories", entry));
+---
+
+<SiteLayout title="Stories" description="Published narrative entries in The Dead Air Archive.">
+  <section class="section">
+    <div class="section-header">
+      <p class="eyebrow">Stories</p>
+      <h1>Stories</h1>
+      <p>Finished narrative entries will appear here after editorial review.</p>
+    </div>
+    <ArchiveBrowser entries={entries} emptyMessage="No public story files have been imported yet. DA-001 is intentionally excluded from this foundation build." />
+  </section>
+</SiteLayout>
