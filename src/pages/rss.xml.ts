@@ -1,7 +1,7 @@
 import rss from "@astrojs/rss";
 import type { APIContext } from "astro";
 import { getCollection } from "astro:content";
-import { entryUrl } from "../lib/archive";
+import { entryUrl, isPublished } from "../lib/archive";
 
 export async function GET(context: APIContext) {
   const site = context.site;
@@ -10,7 +10,7 @@ export async function GET(context: APIContext) {
   }
 
   const stories = (await getCollection("stories"))
-    .filter((entry) => !entry.data.draft)
+    .filter(isPublished)
     .sort((a, b) =>
       Number(b.data.publicationDate ?? b.data.date ?? 0) -
       Number(a.data.publicationDate ?? a.data.date ?? 0)

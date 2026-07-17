@@ -2,9 +2,9 @@
 import { getCollection } from "astro:content";
 import ArchiveBrowser from "../components/ArchiveBrowser.astro";
 import SiteLayout from "../layouts/SiteLayout.astro";
-import { normalizeEntry, sortEntries } from "../lib/archive";
+import { isPublished, normalizeEntry, sortEntries } from "../lib/archive";
 
-const locations = sortEntries((await getCollection("locations")).filter((entry) => !entry.data.draft));
+const locations = sortEntries((await getCollection("locations")).filter(isPublished));
 const entries = locations.map((entry) => normalizeEntry("locations", entry));
 ---
 
