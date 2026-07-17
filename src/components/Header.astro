@@ -1,5 +1,7 @@
 ---
 import { primaryNav } from "../data/navigation";
+
+const currentPath = Astro.url.pathname.replace(/\/$/, "");
 ---
 
 <header class="site-header">
@@ -13,13 +15,16 @@ import { primaryNav } from "../data/navigation";
       </span>
     </a>
     <ul class="nav-list">
-      {primaryNav.map((item) => (
-        <li>
-          <a href={item.href} aria-current={Astro.url.pathname === item.href ? "page" : undefined}>
-            {item.label}
-          </a>
-        </li>
-      ))}
+      {primaryNav.map((item) => {
+        const isCurrent = currentPath === item.href.replace(/\/$/, "");
+        return (
+          <li>
+            <a href={item.href} aria-current={isCurrent ? "page" : undefined}>
+              {item.label}
+            </a>
+          </li>
+        );
+      })}
     </ul>
   </nav>
 </header>

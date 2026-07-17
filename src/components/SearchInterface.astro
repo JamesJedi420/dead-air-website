@@ -92,6 +92,7 @@
       .then((response) => response.json())
       .then((entries: SearchEntry[]) => {
         index = entries;
+        search();
       })
       .catch(() => {
         if (count) count.textContent = "Search index unavailable.";
