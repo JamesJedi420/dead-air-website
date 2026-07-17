@@ -2,9 +2,9 @@
 import { getCollection } from "astro:content";
 import ArchiveBrowser from "../components/ArchiveBrowser.astro";
 import SiteLayout from "../layouts/SiteLayout.astro";
-import { normalizeEntry, sortEntries } from "../lib/archive";
+import { isPublished, normalizeEntry, sortEntries } from "../lib/archive";
 
-const mysteries = sortEntries((await getCollection("mysteries")).filter((entry) => !entry.data.draft));
+const mysteries = sortEntries((await getCollection("mysteries")).filter(isPublished));
 const entries = mysteries.map((entry) => normalizeEntry("mysteries", entry));
 ---
 

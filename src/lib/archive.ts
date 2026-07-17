@@ -55,7 +55,7 @@ export const entrySlug = (entry: ArchiveEntry) =>
 export const entryUrl = (collection: ArchiveCollection, entry: ArchiveEntry) =>
   `${collectionPath(collection)}${entrySlug(entry)}/`;
 
-export const isPublished = (entry: ArchiveEntry) => !entry.data.draft;
+export const isPublished = (entry: ArchiveEntry) => !entry.data.draft && entry.data.status !== "withheld";
 
 export const sortEntries = (entries: ArchiveEntry[]) =>
   [...entries].sort((a, b) => {
