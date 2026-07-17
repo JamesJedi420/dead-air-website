@@ -1,0 +1,62 @@
+---
+import Breadcrumbs from "./Breadcrumbs.astro";
+import CanonBanner from "./CanonBanner.astro";
+import RelatedEntries from "./RelatedEntries.astro";
+import type { ArchiveCollection, ArchiveEntry, NormalizedEntry } from "../lib/archive";
+import { canonWarning, collectionLabels, collectionPath, formatDate, formatLabel } from "../lib/archive";
+
+interface Props {
+  collection: ArchiveCollection;
+  entry: ArchiveEntry;
+  relatedEntries: NormalizedEntry[];
+}
+
+const { collection, entry, relatedEntries } = Astro.props;
+const publicationDate = entry.data.publicationDate ?? entry.data.date;
+const metadata = [
+  entry.data.classification,
+  formatLabel(entry.data.status),
+  formatLabel(entry.data.canonicalStatus),
+  formatDate(publicationDate),
+  entry.data.revision ? `Revision ${entry.data.revision}` : undefined,
+  entry.data.readingTime,
+].filter(Boolean);
+---
+
+<section class="section">
+  <Breadcrumbs items={[
+    { href: "/", label: "Home" },
+    { href: collectionPath(collection), label: collectionLabels[collection] },
+    { href: Astro.url.pathname, label: entry.data.title },
+  ]} />
+  <article class="entry-shell">
+    <header class="entry-header">
+      <p class="eyebrow">{collectionLabels[collection]}</p>
+      <h1>{entry.data.title}</h1>
+      <p>{entry.data.summary}</p>
+      <CanonBanner warnings={canonWarning(entry)} />
+      {metadata.length > 0 && (
+        <dl class="entry-meta">
+          {metadata.map((item) => (
+            <>
+              <dt>Record</dt>
+              <dd>{item}</dd>
+            </>
+          ))}
+        </dl>
+      )}
+    </header>
+    <div class="prose entry-content">
+      <slot />
+    </div>
+    {(entry.data.contentWarnings.length > 0 || entry.data.contentNotes.length > 0) && (
+      <aside class="callout" aria-label="Content notes">
+        <p class="eyebrow">Content Notes</p>
+        <ul>
+          {[...entry.data.contentWarnings, ...entry.data.contentNotes].map((note) => <li>{note}</li>)}
+        </ul>
+      </aside>
+    )}
+  </article>
+</section>
+<RelatedEntries entries={relatedEntries} />

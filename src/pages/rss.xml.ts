@@ -1,7 +1,6 @@
 import rss from "@astrojs/rss";
 import { getCollection } from "astro:content";
-
-const entryPath = (id: string) => id.replace(/\.md$/, "");
+import { entryUrl } from "../lib/archive";
 
 export async function GET(context: { site: URL }) {
   const stories = (await getCollection("stories"))
@@ -16,7 +15,7 @@ export async function GET(context: { site: URL }) {
       title: story.data.title,
       description: story.data.summary,
       pubDate: story.data.date,
-      link: `/stories/${entryPath(story.id)}/`,
+      link: entryUrl("stories", story),
     })),
   });
 }

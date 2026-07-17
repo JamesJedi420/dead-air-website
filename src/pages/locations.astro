@@ -1,0 +1,20 @@
+---
+import { getCollection } from "astro:content";
+import ArchiveBrowser from "../components/ArchiveBrowser.astro";
+import SiteLayout from "../layouts/SiteLayout.astro";
+import { normalizeEntry, sortEntries } from "../lib/archive";
+
+const locations = sortEntries((await getCollection("locations")).filter((entry) => !entry.data.draft));
+const entries = locations.map((entry) => normalizeEntry("locations", entry));
+---
+
+<SiteLayout title="Locations" description="Public location records in The Dead Air Archive.">
+  <section class="section">
+    <div class="section-header">
+      <p class="eyebrow">Locations</p>
+      <h1>Locations</h1>
+      <p>Locations collect public case, story, and phenomenon references.</p>
+    </div>
+    <ArchiveBrowser entries={entries} emptyMessage="No public location records have been opened yet." />
+  </section>
+</SiteLayout>

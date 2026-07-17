@@ -1,10 +1,11 @@
 ---
 import { getCollection } from "astro:content";
-import ArchiveCard from "../components/ArchiveCard.astro";
+import ArchiveBrowser from "../components/ArchiveBrowser.astro";
 import SiteLayout from "../layouts/SiteLayout.astro";
+import { normalizeEntry, sortEntries } from "../lib/archive";
 
-const cases = (await getCollection("cases")).filter((entry) => !entry.data.draft);
-const entryPath = (id: string) => id.replace(/\.md$/, "");
+const cases = sortEntries((await getCollection("cases")).filter((entry) => !entry.data.draft));
+const entries = cases.map((entry) => normalizeEntry("cases", entry));
 ---
 
 <SiteLayout title="Cases" description="Public paranormal case records in The Dead Air Archive.">
@@ -14,22 +15,6 @@ const entryPath = (id: string) => id.replace(/\.md$/, "");
       <h1>Cases</h1>
       <p>Public case records will be indexed by code, status, location, and provenance.</p>
     </div>
-    {cases.length > 0 ? (
-      <div class="grid">
-        {cases.map((item) => (
-          <ArchiveCard
-            href={`/cases/${entryPath(item.id)}/`}
-            eyebrow={item.data.caseCode}
-            title={item.data.title}
-            summary={item.data.summary}
-            meta={item.data.status}
-          />
-        ))}
-      </div>
-    ) : (
-      <div class="callout">
-        <p>No public case files have been opened yet.</p>
-      </div>
-    )}
+    <ArchiveBrowser entries={entries} emptyMessage="No public case files have been opened yet." />
   </section>
 </SiteLayout>

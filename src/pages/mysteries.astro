@@ -1,0 +1,20 @@
+---
+import { getCollection } from "astro:content";
+import ArchiveBrowser from "../components/ArchiveBrowser.astro";
+import SiteLayout from "../layouts/SiteLayout.astro";
+import { normalizeEntry, sortEntries } from "../lib/archive";
+
+const mysteries = sortEntries((await getCollection("mysteries")).filter((entry) => !entry.data.draft));
+const entries = mysteries.map((entry) => normalizeEntry("mysteries", entry));
+---
+
+<SiteLayout title="Mysteries" description="Public mystery records in The Dead Air Archive.">
+  <section class="section">
+    <div class="section-header">
+      <p class="eyebrow">Mysteries</p>
+      <h1>Mysteries</h1>
+      <p>Mysteries gather unresolved patterns, related cases, and provisional canon threads.</p>
+    </div>
+    <ArchiveBrowser entries={entries} emptyMessage="No public mystery records have been opened yet." />
+  </section>
+</SiteLayout>

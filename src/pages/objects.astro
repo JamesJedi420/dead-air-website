@@ -1,0 +1,20 @@
+---
+import { getCollection } from "astro:content";
+import ArchiveBrowser from "../components/ArchiveBrowser.astro";
+import SiteLayout from "../layouts/SiteLayout.astro";
+import { normalizeEntry, sortEntries } from "../lib/archive";
+
+const objects = sortEntries((await getCollection("objects")).filter((entry) => !entry.data.draft));
+const entries = objects.map((entry) => normalizeEntry("objects", entry));
+---
+
+<SiteLayout title="Objects" description="Public object records in The Dead Air Archive.">
+  <section class="section">
+    <div class="section-header">
+      <p class="eyebrow">Objects</p>
+      <h1>Objects</h1>
+      <p>Objects track artifacts, custody notes, evidence type, and narrative appearances.</p>
+    </div>
+    <ArchiveBrowser entries={entries} emptyMessage="No public object records have been opened yet." />
+  </section>
+</SiteLayout>
