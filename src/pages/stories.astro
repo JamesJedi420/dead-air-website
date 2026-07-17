@@ -1,0 +1,35 @@
+---
+import { getCollection } from "astro:content";
+import ArchiveCard from "../components/ArchiveCard.astro";
+import SiteLayout from "../layouts/SiteLayout.astro";
+
+const stories = (await getCollection("stories")).filter((entry) => !entry.data.draft);
+const entryPath = (id: string) => id.replace(/\.md$/, "");
+---
+
+<SiteLayout title="Stories" description="Published narrative entries in The Dead Air Archive.">
+  <section class="section">
+    <div class="section-header">
+      <p class="eyebrow">Stories</p>
+      <h1>Stories</h1>
+      <p>Finished narrative entries will appear here after editorial review.</p>
+    </div>
+    {stories.length > 0 ? (
+      <div class="grid">
+        {stories.map((story) => (
+          <ArchiveCard
+            href={`/stories/${entryPath(story.id)}/`}
+            eyebrow={story.data.status}
+            title={story.data.title}
+            summary={story.data.summary}
+            meta={story.data.date?.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
+          />
+        ))}
+      </div>
+    ) : (
+      <div class="callout">
+        <p>No public story files have been imported yet. DA-001 is intentionally excluded from this foundation build.</p>
+      </div>
+    )}
+  </section>
+</SiteLayout>

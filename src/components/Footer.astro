@@ -1,0 +1,20 @@
+---
+import { primaryNav, utilityNav } from "../data/navigation";
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div>
+    <p class="footer-title">The Dead Air Archive</p>
+    <p class="footer-note">
+      A public index for finished literary horror materials. Private notes, raw transcripts,
+      identities, and hidden continuity remain outside this repository.
+    </p>
+  </div>
+  <nav aria-label="Footer navigation" class="footer-nav">
+    {[...primaryNav, ...utilityNav].map((item) => (
+      <a href={item.href}>{item.label}</a>
+    ))}
+  </nav>
+  <p class="copyright">&copy; {year} The Dead Air Archive. All rights reserved.</p>
+</footer>

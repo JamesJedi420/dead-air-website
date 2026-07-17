@@ -1,0 +1,35 @@
+---
+import { getCollection } from "astro:content";
+import ArchiveCard from "../components/ArchiveCard.astro";
+import SiteLayout from "../layouts/SiteLayout.astro";
+
+const cases = (await getCollection("cases")).filter((entry) => !entry.data.draft);
+const entryPath = (id: string) => id.replace(/\.md$/, "");
+---
+
+<SiteLayout title="Cases" description="Public paranormal case records in The Dead Air Archive.">
+  <section class="section">
+    <div class="section-header">
+      <p class="eyebrow">Cases</p>
+      <h1>Cases</h1>
+      <p>Public case records will be indexed by code, status, location, and provenance.</p>
+    </div>
+    {cases.length > 0 ? (
+      <div class="grid">
+        {cases.map((item) => (
+          <ArchiveCard
+            href={`/cases/${entryPath(item.id)}/`}
+            eyebrow={item.data.caseCode}
+            title={item.data.title}
+            summary={item.data.summary}
+            meta={item.data.status}
+          />
+        ))}
+      </div>
+    ) : (
+      <div class="callout">
+        <p>No public case files have been opened yet.</p>
+      </div>
+    )}
+  </section>
+</SiteLayout>

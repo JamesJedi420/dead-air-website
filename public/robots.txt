@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://dead-air-website.netlify.app/sitemap-index.xml
