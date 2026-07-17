@@ -27,7 +27,7 @@ Netlify settings:
 
 - Build command: `npm run build`
 - Publish directory: `dist`
-- Node version: `20`
+- Node version: `22.12.0` or newer
 
 If the site is not linked locally yet:
 
