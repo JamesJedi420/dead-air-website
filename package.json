@@ -8,7 +8,7 @@
     "dev": "astro dev",
     "prebuild": "node scripts/materialize-da002.mjs",
     "build": "astro check && astro build",
-    "postbuild": "node scripts/validate-da002-withheld.mjs",
+    "postbuild": "node scripts/validate-da002-release.mjs",
     "prepreview": "node scripts/materialize-da002.mjs",
     "preview": "astro preview"
   },
