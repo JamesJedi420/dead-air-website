@@ -4,8 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "predev": "node scripts/materialize-da002.mjs",
     "dev": "astro dev",
+    "prebuild": "node scripts/materialize-da002.mjs",
     "build": "astro check && astro build",
+    "prepreview": "node scripts/materialize-da002.mjs",
     "preview": "astro preview"
   },
   "engines": {
