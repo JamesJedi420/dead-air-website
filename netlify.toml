@@ -11,6 +11,36 @@
   port = 8888
   framework = "#custom"
 
+[[plugins]]
+  package = "@netlify/plugin-lighthouse"
+
+  [plugins.inputs]
+    fail_deploy_on_score_thresholds = "true"
+
+  [plugins.inputs.thresholds]
+    performance = 0.80
+    accessibility = 1.00
+    best-practices = 0.90
+    seo = 1.00
+
+  [plugins.inputs.settings]
+    preset = "desktop"
+
+  [[plugins.inputs.audits]]
+    path = "stories/da-002-the-name-in-the-room/index.html"
+
+[[redirects]]
+  from = "/dead-air-da-002-the-name-in-the-room"
+  to = "/stories/da-002-the-name-in-the-room/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/dead-air-da-002-the-name-in-the-room/"
+  to = "/stories/da-002-the-name-in-the-room/"
+  status = 301
+  force = true
+
 [[headers]]
   for = "/*"
   [headers.values]
