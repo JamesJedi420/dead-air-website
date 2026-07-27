@@ -23,6 +23,28 @@ const route = `/stories/${slug}/`;
 const canonicalUrl = `https://dead-air-website.netlify.app${route}`;
 const legacyRoute = "/dead-air-da-002-the-name-in-the-room";
 const publishedTime = "2026-07-27T00:00:00.000Z";
+const numberedHeadings = [
+  "1. Terms of Return",
+  "2. The First Room",
+  "3. Two Devices",
+  "4. The Student They Build",
+  "5. The Fire Door",
+  "6. The Personal Reading",
+  "7. What We Call Clean",
+  "8. The Auditorium Search",
+  "9. The Final Source",
+];
+const legacySceneHeadings = [
+  "Scene 1 — Terms of Return",
+  "Scene 2 — The First Room",
+  "Scene 3 — Two Devices",
+  "Scene 4 — The Student They Build",
+  "Scene 5 — The Fire Door",
+  "Scene 6 — The Personal Reading",
+  "Scene 7 — What We Call Clean",
+  "Scene 8 — The Auditorium Search",
+  "Scene 9 — The Final Source",
+];
 const driveIds = [
   "1x6cnnql3BhBg_YJkddcOUDWaeXY1lPNh9qhrjLHKpiU",
   "1Nwf6yHNIOtqg0CjbzA7bcwl8Gl50kjWgIXw0CijX1Sc",
@@ -136,24 +158,17 @@ if (!(await exists(storyHtmlPath))) {
   if (h1Count !== 1) fail(`${route}: expected one h1, found ${h1Count}`);
 
   const sourceNoteIndex = html.indexOf(sourceNote);
-  const sceneOneIndex = html.indexOf("Scene 1 — Terms of Return");
-  if (sourceNoteIndex < 0 || sceneOneIndex < 0 || sourceNoteIndex >= sceneOneIndex) {
-    fail(`${route}: standard source note must appear before Scene 1`);
+  const firstSectionIndex = html.indexOf(numberedHeadings[0]);
+  if (sourceNoteIndex < 0 || firstSectionIndex < 0 || sourceNoteIndex >= firstSectionIndex) {
+    fail(`${route}: standard source note must appear before section 1`);
   }
 
-  const headings = [
-    "Scene 1 — Terms of Return",
-    "Scene 2 — The First Room",
-    "Scene 3 — Two Devices",
-    "Scene 4 — The Student They Build",
-    "Scene 5 — The Fire Door",
-    "Scene 6 — The Personal Reading",
-    "Scene 7 — What We Call Clean",
-    "Scene 8 — The Auditorium Search",
-    "Scene 9 — The Final Source",
-  ];
+  for (const legacyHeading of legacySceneHeadings) {
+    if (html.includes(legacyHeading)) fail(`${route}: legacy production heading remains: ${legacyHeading}`);
+  }
+
   let priorIndex = -1;
-  for (const heading of headings) {
+  for (const heading of numberedHeadings) {
     const headingIndex = html.indexOf(heading);
     if (headingIndex < 0) fail(`${route}: missing heading ${heading}`);
     else if (headingIndex <= priorIndex) fail(`${route}: heading order invalid at ${heading}`);
@@ -244,5 +259,5 @@ if (failures.length > 0) {
 }
 
 console.log(
-  `DA-002 publication validation passed: manuscript route, standardized source note, metadata, canonical URL, publication date, scene order, content notes, long-form output, responsive reading CSS, accessibility hooks, internal links, public indexes, RSS, sitemap, and legacy redirects verified.`,
+  `DA-002 publication validation passed: manuscript route, standardized source note, metadata, canonical URL, publication date, numbered section order, content notes, long-form output, responsive reading CSS, accessibility hooks, internal links, public indexes, RSS, sitemap, and legacy redirects verified.`,
 );
