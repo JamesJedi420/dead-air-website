@@ -23,6 +23,9 @@
     best-practices = 0.90
     seo = 1.00
 
+  [plugins.inputs.settings]
+    preset = "desktop"
+
   [[plugins.inputs.audits]]
     path = "stories/da-002-the-name-in-the-room/index.html"
 
