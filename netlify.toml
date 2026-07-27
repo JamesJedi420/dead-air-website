@@ -11,6 +11,18 @@
   port = 8888
   framework = "#custom"
 
+[[redirects]]
+  from = "/dead-air-da-002-the-name-in-the-room"
+  to = "/stories/da-002-the-name-in-the-room/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/dead-air-da-002-the-name-in-the-room/"
+  to = "/stories/da-002-the-name-in-the-room/"
+  status = 301
+  force = true
+
 [[headers]]
   for = "/*"
   [headers.values]
