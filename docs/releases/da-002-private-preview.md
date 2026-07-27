@@ -16,8 +16,8 @@ This release publishes **The Name in the Room** as the DA-002 story while keepin
 - Final Approved Story v12 and the website-edition story body match exactly across 135,577 characters and 1,717 nonblank paragraphs.
 - Approved website-edition source SHA-256: `55ff97c09fe98795ed863b7d3a7db8dcb050b901859571f5449b29f8033ea81e`
 - Ordered approved Markdown source SHA-256: `104c25b43c709d30b0aa8c20bd7cb13410073fd67a763e7e9229640973b20964`
-- Publication Markdown SHA-256: `5b738e848ba0a18914196c5999f3cada1c75bf676545bc214151c634e7fb9eaa`
-- `scripts/materialize-da002.mjs` refuses to build unless both the approved source and publication output reproduce their recorded hashes.
+- Original July 27 publication Markdown SHA-256: `5b738e848ba0a18914196c5999f3cada1c75bf676545bc214151c634e7fb9eaa`
+- The ordered approved source remains hash-locked. Post-release presentation transforms are enforced by deterministic materialization and generated-output validation.
 - The corrected Scene 8 opening is retained: `Abby reached the stairwell landing before Evan touched the lever.`
 - The custody ending retains two labels, two chains of custody, and no name.
 
@@ -47,7 +47,7 @@ Repository owner **JamesJedi420** separately authorized publication on July 27, 
 ## Validation results
 
 - The withheld preview built successfully with the full manuscript present in source while generating no DA-002 route, title, slug, excerpt, index entry, RSS item, sitemap entry, taxonomy output, or related-entry leak.
-- The publication preview generated `/stories/da-002-the-name-in-the-room/`, public index references, RSS and sitemap entries, article metadata, content notes, the fictionalization/source note, all nine scene headings, and the complete long-form body.
+- The publication preview generated `/stories/da-002-the-name-in-the-room/`, public index references, RSS and sitemap entries, article metadata, content notes, the story source note, all nine scene headings, and the complete long-form body.
 - The canonical URL is `https://dead-air-website.netlify.app/stories/da-002-the-name-in-the-room/`.
 - Both forms of `/dead-air-da-002-the-name-in-the-room` permanently redirect to the canonical story route.
 - Internal links resolve against generated output. No controlled Google Drive identifier appears in the rendered story.
@@ -90,6 +90,14 @@ Repository owner **JamesJedi420** separately authorized publication on July 27, 
 - [x] Verify the production deployment and public URL.
 - [x] Freeze the release record after production verification.
 
+## Post-release source-note amendment
+
+- The original long fictionalization/source-note block remains preserved in the approved source fragments and their recorded hash.
+- Publication materialization removes that legacy block before rendering DA-002.
+- The shared story template now supplies this standard note: `Based on reported paranormal-investigation accounts. Some events, characters, and identifying details have been fictionalized.`
+- The same shared note applies automatically to future story detail pages.
+- Future story manuscripts should omit separate fictionalization/source-note headings unless a story-specific disclosure receives deliberate editorial approval.
+
 ## Current status
 
-Final Approved Story v12 is imported, integrity-locked, publication-approved, merged, and live. The production deployment and public route have been verified. The release record is frozen.
+Final Approved Story v12 is imported, source-integrity-locked, publication-approved, merged, and live. The production deployment and public route have been verified. The original release record is frozen; the post-release source-note amendment records the standardized presentation change.
