@@ -2,7 +2,7 @@
 
 ## Scope
 
-This branch publishes **The Name in the Room** as the DA-002 story while keeping the DA-002 case, character additions, location updates, object relationship, and mystery records withheld. The complete approved manuscript is stored as ordered source fragments and deterministically materialized into the Astro story entry before development, preview, and production builds.
+This release publishes **The Name in the Room** as the DA-002 story while keeping the DA-002 case, character additions, location updates, object relationship, and mystery records withheld. The complete approved manuscript is stored as ordered source fragments and deterministically materialized into the Astro story entry before development, preview, and production builds.
 
 ## Governing sources
 
@@ -33,7 +33,7 @@ The DA-002 case, character additions, Bellweather location update, object relati
 
 ## Publication approval
 
-Repository owner **JamesJedi420** separately authorized publication on July 27, 2026, after requesting completion of the manuscript import, comparison, withheld-output scan, desktop/mobile/long-form proof, metadata and link checks, and approval record. Every requested pre-merge release gate has now passed.
+Repository owner **JamesJedi420** separately authorized publication on July 27, 2026, after requesting completion of the manuscript import, comparison, withheld-output scan, desktop/mobile/long-form proof, metadata and link checks, and approval record. Every requested pre-merge release gate passed before merge.
 
 ## Canon boundaries
 
@@ -56,6 +56,16 @@ Repository owner **JamesJedi420** separately authorized publication on July 27, 
 - Desktop Lighthouse audit: performance 100, accessibility 100, best practices 100, SEO 100.
 - Responsive presentation uses an 18px desktop root size, 16px mobile root size, 1.65 line height, a 42rem reading width, visible keyboard focus, a mobile breakpoint, ordered headings, and one page-level H1.
 
+## Production verification
+
+- PR #3 was squash-merged into `main` as commit `ea3823f65e0de466c97f15e969e81db1416b435e`.
+- Netlify production deploy `6a675109c3adb80009c7f28e` completed successfully on July 27, 2026.
+- Production context: `main`.
+- Public site alias: `https://dead-air-website.netlify.app`.
+- Public story URL: `https://dead-air-website.netlify.app/stories/da-002-the-name-in-the-room/`.
+- Production validation and desktop Lighthouse audit passed with performance 100, accessibility 100, best practices 100, and SEO 100.
+- Two permanent redirect rules and two security-header rules were processed successfully.
+
 ## Release checklist
 
 - [x] Create withheld DA-002 case and relationship records.
@@ -76,10 +86,10 @@ Repository owner **JamesJedi420** separately authorized publication on July 27, 
 - [x] Proof desktop presentation with a page-specific Lighthouse audit.
 - [x] Review all PR conversations and confirm no unresolved inline threads.
 - [x] Confirm all pre-merge release gates pass.
-- [ ] Squash-merge PR #3.
-- [ ] Verify the production deployment and public URL.
-- [ ] Freeze the release record after production verification.
+- [x] Squash-merge PR #3.
+- [x] Verify the production deployment and public URL.
+- [x] Freeze the release record after production verification.
 
 ## Current status
 
-Final Approved Story v12 is imported, integrity-locked, publication-approved, and validated in withheld, mobile-publication, and desktop-publication previews. PR #3 is ready for final automated review and squash merge. Production verification and release freeze remain pending.
+Final Approved Story v12 is imported, integrity-locked, publication-approved, merged, and live. The production deployment and public route have been verified. The release record is frozen.
