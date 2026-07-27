@@ -59,6 +59,18 @@ Every story detail page renders this shared note through `src/components/StorySo
 
 Story manuscripts should not add a separate fictionalization or source-note heading. Any story-specific disclosure beyond the standard note requires deliberate editorial review before publication.
 
+## Published Story Section Standard
+
+Public story divisions use semantic level-two headings with sequential Arabic numerals:
+
+```markdown
+## 1. Terms of Return
+```
+
+Internal outlines and approved source manuscripts may retain scene terminology, but published pages do not display literal `Scene 1 —` labels. A continuous story may omit section headings; when divisions are used, each level-two heading must follow the numbered convention beginning with `1`.
+
+The approved policy is recorded in `docs/editorial/story-section-standard.md`. `scripts/validate-story-section-headings.mjs` enforces it before development, preview, and production builds.
+
 ## Public Repository Boundaries
 
 Do not commit internal development records, raw transcripts, real participant identities, hidden canon, unpublished continuity data, private research notes, or source interview material to this repository.
