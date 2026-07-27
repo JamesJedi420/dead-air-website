@@ -19,6 +19,17 @@ const legacySourceNote = [
   "",
   "",
 ].join("\n");
+const publishedSectionHeadings = [
+  ["## Scene 1 — Terms of Return", "## 1. Terms of Return"],
+  ["## Scene 2 — The First Room", "## 2. The First Room"],
+  ["## Scene 3 — Two Devices", "## 3. Two Devices"],
+  ["## Scene 4 — The Student They Build", "## 4. The Student They Build"],
+  ["## Scene 5 — The Fire Door", "## 5. The Fire Door"],
+  ["## Scene 6 — The Personal Reading", "## 6. The Personal Reading"],
+  ["## Scene 7 — What We Call Clean", "## 7. What We Call Clean"],
+  ["## Scene 8 — The Auditorium Search", "## 8. The Auditorium Search"],
+  ["## Scene 9 — The Final Source", "## 9. The Final Source"],
+];
 
 const sha256 = (value) => createHash("sha256").update(value, "utf8").digest("hex");
 
@@ -50,7 +61,7 @@ if (sourceNoteOccurrences !== 1) {
   );
 }
 
-const manuscript = approvedSource
+let manuscript = approvedSource
   .replace(legacySourceNote, "")
   .replace(/^status: withheld$/m, "status: active")
   .replace(
@@ -59,6 +70,14 @@ const manuscript = approvedSource
   )
   .replace(/^draft: true$/m, "draft: false");
 
+for (const [sourceHeading, publishedHeading] of publishedSectionHeadings) {
+  const headingOccurrences = manuscript.split(sourceHeading).length - 1;
+  if (headingOccurrences !== 1) {
+    throw new Error(`Expected exactly one DA-002 heading ${JSON.stringify(sourceHeading)}, found ${headingOccurrences}.`);
+  }
+  manuscript = manuscript.replace(sourceHeading, publishedHeading);
+}
+
 if (
   manuscript.includes("## Fictionalization and Source Note") ||
   manuscript.includes("This literary paranormal-horror story adapts reported paranormal-investigation")
@@ -66,9 +85,13 @@ if (
   throw new Error("The legacy DA-002 source note remained in the materialized publication output.");
 }
 
+if (/^##\s+Scene\s+\d+/im.test(manuscript)) {
+  throw new Error("A production scene label remained in the materialized DA-002 publication output.");
+}
+
 const actualPublicationSha256 = sha256(manuscript);
 
 await writeFile(outputPath, manuscript, "utf8");
 console.log(
-  `Materialized DA-002 Final Approved Story v12 for publication (${actualPublicationSha256}); approved source preserved (${actualSourceSha256}); standard source note supplied by the shared story template.`,
+  `Materialized DA-002 Final Approved Story v12 for publication (${actualPublicationSha256}); approved source preserved (${actualSourceSha256}); standard source note supplied by the shared story template; public divisions rendered as numbered section headings.`,
 );
