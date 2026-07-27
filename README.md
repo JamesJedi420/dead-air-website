@@ -51,6 +51,14 @@ netlify deploy --build
 - Robots policy at `/robots.txt`
 - Canonical and Open Graph metadata in the shared layout
 
+## Standard Story Source Note
+
+Every story detail page renders this shared note through `src/components/StorySourceNote.astro`:
+
+> Based on reported paranormal-investigation accounts. Some events, characters, and identifying details have been fictionalized.
+
+Story manuscripts should not add a separate fictionalization or source-note heading. Any story-specific disclosure beyond the standard note requires deliberate editorial review before publication.
+
 ## Public Repository Boundaries
 
 Do not commit internal development records, raw transcripts, real participant identities, hidden canon, unpublished continuity data, private research notes, or source interview material to this repository.

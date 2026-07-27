@@ -12,7 +12,13 @@ const outputPath = path.join(
   "da-002-the-name-in-the-room.md",
 );
 const approvedSourceSha256 = "104c25b43c709d30b0aa8c20bd7cb13410073fd67a763e7e9229640973b20964";
-const publicationSha256 = "5b738e848ba0a18914196c5999f3cada1c75bf676545bc214151c634e7fb9eaa";
+const legacySourceNote = [
+  "## Fictionalization and Source Note",
+  "",
+  "This literary paranormal-horror story adapts reported paranormal-investigation and mediumship material into fiction. Names, locations, identities, historical material, and institutional details are fictionalized or invented. The story preserves competing ordinary explanations and unresolved interpretations. Public release excludes raw source materials and restricted participant information.",
+  "",
+  "",
+].join("\n");
 
 const sha256 = (value) => createHash("sha256").update(value, "utf8").digest("hex");
 
@@ -37,7 +43,15 @@ if (actualSourceSha256 !== approvedSourceSha256) {
   );
 }
 
+const sourceNoteOccurrences = approvedSource.split(legacySourceNote).length - 1;
+if (sourceNoteOccurrences !== 1) {
+  throw new Error(
+    `Expected exactly one legacy DA-002 source-note block, found ${sourceNoteOccurrences}.`,
+  );
+}
+
 const manuscript = approvedSource
+  .replace(legacySourceNote, "")
   .replace(/^status: withheld$/m, "status: active")
   .replace(
     /^revision: Final Approved Story v12$/m,
@@ -45,14 +59,16 @@ const manuscript = approvedSource
   )
   .replace(/^draft: true$/m, "draft: false");
 
-const actualPublicationSha256 = sha256(manuscript);
-if (actualPublicationSha256 !== publicationSha256) {
-  throw new Error(
-    `DA-002 publication integrity check failed. Expected ${publicationSha256}, received ${actualPublicationSha256}.`,
-  );
+if (
+  manuscript.includes("## Fictionalization and Source Note") ||
+  manuscript.includes("This literary paranormal-horror story adapts reported paranormal-investigation")
+) {
+  throw new Error("The legacy DA-002 source note remained in the materialized publication output.");
 }
+
+const actualPublicationSha256 = sha256(manuscript);
 
 await writeFile(outputPath, manuscript, "utf8");
 console.log(
-  `Materialized DA-002 Final Approved Story v12 for publication (${actualPublicationSha256}); approved source preserved (${actualSourceSha256}).`,
+  `Materialized DA-002 Final Approved Story v12 for publication (${actualPublicationSha256}); approved source preserved (${actualSourceSha256}); standard source note supplied by the shared story template.`,
 );

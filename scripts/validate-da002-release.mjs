@@ -17,6 +17,7 @@ const textExtensions = new Set([".html", ".xml", ".json", ".txt", ".js", ".css",
 
 const title = "The Name in the Room";
 const summary = "A final cleansing at Bellweather High becomes a struggle over names, consent, source custody, and the difference between relief and proof.";
+const sourceNote = "Based on reported paranormal-investigation accounts. Some events, characters, and identifying details have been fictionalized.";
 const slug = "da-002-the-name-in-the-room";
 const route = `/stories/${slug}/`;
 const canonicalUrl = `https://dead-air-website.netlify.app${route}`;
@@ -119,7 +120,10 @@ if (!(await exists(storyHtmlPath))) {
     [html.includes('name="twitter:card" content="summary"'), "Twitter card metadata missing"],
     [html.includes('id="main-content" tabindex="-1"'), "keyboard-focusable main landmark missing"],
     [html.includes('href="#main-content"'), "skip link missing"],
-    [html.includes("Fictionalization and Source Note"), "fictionalization/source note missing"],
+    [html.includes('role="note"'), "story source-note landmark missing"],
+    [html.includes(sourceNote), "standard story source note missing"],
+    [!html.includes("Fictionalization and Source Note"), "legacy source-note heading remains"],
+    [!html.includes("This literary paranormal-horror story adapts reported paranormal-investigation"), "legacy source-note paragraph remains"],
     [html.includes("Content Notes"), "content-notes region missing"],
     [html.includes("No graphic violence."), "content note text missing"],
     [html.includes("Abby reached the stairwell landing before Evan touched the lever."), "corrected Scene 8 opening missing"],
@@ -131,8 +135,13 @@ if (!(await exists(storyHtmlPath))) {
   const h1Count = (html.match(/<h1\b/gi) ?? []).length;
   if (h1Count !== 1) fail(`${route}: expected one h1, found ${h1Count}`);
 
+  const sourceNoteIndex = html.indexOf(sourceNote);
+  const sceneOneIndex = html.indexOf("Scene 1 — Terms of Return");
+  if (sourceNoteIndex < 0 || sceneOneIndex < 0 || sourceNoteIndex >= sceneOneIndex) {
+    fail(`${route}: standard source note must appear before Scene 1`);
+  }
+
   const headings = [
-    "Fictionalization and Source Note",
     "Scene 1 — Terms of Return",
     "Scene 2 — The First Room",
     "Scene 3 — Two Devices",
@@ -235,5 +244,5 @@ if (failures.length > 0) {
 }
 
 console.log(
-  `DA-002 publication validation passed: manuscript route, metadata, canonical URL, publication date, scene order, content notes, long-form output, responsive reading CSS, accessibility hooks, internal links, public indexes, RSS, sitemap, and legacy redirects verified.`,
+  `DA-002 publication validation passed: manuscript route, standardized source note, metadata, canonical URL, publication date, scene order, content notes, long-form output, responsive reading CSS, accessibility hooks, internal links, public indexes, RSS, sitemap, and legacy redirects verified.`,
 );
