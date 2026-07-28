@@ -4,14 +4,15 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "predev": "node scripts/materialize-da002.mjs && node scripts/validate-story-section-headings.mjs",
+    "predev": "node scripts/materialize-da002.mjs && node scripts/validate-story-section-headings.mjs && node scripts/validate-narrative-timeline.mjs",
     "dev": "astro dev",
-    "prebuild": "node scripts/materialize-da002.mjs && node scripts/validate-story-section-headings.mjs",
+    "prebuild": "node scripts/materialize-da002.mjs && node scripts/validate-story-section-headings.mjs && node scripts/validate-narrative-timeline.mjs",
     "build": "astro check && astro build",
     "postbuild": "node scripts/validate-da002-release.mjs",
-    "prepreview": "node scripts/materialize-da002.mjs && node scripts/validate-story-section-headings.mjs",
+    "prepreview": "node scripts/materialize-da002.mjs && node scripts/validate-story-section-headings.mjs && node scripts/validate-narrative-timeline.mjs",
     "preview": "astro preview",
-    "validate:story-sections": "node scripts/validate-story-section-headings.mjs"
+    "validate:story-sections": "node scripts/validate-story-section-headings.mjs",
+    "validate:narrative-timeline": "node scripts/validate-narrative-timeline.mjs"
   },
   "engines": {
     "node": ">=22.12.0"
