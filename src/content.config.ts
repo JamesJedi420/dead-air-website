@@ -15,6 +15,7 @@ const canonicalStatus = z.enum([
   "withheld",
   "non-canon",
 ]);
+const datePrecision = z.enum(["exact", "approximate", "seasonal", "relative"]);
 const relatedEntry = z.object({
   collection: z.enum(["stories", "cases", "characters", "locations", "objects", "mysteries"]),
   slug: z.string(),
@@ -32,6 +33,12 @@ const baseEntry = {
   contentWarnings: z.array(z.string()).default([]),
   readingTime: z.string().optional(),
   timelineOrder: z.number().optional(),
+  timelineLabel: z.string().optional(),
+  sourceOrder: z.string().optional(),
+  datePrecision: datePrecision.optional(),
+  chronologyNote: z.string().optional(),
+  follows: z.array(relatedEntry).default([]),
+  precedes: z.array(relatedEntry).default([]),
   publicationDate: z.coerce.date().optional(),
   revision: z.string().optional(),
   canonicalStatus: canonicalStatus.default("provisional canon"),
