@@ -28,6 +28,12 @@ export interface NormalizedEntry {
   classification?: string;
   publicationYear?: string;
   timelineOrder?: number;
+  timelineLabel?: string;
+  sourceOrder?: string;
+  datePrecision?: "exact" | "approximate" | "seasonal" | "relative";
+  chronologyNote?: string;
+  follows: ArchiveLink[];
+  precedes: ArchiveLink[];
   publicationDate?: string;
   tags: string[];
   phenomenon: string[];
@@ -119,6 +125,12 @@ export const normalizeEntry = (collection: ArchiveCollection, entry: ArchiveEntr
     classification: entry.data.classification,
     publicationYear: publicationDate ? String(publicationDate.getFullYear()) : undefined,
     timelineOrder: entry.data.timelineOrder,
+    timelineLabel: entry.data.timelineLabel,
+    sourceOrder: entry.data.sourceOrder,
+    datePrecision: entry.data.datePrecision,
+    chronologyNote: entry.data.chronologyNote,
+    follows: entry.data.follows,
+    precedes: entry.data.precedes,
     publicationDate: publicationDate?.toISOString(),
     tags: entry.data.tags,
     phenomenon: entry.data.phenomenon,
