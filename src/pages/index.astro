@@ -2,10 +2,19 @@
 import { getCollection } from "astro:content";
 import ArchiveCard from "../components/ArchiveCard.astro";
 import SiteLayout from "../layouts/SiteLayout.astro";
-import { entryUrl, isPublished, sortEntries } from "../lib/archive";
+import { entryUrl, isPublished } from "../lib/archive";
 
-const publishedStories = sortEntries((await getCollection("stories")).filter(isPublished));
-const featuredStory = publishedStories.at(-1);
+const publishedStories = (await getCollection("stories"))
+  .filter(isPublished)
+  .sort((a, b) =>
+    Number(b.data.publicationDate ?? b.data.date ?? 0) -
+    Number(a.data.publicationDate ?? a.data.date ?? 0)
+  );
+const publishedCases = (await getCollection("cases")).filter(isPublished);
+const featuredStory = publishedStories[0];
+const caseMeta = publishedCases.length > 0
+  ? `${publishedCases.length} public case ${publishedCases.length === 1 ? "file is" : "files are"} currently open.`
+  : "No public case files are currently open.";
 ---
 
 <SiteLayout
@@ -60,7 +69,7 @@ const featuredStory = publishedStories.at(-1);
         eyebrow="Cases"
         title="Case Catalogue"
         summary="Case summaries, evidence histories, artifact custody, and cross-references cleared for public release."
-        meta="No public case files are currently open."
+        meta={caseMeta}
       />
       <ArchiveCard
         href="/research-and-provenance/"
