@@ -107,6 +107,17 @@ Repository owner **JamesJedi420** separately authorized publication on July 27, 
 - `scripts/validate-story-section-headings.mjs` enforces the convention across all published stories before development, preview, and production builds.
 - The DA-002 output validator rejects every legacy scene heading and verifies the nine numbered headings in order.
 
+## Post-release narrative timeline amendment
+
+- Narrative chronology is separate from publication order and follows the approximate sequence of the source investigations and transcripts.
+- DA-001 — *The Building Keeps the Hour* is locked as archive position 1: the initial Bellweather investigation and original source investigation.
+- DA-002 — *The Name in the Room* is locked as archive position 2: the return investigation and attempted cleansing, derived from a follow-up source investigation.
+- DA-002 is materialized with `timelineOrder: 2`, `datePrecision: relative`, and an explicit `follows` relationship to `stories/da-001-the-building-keeps-the-hour`.
+- The exact interval between DA-001 and DA-002 remains fictionalized or withheld rather than being inferred from upload, transcript, or publication dates.
+- DA-001 may remain absent from the public site until publication-ready; its reserved position still governs DA-002's relative chronology.
+- `scripts/validate-narrative-timeline.mjs` enforces complete chronology metadata for future published timeline entries.
+- `scripts/validate-narrative-timeline-output.mjs` verifies the public timeline and prevents DA-002's July 27, 2026 publication date from being presented as an event date.
+
 ## Current status
 
-Final Approved Story v12 is imported, source-integrity-locked, publication-approved, merged, and live. The production deployment and public route have been verified. The original release record is frozen; post-release amendments record the standardized source note and numbered public section presentation.
+Final Approved Story v12 is imported, source-integrity-locked, publication-approved, merged, and live. The production deployment and public route have been verified. The original release record is frozen; post-release amendments record the standardized source note, numbered public section presentation, and the DA-001 → DA-002 narrative chronology.
