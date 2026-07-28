@@ -94,6 +94,7 @@ for (const [collection, directory] of collectionDirectories) {
     const timelineOrder = Number(timelineOrderRaw);
     if (!Number.isFinite(timelineOrder) || timelineOrder <= 0) {
       failures.push(`${fileName}: timelineOrder must be a positive number, received ${JSON.stringify(timelineOrderRaw)}`);
+      continue;
     }
 
     for (const field of chronologyScalarFields) {
