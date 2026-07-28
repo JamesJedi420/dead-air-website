@@ -2,10 +2,12 @@ import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 
+const root = process.cwd();
 const collectionDirectories = [
-  ["stories", path.join(process.cwd(), "src", "content", "stories")],
-  ["cases", path.join(process.cwd(), "src", "content", "cases")],
+  ["stories", path.join(root, "src", "content", "stories")],
+  ["cases", path.join(root, "src", "content", "cases")],
 ];
+const reservationsPath = path.join(root, "src", "data", "narrative-timeline-reservations.json");
 const allowedPrecisions = new Set(["exact", "approximate", "seasonal", "relative"]);
 const chronologyScalarFields = [
   "timelineLabel",
@@ -37,29 +39,92 @@ const stripMatchingQuotes = (value) => {
   return first === last && (first === '"' || first === "'") ? value.slice(1, -1) : value;
 };
 
-const readFrontmatterScalar = (frontmatter, key) => {
-  const line = frontmatter
-    .split(/\r?\n/)
-    .find((candidate) => new RegExp(`^${key}:`).test(candidate));
-  if (!line) return undefined;
-
-  let value = line.slice(line.indexOf(":") + 1).trim();
+const normalizeScalar = (rawValue) => {
+  let value = rawValue.trim();
   if (!value.startsWith('"') && !value.startsWith("'")) {
     value = value.replace(/\s+#.*$/, "").trim();
   }
   return stripMatchingQuotes(value);
 };
 
+const readFrontmatterScalar = (frontmatter, key) => {
+  const line = frontmatter
+    .split(/\r?\n/)
+    .find((candidate) => new RegExp(`^${key}:`).test(candidate));
+  if (!line) return undefined;
+  return normalizeScalar(line.slice(line.indexOf(":") + 1));
+};
+
 const hasFrontmatterKey = (frontmatter, key) =>
   new RegExp(`^${key}:`, "m").test(frontmatter);
 
+const readRelationList = (frontmatter, key, fileName, failures) => {
+  const lines = frontmatter.split(/\r?\n/);
+  const startIndex = lines.findIndex((line) => new RegExp(`^${key}:`).test(line));
+  if (startIndex < 0) return { present: false, relations: [] };
+
+  const headerValue = normalizeScalar(lines[startIndex].slice(lines[startIndex].indexOf(":") + 1));
+  if (/^\[\s*\]$/.test(headerValue)) return { present: true, relations: [] };
+  if (headerValue) {
+    failures.push(`${fileName}: ${key} must be a block list or an explicit empty list`);
+    return { present: true, relations: [] };
+  }
+
+  const relations = [];
+  let current;
+  const finishCurrent = () => {
+    if (!current) return;
+    if (!current.collection || !current.slug) {
+      failures.push(`${fileName}: ${key} relation must include collection and slug`);
+    } else {
+      relations.push(current);
+    }
+    current = undefined;
+  };
+
+  for (let index = startIndex + 1; index < lines.length; index += 1) {
+    const line = lines[index];
+    if (/^[^\s][^:]*:/.test(line)) break;
+    if (!line.trim() || /^\s*#/.test(line)) continue;
+
+    const collectionMatch = line.match(/^\s*-\s+collection:\s*(.+)$/);
+    if (collectionMatch) {
+      finishCurrent();
+      current = { collection: normalizeScalar(collectionMatch[1]) };
+      continue;
+    }
+
+    const slugMatch = line.match(/^\s+slug:\s*(.+)$/);
+    if (slugMatch) {
+      if (!current) {
+        failures.push(`${fileName}: ${key} contains a slug without a collection`);
+      } else if (current.slug) {
+        failures.push(`${fileName}: ${key} relation contains more than one slug`);
+      } else {
+        current.slug = normalizeScalar(slugMatch[1]);
+      }
+      continue;
+    }
+
+    failures.push(`${fileName}: unsupported ${key} relation syntax ${JSON.stringify(line.trim())}`);
+  }
+
+  finishCurrent();
+  if (relations.length === 0) {
+    failures.push(`${fileName}: empty ${key} relationships must use []`);
+  }
+  return { present: true, relations };
+};
+
 const failures = [];
+const entries = [];
 let publishedEntriesChecked = 0;
 let timelineEntriesChecked = 0;
 
 for (const [collection, directory] of collectionDirectories) {
   for (const filePath of await collectMarkdownFiles(directory)) {
-    const fileName = `${collection}/${path.relative(directory, filePath).replaceAll(path.sep, "/")}`;
+    const relativePath = path.relative(directory, filePath).replaceAll(path.sep, "/");
+    const fileName = `${collection}/${relativePath}`;
     const content = await readFile(filePath, "utf8");
     const frontmatterMatch = content.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?/);
 
@@ -78,43 +143,148 @@ for (const [collection, directory] of collectionDirectories) {
       draft = true;
     }
 
-    if (draft || status === "withheld") continue;
-    publishedEntriesChecked += 1;
-
+    const slug = readFrontmatterScalar(frontmatter, "slug") ?? relativePath.replace(/\.md$/, "");
     const timelineOrderRaw = readFrontmatterScalar(frontmatter, "timelineOrder");
-    const hasAnyChronologyMetadata = chronologyFields.some((key) => hasFrontmatterKey(frontmatter, key));
+    const timelineOrder = timelineOrderRaw === undefined ? undefined : Number(timelineOrderRaw);
 
-    if (timelineOrderRaw === undefined) {
-      if (hasAnyChronologyMetadata) {
-        failures.push(`${fileName}: chronology metadata is present without timelineOrder`);
-      }
-      continue;
-    }
-
-    const timelineOrder = Number(timelineOrderRaw);
-    if (!Number.isFinite(timelineOrder) || timelineOrder <= 0) {
-      failures.push(`${fileName}: timelineOrder must be a positive number, received ${JSON.stringify(timelineOrderRaw)}`);
-      continue;
-    }
-
-    for (const field of chronologyScalarFields) {
-      const value = readFrontmatterScalar(frontmatter, field);
-      if (!value) failures.push(`${fileName}: published timeline entry is missing ${field}`);
-    }
-
-    const datePrecision = readFrontmatterScalar(frontmatter, "datePrecision");
-    if (datePrecision && !allowedPrecisions.has(datePrecision)) {
-      failures.push(`${fileName}: unsupported datePrecision ${JSON.stringify(datePrecision)}`);
-    }
-
-    for (const relationField of ["follows", "precedes"]) {
-      if (!hasFrontmatterKey(frontmatter, relationField)) {
-        failures.push(`${fileName}: published timeline entry is missing ${relationField}`);
-      }
-    }
-
-    timelineEntriesChecked += 1;
+    entries.push({
+      collection,
+      slug,
+      key: `${collection}:${slug}`,
+      fileName,
+      frontmatter,
+      published: !draft && status !== "withheld",
+      timelineOrder,
+      timelineOrderRaw,
+    });
   }
+}
+
+let reservations = [];
+try {
+  const parsed = JSON.parse(await readFile(reservationsPath, "utf8"));
+  if (!Array.isArray(parsed)) throw new Error("root value must be an array");
+  reservations = parsed;
+} catch (error) {
+  failures.push(`narrative timeline reservations could not be read: ${error.message}`);
+}
+
+const targetMap = new Map();
+for (const [index, reservation] of reservations.entries()) {
+  const label = `reservation[${index}]`;
+  if (!reservation || typeof reservation !== "object" || Array.isArray(reservation)) {
+    failures.push(`${label}: reservation must be an object`);
+    continue;
+  }
+  const { collection, slug, timelineOrder } = reservation;
+  if (!collectionDirectories.some(([knownCollection]) => knownCollection === collection)) {
+    failures.push(`${label}: unsupported collection ${JSON.stringify(collection)}`);
+    continue;
+  }
+  if (typeof slug !== "string" || !slug.trim()) {
+    failures.push(`${label}: slug must be a nonempty string`);
+    continue;
+  }
+  if (!Number.isFinite(timelineOrder) || timelineOrder <= 0) {
+    failures.push(`${label}: timelineOrder must be a positive number`);
+    continue;
+  }
+  const key = `${collection}:${slug}`;
+  if (targetMap.has(key)) {
+    failures.push(`${label}: duplicate reserved target ${key}`);
+    continue;
+  }
+  targetMap.set(key, { key, timelineOrder, source: label, reserved: true });
+}
+
+for (const entry of entries) {
+  const existing = targetMap.get(entry.key);
+  const hasValidOrder = Number.isFinite(entry.timelineOrder) && entry.timelineOrder > 0;
+  if (existing && !existing.reserved) {
+    failures.push(`${entry.fileName}: duplicate chronology target ${entry.key}`);
+    continue;
+  }
+  if (existing?.reserved && hasValidOrder && existing.timelineOrder !== entry.timelineOrder) {
+    failures.push(
+      `${entry.fileName}: timelineOrder ${entry.timelineOrder} conflicts with reserved order ${existing.timelineOrder} for ${entry.key}`,
+    );
+  }
+  targetMap.set(entry.key, {
+    key: entry.key,
+    timelineOrder: hasValidOrder ? entry.timelineOrder : existing?.timelineOrder,
+    source: entry.fileName,
+    reserved: false,
+  });
+}
+
+for (const entry of entries) {
+  if (!entry.published) continue;
+  publishedEntriesChecked += 1;
+
+  const hasAnyChronologyMetadata = chronologyFields.some((key) => hasFrontmatterKey(entry.frontmatter, key));
+  if (entry.timelineOrderRaw === undefined) {
+    if (hasAnyChronologyMetadata) {
+      failures.push(`${entry.fileName}: chronology metadata is present without timelineOrder`);
+    }
+    continue;
+  }
+
+  if (!Number.isFinite(entry.timelineOrder) || entry.timelineOrder <= 0) {
+    failures.push(
+      `${entry.fileName}: timelineOrder must be a positive number, received ${JSON.stringify(entry.timelineOrderRaw)}`,
+    );
+    continue;
+  }
+
+  for (const field of chronologyScalarFields) {
+    const value = readFrontmatterScalar(entry.frontmatter, field);
+    if (!value) failures.push(`${entry.fileName}: published timeline entry is missing ${field}`);
+  }
+
+  const datePrecision = readFrontmatterScalar(entry.frontmatter, "datePrecision");
+  if (datePrecision && !allowedPrecisions.has(datePrecision)) {
+    failures.push(`${entry.fileName}: unsupported datePrecision ${JSON.stringify(datePrecision)}`);
+  }
+
+  for (const relationField of ["follows", "precedes"]) {
+    const { present, relations } = readRelationList(entry.frontmatter, relationField, entry.fileName, failures);
+    if (!present) {
+      failures.push(`${entry.fileName}: published timeline entry is missing ${relationField}`);
+      continue;
+    }
+
+    const seenRelations = new Set();
+    for (const relation of relations) {
+      const relationKey = `${relation.collection}:${relation.slug}`;
+      if (seenRelations.has(relationKey)) {
+        failures.push(`${entry.fileName}: duplicate ${relationField} relationship ${relationKey}`);
+        continue;
+      }
+      seenRelations.add(relationKey);
+
+      const target = targetMap.get(relationKey);
+      if (!target) {
+        failures.push(`${entry.fileName}: ${relationField} target ${relationKey} does not exist or have an explicit reservation`);
+        continue;
+      }
+      if (!Number.isFinite(target.timelineOrder) || target.timelineOrder <= 0) {
+        failures.push(`${entry.fileName}: ${relationField} target ${relationKey} has no valid timelineOrder`);
+        continue;
+      }
+
+      const isCorrectlyOrdered = relationField === "follows"
+        ? target.timelineOrder < entry.timelineOrder
+        : target.timelineOrder > entry.timelineOrder;
+      if (!isCorrectlyOrdered) {
+        const expected = relationField === "follows" ? "earlier than" : "later than";
+        failures.push(
+          `${entry.fileName}: ${relationField} target ${relationKey} is order ${target.timelineOrder}, which is not ${expected} order ${entry.timelineOrder}`,
+        );
+      }
+    }
+  }
+
+  timelineEntriesChecked += 1;
 }
 
 if (failures.length > 0) {
@@ -122,5 +292,5 @@ if (failures.length > 0) {
 }
 
 console.log(
-  `Narrative timeline validation passed across ${publishedEntriesChecked} published stories and cases, including ${timelineEntriesChecked} entries assigned to the public chronology. Publication dates remain independent of narrative order.`,
+  `Narrative timeline validation passed across ${publishedEntriesChecked} published stories and cases, including ${timelineEntriesChecked} entries assigned to the public chronology and ${reservations.length} explicitly reserved chronology targets. Publication dates remain independent of narrative order.`,
 );
