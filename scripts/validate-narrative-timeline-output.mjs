@@ -61,17 +61,30 @@ if (!(await exists(timelineHtmlPath))) {
   fail("Narrative timeline route was not generated.");
 } else {
   const html = await readFile(timelineHtmlPath, "utf8");
+  const routeIndex = html.indexOf(`href=\"${storyRoute}\"`);
+  let da002EntryHtml = "";
+  if (routeIndex < 0) {
+    fail("timeline does not link to DA-002");
+  } else {
+    const listItemStart = html.lastIndexOf("<li", routeIndex);
+    const listItemEnd = html.indexOf("</li>", routeIndex);
+    if (listItemStart < 0 || listItemEnd < 0) {
+      fail("DA-002 timeline list item could not be isolated");
+    } else {
+      da002EntryHtml = html.slice(listItemStart, listItemEnd + "</li>".length);
+    }
+  }
+
   const assertions = [
     [html.includes("Narrative Chronology"), "narrative chronology heading is missing"],
     [html.includes("Publication order is separate."), "publication-order distinction is missing"],
-    [html.includes("Archive position 2"), "DA-002 narrative position is missing"],
-    [html.includes("Return investigation and attempted cleansing"), "DA-002 timeline label is missing"],
-    [html.includes("Follow-up investigation"), "DA-002 source-order label is missing"],
-    [html.includes("Relative"), "DA-002 date precision is missing"],
-    [html.includes(chronologyNote), "DA-002 chronology note is missing"],
-    [html.includes(storyRoute), "timeline does not link to DA-002"],
-    [html.includes("The Name in the Room"), "timeline does not name DA-002"],
-    [!html.includes("July 27, 2026"), "publication date is presented on the narrative timeline"],
+    [da002EntryHtml.includes("Archive position 2"), "DA-002 narrative position is missing"],
+    [da002EntryHtml.includes("Return investigation and attempted cleansing"), "DA-002 timeline label is missing"],
+    [da002EntryHtml.includes("Follow-up investigation"), "DA-002 source-order label is missing"],
+    [da002EntryHtml.includes("Relative"), "DA-002 date precision is missing"],
+    [da002EntryHtml.includes(chronologyNote), "DA-002 chronology note is missing"],
+    [da002EntryHtml.includes("The Name in the Room"), "timeline does not name DA-002"],
+    [!da002EntryHtml.includes("July 27, 2026"), "DA-002 publication date is presented as its narrative event date"],
   ];
 
   for (const [passed, message] of assertions) if (!passed) fail(message);
@@ -82,5 +95,5 @@ if (failures.length > 0) {
 }
 
 console.log(
-  "Narrative timeline output validation passed: DA-002 remains archive position 2 after DA-001, relative source chronology is visible, and publication date is not presented as an event date.",
+  "Narrative timeline output validation passed: DA-002 remains archive position 2 after DA-001, relative source chronology is visible, and its publication date is not presented as an event date.",
 );
