@@ -1,36 +1,59 @@
 ---
+import { getCollection } from "astro:content";
 import ArchiveCard from "../components/ArchiveCard.astro";
 import SiteLayout from "../layouts/SiteLayout.astro";
+import { entryUrl, isPublished } from "../lib/archive";
+
+const publishedStories = (await getCollection("stories"))
+  .filter(isPublished)
+  .sort((a, b) =>
+    Number(b.data.publicationDate ?? b.data.date ?? 0) -
+    Number(a.data.publicationDate ?? a.data.date ?? 0)
+  );
+const publishedCases = (await getCollection("cases")).filter(isPublished);
+const featuredStory = publishedStories[0];
+const caseMeta = publishedCases.length > 0
+  ? `${publishedCases.length} public case ${publishedCases.length === 1 ? "file is" : "files are"} currently open.`
+  : "No public case files are currently open.";
 ---
 
 <SiteLayout
   title="The Dead Air Archive"
-  description="A restrained public archive for literary paranormal horror stories, cases, and provenance."
+  description="Literary paranormal horror told through stories, case records, object files, and disputed evidence."
 >
   <section class="hero" aria-labelledby="home-title">
     <div class="hero-copy">
       <p class="eyebrow">Public Reading Room</p>
       <h1 id="home-title">The Dead Air Archive</h1>
       <p>
-        A literary paranormal horror archive for finished stories, case files, recovered
-        objects, and the institutional notes safe enough to leave under glass.
+        Literary paranormal horror told through stories, case records, object files, and disputed
+        evidence.
+      </p>
+      <p>
+        Enter through a narrative file, then follow its people, locations, objects, and unresolved
+        questions across the archive.
       </p>
     </div>
-    <aside class="hero-panel" aria-label="Archive notice">
-      <p>
-        This public catalogue contains edited, publishable materials only. Raw transcripts,
-        real identities, hidden continuity, and private development records are excluded.
-      </p>
-    </aside>
+    {featuredStory && (
+      <aside class="hero-panel" aria-label="Featured story">
+        <p class="eyebrow">Begin Here</p>
+        <h2>{featuredStory.data.title}</h2>
+        <p>{featuredStory.data.summary}</p>
+        {featuredStory.data.readingTime && (
+          <p class="card-meta">Reading time: {featuredStory.data.readingTime}</p>
+        )}
+        <a class="cta-link" href={entryUrl("stories", featuredStory)}>Read the story</a>
+      </aside>
+    )}
   </section>
 
   <section class="section" aria-labelledby="index-title">
     <div class="section-header">
-      <p class="eyebrow">Initial Index</p>
-      <h2 id="index-title">Rooms Open to the Public</h2>
+      <p class="eyebrow">Open Records</p>
+      <h2 id="index-title">Explore the Archive</h2>
       <p>
-        The foundation is ready for stories and cases, but the first narrative entry has not
-        been imported yet.
+        Each collection offers a different way into the same body of fiction. Published records are
+        connected when their people, evidence, locations, or unresolved questions overlap.
       </p>
     </div>
     <div class="grid">
@@ -38,23 +61,61 @@ import SiteLayout from "../layouts/SiteLayout.astro";
         href="/stories/"
         eyebrow="Stories"
         title="Narrative Files"
-        summary="Published horror fiction and related serial entries will be indexed here."
-        meta="Withheld records stay outside the public catalogue."
+        summary="Long-form paranormal horror and related serial fiction from the archive."
+        meta={featuredStory ? `Begin with ${featuredStory.data.title}.` : "No public narrative files are currently open."}
       />
       <ArchiveCard
         href="/cases/"
         eyebrow="Cases"
         title="Case Catalogue"
-        summary="Public-facing case summaries, artifact chains, and cross-references."
-        meta="Structured for future content collection entries."
+        summary="Case summaries, evidence histories, artifact custody, and cross-references cleared for public release."
+        meta={caseMeta}
       />
       <ArchiveCard
         href="/research-and-provenance/"
         eyebrow="Provenance"
         title="Source Discipline"
-        summary="Editorial standards for evidence, attribution, redaction, and publication boundaries."
-        meta="No internal source material is published here."
+        summary="How the archive handles reported material, attribution, fictionalization, redaction, source custody, and publication boundaries."
+        meta="Read the editorial standards."
       />
     </div>
   </section>
+
+  <section class="section" aria-labelledby="archive-notice-title">
+    <div class="section-header">
+      <p class="eyebrow">Archive Notice</p>
+      <h2 id="archive-notice-title">What Remains Outside the Glass</h2>
+      <p>
+        The public archive contains finished, reader-facing fiction and supporting records. Raw
+        transcripts, real identities, private source material, hidden continuity, and internal
+        development notes are not published.
+      </p>
+    </div>
+  </section>
 </SiteLayout>
+
+<style>
+  .hero-panel h2 {
+    font-size: clamp(1.7rem, 4vw, 2.4rem);
+    margin-bottom: 0.75rem;
+  }
+
+  .hero-panel .card-meta {
+    margin-bottom: 1rem;
+  }
+
+  .cta-link {
+    background: var(--color-brass);
+    border-radius: 4px;
+    color: var(--color-ink);
+    display: inline-flex;
+    font-weight: 700;
+    padding: 0.65rem 0.9rem;
+    text-decoration: none;
+  }
+
+  .cta-link:hover {
+    color: var(--color-ink);
+    filter: brightness(1.12);
+  }
+</style>
