@@ -30,6 +30,14 @@ A published story or case included on the narrative timeline must carry:
 
 Entries without `timelineOrder` remain outside the public narrative timeline. Publication dates must not be substituted for narrative dates or relative chronology.
 
+Every relationship target must resolve to either an existing story or case entry or an explicit entry in `src/data/narrative-timeline-reservations.json`. A `follows` target must have a lower `timelineOrder`; a `precedes` target must have a higher `timelineOrder`. Misspelled, missing, self-referential, and order-contradicting targets fail validation.
+
+## Chronology reservations
+
+A chronology reservation records a continuity position that must remain stable before its story or case is ready for the public content collections. Reservations contain public-safe identity and ordering metadata only. They generate no route, index entry, feed item, or placeholder story.
+
+When the corresponding content entry is created, its collection, slug, and `timelineOrder` must match the reservation. The content entry may then replace the reservation as the resolved relationship target without changing established chronology.
+
 ## Date handling
 
 Use the narrowest precision supported by the fiction and source sequence:
@@ -48,7 +56,7 @@ A source upload date, video release date, transcript timestamp, or publication d
 | 1 | DA-001 — *The Building Keeps the Hour* | Initial Bellweather investigation | Original investigation |
 | 2 | DA-002 — *The Name in the Room* | Return investigation and attempted cleansing | Follow-up investigation |
 
-DA-001 may remain absent from the public site until its story is publication-ready. DA-002 nevertheless retains `timelineOrder: 2` and an explicit `follows` relationship so later publication of DA-001 cannot reverse the established sequence.
+DA-001 may remain absent from the public site until its story is publication-ready. Its public-safe chronology reservation makes it a resolvable position-1 target without publishing a placeholder. DA-002 retains `timelineOrder: 2` and an explicit `follows` relationship so later publication of DA-001 cannot reverse the established sequence.
 
 ## Adaptation boundaries
 
@@ -59,6 +67,8 @@ The public timeline must never imply that disputed paranormal claims, edited rec
 ## Enforcement
 
 - `src/content.config.ts` defines the chronology fields and permitted date-precision values.
-- `scripts/validate-narrative-timeline.mjs` requires complete chronology metadata for every published story or case assigned a timeline position.
+- `src/data/narrative-timeline-reservations.json` records public-safe positions for established but unpublished entries.
+- `scripts/validate-narrative-timeline.mjs` requires complete chronology metadata and validates relationship existence and direction for every published story or case assigned a timeline position.
 - `src/pages/timeline.astro` orders entries by `timelineOrder`, not by publication date.
+- `scripts/validate-narrative-timeline-output.mjs` scopes rendered assertions to the relevant timeline entry rather than rejecting legitimate dates elsewhere on the page.
 - Story-specific release validators may lock important chronology fields when continuity depends on them.
