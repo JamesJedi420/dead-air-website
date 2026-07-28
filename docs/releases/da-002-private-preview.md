@@ -47,7 +47,7 @@ Repository owner **JamesJedi420** separately authorized publication on July 27, 
 ## Validation results
 
 - The withheld preview built successfully with the full manuscript present in source while generating no DA-002 route, title, slug, excerpt, index entry, RSS item, sitemap entry, taxonomy output, or related-entry leak.
-- The publication preview generated `/stories/da-002-the-name-in-the-room/`, public index references, RSS and sitemap entries, article metadata, content notes, the story source note, all nine scene headings, and the complete long-form body.
+- The publication preview generated `/stories/da-002-the-name-in-the-room/`, public index references, RSS and sitemap entries, article metadata, content notes, the story source note, all nine numbered section headings, and the complete long-form body.
 - The canonical URL is `https://dead-air-website.netlify.app/stories/da-002-the-name-in-the-room/`.
 - Both forms of `/dead-air-da-002-the-name-in-the-room` permanently redirect to the canonical story route.
 - Internal links resolve against generated output. No controlled Google Drive identifier appears in the rendered story.
@@ -80,7 +80,7 @@ Repository owner **JamesJedi420** separately authorized publication on July 27, 
 - [x] Create and verify a withheld Netlify deploy preview.
 - [x] Record separate publication approval.
 - [x] Stage only the story publication fields after the withheld preview passed.
-- [x] Verify the publication route, canonical metadata, publication date, Open Graph article metadata, Twitter metadata, content notes, fictionalization note, scene order, and long-form body.
+- [x] Verify the publication route, canonical metadata, publication date, Open Graph article metadata, Twitter metadata, content notes, story source note, section order, and long-form body.
 - [x] Verify generated internal links, public indexes, RSS, sitemap, and legacy redirects.
 - [x] Proof mobile presentation with a page-specific Lighthouse audit.
 - [x] Proof desktop presentation with a page-specific Lighthouse audit.
@@ -98,6 +98,15 @@ Repository owner **JamesJedi420** separately authorized publication on July 27, 
 - The same shared note applies automatically to future story detail pages.
 - Future story manuscripts should omit separate fictionalization/source-note headings unless a story-specific disclosure receives deliberate editorial approval.
 
+## Post-release section-heading amendment
+
+- The approved source fragments retain their original internal `Scene 1 —` through `Scene 9 —` headings and recorded source hash.
+- Publication materialization maps those labels to `1. Terms of Return` through `9. The Final Source` without altering the approved source.
+- Public story divisions use sequential Arabic-numbered level-two headings as the archive's approved house style.
+- Internal outlines and editorial discussions may continue to use scene terminology.
+- `scripts/validate-story-section-headings.mjs` enforces the convention across all published stories before development, preview, and production builds.
+- The DA-002 output validator rejects every legacy scene heading and verifies the nine numbered headings in order.
+
 ## Current status
 
-Final Approved Story v12 is imported, source-integrity-locked, publication-approved, merged, and live. The production deployment and public route have been verified. The original release record is frozen; the post-release source-note amendment records the standardized presentation change.
+Final Approved Story v12 is imported, source-integrity-locked, publication-approved, merged, and live. The production deployment and public route have been verified. The original release record is frozen; post-release amendments record the standardized source note and numbered public section presentation.
