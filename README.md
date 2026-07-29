@@ -71,6 +71,14 @@ Internal outlines and approved source manuscripts may retain scene terminology, 
 
 The approved policy is recorded in `docs/editorial/story-section-standard.md`. `scripts/validate-story-section-headings.mjs` enforces it before development, preview, and production builds.
 
+## Narrative Timeline Standard
+
+Narrative order follows the approximate sequence of the source investigations and transcripts, not publication order. Exact in-world dates may remain relative, seasonal, approximate, or withheld when the source record does not support greater precision.
+
+Published stories or cases assigned a timeline position must record `timelineOrder`, `timelineLabel`, `sourceOrder`, `datePrecision`, `chronologyNote`, `follows`, and `precedes`. The public Timeline page sorts by narrative position and does not substitute release dates for event dates.
+
+The approved policy and initial DA-001 → DA-002 sequence are recorded in `docs/editorial/narrative-timeline-standard.md`. `scripts/validate-narrative-timeline.mjs` enforces metadata completeness before development, preview, and production builds; `scripts/validate-narrative-timeline-output.mjs` verifies the generated public chronology.
+
 ## Public Repository Boundaries
 
 Do not commit internal development records, raw transcripts, real participant identities, hidden canon, unpublished continuity data, private research notes, or source interview material to this repository.

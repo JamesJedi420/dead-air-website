@@ -1,41 +1,115 @@
 ---
 import SiteLayout from "../layouts/SiteLayout.astro";
-import { formatDate, normalizeEntry } from "../lib/archive";
+import { collectionLabels, formatLabel, normalizeEntry } from "../lib/archive";
 import { getPublishedCollection } from "../lib/loadArchive";
 
-const cases = (await getPublishedCollection("cases"))
-  .map((entry) => ({ raw: entry, entry: normalizeEntry("cases", entry) }))
+const timelineEntries = [
+  ...(await getPublishedCollection("stories")).map((entry) => normalizeEntry("stories", entry)),
+  ...(await getPublishedCollection("cases")).map((entry) => normalizeEntry("cases", entry)),
+]
+  .filter((entry) => entry.timelineOrder !== undefined)
   .sort((a, b) => {
-    const aDate = Number(a.raw.data.publicationDate ?? a.raw.data.date ?? 0);
-    const bDate = Number(b.raw.data.publicationDate ?? b.raw.data.date ?? 0);
-    if (aDate !== bDate) return aDate - bDate;
-    return (a.raw.data.timelineOrder ?? 0) - (b.raw.data.timelineOrder ?? 0);
+    const orderDifference = a.timelineOrder! - b.timelineOrder!;
+    if (orderDifference !== 0) return orderDifference;
+    if (a.collection !== b.collection) return a.collection === "stories" ? -1 : 1;
+    return a.title.localeCompare(b.title);
   });
 ---
 
-<SiteLayout title="Timeline" description="Chronological public case timeline for The Dead Air Archive.">
+<SiteLayout
+  title="Narrative Timeline"
+  description="The narrative chronology of The Dead Air Archive, based approximately on the sequence of the source investigations and transcripts."
+>
   <section class="section">
     <div class="section-header">
-      <p class="eyebrow">Timeline</p>
+      <p class="eyebrow">Narrative Chronology</p>
       <h1>Timeline</h1>
-      <p>Published cases are ordered chronologically from frontmatter. Future story-linked cases will appear automatically.</p>
+      <p>
+        Entries are ordered by when their events occur inside Dead Air continuity. The sequence follows
+        the approximate order of the source investigations and transcripts; exact dates may be
+        fictionalized, withheld, or left unresolved. Publication order is separate.
+      </p>
     </div>
-    {cases.length > 0 ? (
+    {timelineEntries.length > 0 ? (
       <ol class="timeline-list">
-        {cases.map(({ raw, entry }) => (
+        {timelineEntries.map((entry) => (
           <li>
-            <time datetime={(raw.data.publicationDate ?? raw.data.date)?.toISOString()}>
-              {formatDate(raw.data.publicationDate ?? raw.data.date) ?? "Undated"}
-            </time>
+            <p class="timeline-position">Archive position {entry.timelineOrder}</p>
+            <p class="eyebrow">{entry.timelineLabel ?? "Relative chronology"}</p>
             <h2><a href={entry.url}>{entry.title}</a></h2>
             <p>{entry.summary}</p>
+            <dl class="timeline-meta">
+              <div>
+                <dt>Record type</dt>
+                <dd>{collectionLabels[entry.collection]}</dd>
+              </div>
+              {entry.sourceOrder && (
+                <div>
+                  <dt>Source sequence</dt>
+                  <dd>{entry.sourceOrder}</dd>
+                </div>
+              )}
+              {entry.datePrecision && (
+                <div>
+                  <dt>Date precision</dt>
+                  <dd>{formatLabel(entry.datePrecision)}</dd>
+                </div>
+              )}
+            </dl>
+            {entry.chronologyNote && <p class="chronology-note">{entry.chronologyNote}</p>}
           </li>
         ))}
       </ol>
     ) : (
       <div class="callout">
-        <p>No published cases have been dated for the public timeline yet.</p>
+        <p>No published stories or cases have narrative chronology metadata yet.</p>
       </div>
     )}
   </section>
 </SiteLayout>
+
+<style>
+  .timeline-position {
+    color: var(--color-dim);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.35rem;
+    text-transform: uppercase;
+  }
+
+  .timeline-list .eyebrow {
+    margin-bottom: 0.4rem;
+  }
+
+  .timeline-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    margin: 1rem 0;
+  }
+
+  .timeline-meta div {
+    display: grid;
+    gap: 0.1rem;
+  }
+
+  .timeline-meta dt {
+    color: var(--color-brass);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .timeline-meta dd,
+  .chronology-note {
+    color: var(--color-muted);
+    margin: 0;
+  }
+
+  .chronology-note {
+    border-left: 2px solid var(--color-line);
+    padding-left: 0.75rem;
+  }
+</style>

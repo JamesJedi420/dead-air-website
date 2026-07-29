@@ -30,6 +30,19 @@ const publishedSectionHeadings = [
   ["## Scene 8 — The Auditorium Search", "## 8. The Auditorium Search"],
   ["## Scene 9 — The Final Source", "## 9. The Final Source"],
 ];
+const chronologyMetadata = [
+  "revision: Final Approved Story v12",
+  "publicationDate: 2026-07-27",
+  "timelineOrder: 2",
+  "timelineLabel: Return investigation and attempted cleansing",
+  "sourceOrder: Follow-up investigation",
+  "datePrecision: relative",
+  "chronologyNote: Placed after DA-001 according to the approximate order of the source investigations and transcripts; the exact interval is fictionalized or withheld.",
+  "follows:",
+  "  - collection: stories",
+  "    slug: da-001-the-building-keeps-the-hour",
+  "precedes: []",
+].join("\n");
 
 const sha256 = (value) => createHash("sha256").update(value, "utf8").digest("hex");
 
@@ -64,10 +77,7 @@ if (sourceNoteOccurrences !== 1) {
 let manuscript = approvedSource
   .replace(legacySourceNote, "")
   .replace(/^status: withheld$/m, "status: active")
-  .replace(
-    /^revision: Final Approved Story v12$/m,
-    "revision: Final Approved Story v12\npublicationDate: 2026-07-27",
-  )
+  .replace(/^revision: Final Approved Story v12$/m, chronologyMetadata)
   .replace(/^draft: true$/m, "draft: false");
 
 for (const [sourceHeading, publishedHeading] of publishedSectionHeadings) {
@@ -93,5 +103,5 @@ const actualPublicationSha256 = sha256(manuscript);
 
 await writeFile(outputPath, manuscript, "utf8");
 console.log(
-  `Materialized DA-002 Final Approved Story v12 for publication (${actualPublicationSha256}); approved source preserved (${actualSourceSha256}); standard source note supplied by the shared story template; public divisions rendered as numbered section headings.`,
+  `Materialized DA-002 Final Approved Story v12 for publication (${actualPublicationSha256}); approved source preserved (${actualSourceSha256}); standard source note supplied by the shared story template; public divisions rendered as numbered section headings; narrative chronology fixed at archive position 2 after DA-001.`,
 );
