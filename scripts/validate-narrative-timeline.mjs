@@ -9,6 +9,7 @@ const collectionDirectories = [
 ];
 const reservationsPath = path.join(root, "src", "data", "narrative-timeline-reservations.json");
 const allowedPrecisions = new Set(["exact", "approximate", "seasonal", "relative"]);
+const relationProperties = new Set(["collection", "slug"]);
 const chronologyScalarFields = [
   "timelineLabel",
   "sourceOrder",
@@ -58,6 +59,31 @@ const readFrontmatterScalar = (frontmatter, key) => {
 const hasFrontmatterKey = (frontmatter, key) =>
   new RegExp(`^${key}:`, "m").test(frontmatter);
 
+const assignRelationProperty = (current, mappingText, key, fileName, failures) => {
+  const mappingMatch = mappingText.match(/^([^:]+):\s*(.*)$/);
+  if (!mappingMatch) {
+    failures.push(`${fileName}: unsupported ${key} relation syntax ${JSON.stringify(mappingText)}`);
+    return;
+  }
+
+  const property = mappingMatch[1].trim();
+  if (!relationProperties.has(property)) {
+    failures.push(`${fileName}: unsupported ${key} relation property ${JSON.stringify(property)}`);
+    return;
+  }
+  if (Object.hasOwn(current, property)) {
+    failures.push(`${fileName}: ${key} relation contains more than one ${property}`);
+    return;
+  }
+
+  const value = normalizeScalar(mappingMatch[2]);
+  if (!value) {
+    failures.push(`${fileName}: ${key} relation ${property} must not be empty`);
+    return;
+  }
+  current[property] = value;
+};
+
 const readRelationList = (frontmatter, key, fileName, failures) => {
   const lines = frontmatter.split(/\r?\n/);
   const startIndex = lines.findIndex((line) => new RegExp(`^${key}:`).test(line));
@@ -87,22 +113,18 @@ const readRelationList = (frontmatter, key, fileName, failures) => {
     if (/^[^\s][^:]*:/.test(line)) break;
     if (!line.trim() || /^\s*#/.test(line)) continue;
 
-    const collectionMatch = line.match(/^\s*-\s+collection:\s*(.+)$/);
-    if (collectionMatch) {
+    const listItemMatch = line.match(/^\s*-\s*(.*)$/);
+    if (listItemMatch) {
       finishCurrent();
-      current = { collection: normalizeScalar(collectionMatch[1]) };
+      current = {};
+      const mappingText = listItemMatch[1].trim();
+      if (mappingText) assignRelationProperty(current, mappingText, key, fileName, failures);
       continue;
     }
 
-    const slugMatch = line.match(/^\s+slug:\s*(.+)$/);
-    if (slugMatch) {
-      if (!current) {
-        failures.push(`${fileName}: ${key} contains a slug without a collection`);
-      } else if (current.slug) {
-        failures.push(`${fileName}: ${key} relation contains more than one slug`);
-      } else {
-        current.slug = normalizeScalar(slugMatch[1]);
-      }
+    const continuationMatch = line.match(/^\s+([^\s].*)$/);
+    if (continuationMatch && current) {
+      assignRelationProperty(current, continuationMatch[1].trim(), key, fileName, failures);
       continue;
     }
 
@@ -169,6 +191,7 @@ try {
   failures.push(`narrative timeline reservations could not be read: ${error.message}`);
 }
 
+const reservationMap = new Map();
 const targetMap = new Map();
 for (const [index, reservation] of reservations.entries()) {
   const label = `reservation[${index}]`;
@@ -190,11 +213,13 @@ for (const [index, reservation] of reservations.entries()) {
     continue;
   }
   const key = `${collection}:${slug}`;
-  if (targetMap.has(key)) {
+  if (reservationMap.has(key)) {
     failures.push(`${label}: duplicate reserved target ${key}`);
     continue;
   }
-  targetMap.set(key, { key, timelineOrder, source: label, reserved: true });
+  const target = { key, timelineOrder, source: label, reserved: true };
+  reservationMap.set(key, target);
+  targetMap.set(key, target);
 }
 
 for (const entry of entries) {
@@ -221,9 +246,14 @@ for (const entry of entries) {
   if (!entry.published) continue;
   publishedEntriesChecked += 1;
 
+  const reservation = reservationMap.get(entry.key);
   const hasAnyChronologyMetadata = chronologyFields.some((key) => hasFrontmatterKey(entry.frontmatter, key));
   if (entry.timelineOrderRaw === undefined) {
-    if (hasAnyChronologyMetadata) {
+    if (reservation) {
+      failures.push(
+        `${entry.fileName}: published reserved entry ${entry.key} must declare timelineOrder ${reservation.timelineOrder} and complete chronology metadata`,
+      );
+    } else if (hasAnyChronologyMetadata) {
       failures.push(`${entry.fileName}: chronology metadata is present without timelineOrder`);
     }
     continue;
@@ -234,6 +264,12 @@ for (const entry of entries) {
       `${entry.fileName}: timelineOrder must be a positive number, received ${JSON.stringify(entry.timelineOrderRaw)}`,
     );
     continue;
+  }
+
+  if (reservation && entry.timelineOrder !== reservation.timelineOrder) {
+    failures.push(
+      `${entry.fileName}: published reserved entry ${entry.key} must retain timelineOrder ${reservation.timelineOrder}, received ${entry.timelineOrder}`,
+    );
   }
 
   for (const field of chronologyScalarFields) {
