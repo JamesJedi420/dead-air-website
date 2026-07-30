@@ -10,10 +10,10 @@ const privateSourcePath = path.join(root, "src", "manuscripts", "da-001", "sourc
 const gitignorePath = path.join(root, ".gitignore");
 
 const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
-const publicContentPath = path.join(root, "src", "content", "stories", `${manifest.slug}.md`);
 const reservations = JSON.parse(await readFile(reservationsPath, "utf8"));
 const successor = await readFile(successorPath, "utf8");
 const gitignore = await readFile(gitignorePath, "utf8");
+const publicContentPath = path.join(root, "src", "content", "stories", `${manifest.slug}.md`);
 
 const failures = [];
 const fail = (message) => failures.push(message);
@@ -35,27 +35,20 @@ const extractFrontmatter = (content, label) => {
   return match[1];
 };
 
-const stripMatchingQuotes = (value) => {
-  if (value.length < 2) return value;
-  const first = value[0];
-  const last = value.at(-1);
-  return first === last && (first === '"' || first === "'") ? value.slice(1, -1) : value;
-};
-
 const normalizeScalar = (rawValue) => {
   let value = rawValue.trim();
   if (!value.startsWith('"') && !value.startsWith("'")) {
     value = value.replace(/\s+#.*$/, "").trim();
   }
-  return stripMatchingQuotes(value);
+  if (value.length >= 2 && value[0] === value.at(-1) && (value[0] === '"' || value[0] === "'")) {
+    return value.slice(1, -1);
+  }
+  return value;
 };
 
 const readScalar = (frontmatter, key) => {
-  const line = frontmatter
-    .split(/\r?\n/)
-    .find((candidate) => new RegExp(`^${key}:`).test(candidate));
-  if (!line) return undefined;
-  return normalizeScalar(line.slice(line.indexOf(":") + 1));
+  const line = frontmatter.split(/\r?\n/).find((candidate) => new RegExp(`^${key}:`).test(candidate));
+  return line ? normalizeScalar(line.slice(line.indexOf(":") + 1)) : undefined;
 };
 
 const readBlockList = (frontmatter, key, label) => {
@@ -107,11 +100,8 @@ const readRelationList = (frontmatter, key, label) => {
   let current;
   const finishCurrent = () => {
     if (!current) return;
-    if (!current.collection || !current.slug) {
-      fail(`${label}: ${key} relation must include collection and slug`);
-    } else {
-      relations.push(current);
-    }
+    if (!current.collection || !current.slug) fail(`${label}: ${key} relation must include collection and slug`);
+    else relations.push(current);
     current = undefined;
   };
 
@@ -129,11 +119,8 @@ const readRelationList = (frontmatter, key, label) => {
 
     const propertyMatch = line.match(/^\s+(collection|slug):\s*(.+)$/);
     if (propertyMatch && current) {
-      if (current[propertyMatch[1]]) {
-        fail(`${label}: ${key} relation repeats ${propertyMatch[1]}`);
-      } else {
-        current[propertyMatch[1]] = normalizeScalar(propertyMatch[2]);
-      }
+      if (current[propertyMatch[1]]) fail(`${label}: ${key} relation repeats ${propertyMatch[1]}`);
+      else current[propertyMatch[1]] = normalizeScalar(propertyMatch[2]);
       continue;
     }
 
@@ -144,56 +131,65 @@ const readRelationList = (frontmatter, key, label) => {
   return relations;
 };
 
+const expectedSections = [
+  "Three-Thirty",
+  "Permission Slips",
+  "The Quiet Test",
+  "Four Seconds",
+  "The Markers",
+  "The West Route",
+  "The Cut",
+  "The Glassless Window",
+  "The Key That Is Not Hers",
+  "Source Track",
+];
+
 if (manifest.slug !== "da-001-the-building-keeps-the-hour") fail("Manifest slug is not DA-001.");
 if (manifest.title !== "The Building Keeps the Hour") fail("Manifest title is not the approved DA-001 title.");
 
-if (manifest.source?.storage !== "private-controlled-source") {
-  fail("DA-001 source storage must remain private-controlled-source.");
+const source = manifest.source ?? {};
+if (source.storage !== "private-controlled-source") fail("DA-001 source storage must remain private-controlled-source.");
+if (source.repositoryPath !== null) fail("DA-001 manifest must not declare a repository source path.");
+if (source.approvedRevision !== "Final Approved Story v17") fail("DA-001 approved revision must remain Final Approved Story v17.");
+if (source.approvedDocumentTitle !== "DA-001 — Final Approved Story v17 — The Building Keeps the Hour") {
+  fail("DA-001 approved document title changed.");
 }
-if (manifest.source?.repositoryPath !== null) {
-  fail("DA-001 manifest must not declare a repository source path.");
+if (source.canonicalization !== "google-doc-text-v1") fail("DA-001 source canonicalization changed.");
+if (source.approvedCanonicalSha256 !== "e219318d0d395d601daa32f4778b207a99c7ba05301f9834631f539eb4a9b415") {
+  fail("DA-001 approved canonical SHA-256 changed.");
 }
-if (manifest.source?.formerGitBlobSha1 !== "784b2bbc7cd634a143845b4b293de73aeb3c5720") {
+if (source.approvedWordCount !== 23621) fail("DA-001 approved canonical word count changed.");
+if (source.formerGitBlobSha1 !== "784b2bbc7cd634a143845b4b293de73aeb3c5720") {
   fail("DA-001 former Git blob digest changed.");
 }
-if (manifest.source?.requiresDigestVerificationOnImport !== true) {
-  fail("DA-001 private import must require digest verification.");
-}
-if (await exists(privateSourcePath)) {
-  fail("DA-001 controlled manuscript is present under src/manuscripts/.");
-}
-if (await exists(publicContentPath)) {
-  fail("DA-001 content entry exists before publication approval.");
-}
+if (source.formerGitSourceStatus !== "superseded") fail("DA-001 former Git source must remain marked superseded.");
+if (source.requiresDigestVerificationOnImport !== true) fail("DA-001 private import must require digest verification.");
+
+if (await exists(privateSourcePath)) fail("DA-001 controlled manuscript is present under src/manuscripts/.");
+if (await exists(publicContentPath)) fail("DA-001 content entry exists before publication approval.");
 if (!gitignore.split(/\r?\n/).includes("src/manuscripts/")) {
   fail(".gitignore must block src/manuscripts/ from this public repository.");
 }
 
-if (manifest.releaseState?.status !== "withheld") fail("DA-001 preparation must remain withheld.");
-if (manifest.releaseState?.draft !== true) fail("DA-001 preparation must remain draft true.");
-if (manifest.releaseState?.publicationDate !== null) fail("DA-001 publication date must remain unset.");
-if (manifest.releaseState?.requiresSeparateApproval !== true) fail("DA-001 must require separate publication approval.");
+const releaseState = manifest.releaseState ?? {};
+if (releaseState.status !== "withheld") fail("DA-001 preparation must remain withheld.");
+if (releaseState.draft !== true) fail("DA-001 preparation must remain draft true.");
+if (releaseState.publicationDate !== null) fail("DA-001 publication date must remain unset.");
+if (releaseState.requiresSeparateApproval !== true) fail("DA-001 must require separate publication approval.");
+if (releaseState.editorialProof?.status !== "complete") fail("DA-001 editorial proof must remain complete.");
+if (releaseState.editorialProof?.verifiedOn !== "2026-07-30") fail("DA-001 editorial proof verification date changed.");
+if (releaseState.editorialProof?.result !== "no-required-manuscript-revision") {
+  fail("DA-001 editorial proof result changed.");
+}
 
-if (!Array.isArray(manifest.sections) || manifest.sections.length !== 10) {
+if (!Array.isArray(manifest.sections) || manifest.sections.length !== expectedSections.length) {
   fail("DA-001 preparation must retain exactly ten section mappings.");
 } else {
-  const seenSource = new Set();
-  const seenPublished = new Set();
   manifest.sections.forEach((section, index) => {
     const number = index + 1;
-    const sourceMatch = section.source?.match(new RegExp(`^Scene ${number} — (.+)$`));
-    if (!sourceMatch) {
-      fail(`DA-001 source heading ${number} is not the approved Scene mapping.`);
-      return;
-    }
-    const expectedPublished = `${number}. ${sourceMatch[1]}`;
-    if (section.published !== expectedPublished) {
-      fail(`DA-001 published heading ${number} expected ${JSON.stringify(expectedPublished)}.`);
-    }
-    if (seenSource.has(section.source)) fail(`DA-001 repeats source heading ${JSON.stringify(section.source)}.`);
-    if (seenPublished.has(section.published)) fail(`DA-001 repeats published heading ${JSON.stringify(section.published)}.`);
-    seenSource.add(section.source);
-    seenPublished.add(section.published);
+    const title = expectedSections[index];
+    if (section.source !== `Scene ${number} — ${title}`) fail(`DA-001 source heading ${number} changed.`);
+    if (section.published !== `${number}. ${title}`) fail(`DA-001 published heading ${number} changed.`);
   });
 }
 
@@ -203,7 +199,9 @@ if (chronology.timelineLabel !== "Initial Bellweather investigation") fail("DA-0
 if (chronology.sourceOrder !== "Original investigation") fail("DA-001 source-order label changed.");
 if (chronology.datePrecision !== "relative") fail("DA-001 date precision must remain relative.");
 if (!chronology.chronologyNote?.trim()) fail("DA-001 chronology note is missing.");
-if (!Array.isArray(chronology.follows) || chronology.follows.length !== 0) fail("DA-001 follows must remain an explicit empty list.");
+if (!Array.isArray(chronology.follows) || chronology.follows.length !== 0) {
+  fail("DA-001 follows must remain an explicit empty list.");
+}
 if (
   !Array.isArray(chronology.precedes) ||
   chronology.precedes.length !== 1 ||
@@ -252,7 +250,9 @@ for (const [field, values] of [
   }
   const successorValues = new Set(readBlockList(successorFrontmatter, field, "DA-002 successor"));
   for (const value of values) {
-    if (!successorValues.has(value)) fail(`DA-002 successor is missing shared ${field} value ${JSON.stringify(value)}`);
+    if (!successorValues.has(value)) {
+      fail(`DA-002 successor is missing shared ${field} value ${JSON.stringify(value)}`);
+    }
   }
 }
 
@@ -261,5 +261,5 @@ if (failures.length > 0) {
 }
 
 console.log(
-  "DA-001 public preparation passed: no manuscript exists in the repository; the former source digest, ten-section transform map, chronology reservation, DA-002 successor relationship, and separate publication approval boundary remain enforced. Byte-level manuscript verification is required during the authorized private-source import workflow.",
+  "DA-001 public preparation passed: Final Approved Story v17 remains the authoritative private source; its canonical SHA-256, word count, approved ten-section map, completed editorial proof, chronology reservation, DA-002 continuity, and separate publication boundary are enforced while no manuscript exists in the repository.",
 );
