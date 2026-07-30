@@ -1,4 +1,4 @@
-import { readdir, readFile, stat, writeFile } from "node:fs/promises";
+import { readdir, readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 
@@ -122,11 +122,9 @@ if (!(await exists(timelinePath))) {
 }
 
 if (failures.length > 0) {
-  const diagnosticPath = outputPath("da001-validation-diagnostics.txt");
-  await writeFile(diagnosticPath, `${failures.join("\n")}\n`, "utf8");
-  console.warn(`DA-001 diagnostic build recorded ${failures.length} output validation failure(s).`);
-} else {
-  console.log(
-    `DA-001 withheld-output validation passed across ${files.length} deployed files: controlled source remains outside Astro's content collection, and no route, title, slug, excerpt, RSS, sitemap, index, or timeline leakage was detected; DA-002 remains publicly visible at archive position 2 until separate DA-001 publication approval.`,
-  );
+  throw new Error(`DA-001 withheld-output validation failed:\n${failures.join("\n")}`);
 }
+
+console.log(
+  `DA-001 withheld-output validation passed across ${files.length} deployed files: controlled source remains outside Astro's content collection, and no route, title, slug, excerpt, RSS, sitemap, index, or timeline leakage was detected; DA-002 remains publicly visible at archive position 2 until separate DA-001 publication approval.`,
+);
