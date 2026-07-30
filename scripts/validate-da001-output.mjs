@@ -6,14 +6,13 @@ const root = process.cwd();
 const outputDirectory = path.join(root, "dist");
 const manifestPath = path.join(root, "src", "data", "da-001-release-preparation.json");
 const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
-const sourcePath = path.join(root, ...manifest.source.path.split("/"));
-const publicContentPath = path.join(root, "src", "content", "stories", `${manifest.slug}.md`);
-const source = await readFile(sourcePath, "utf8");
 
+const privateSourcePath = path.join(root, "src", "manuscripts", "da-001", "source.md");
+const publicContentPath = path.join(root, "src", "content", "stories", `${manifest.slug}.md`);
+const route = `/stories/${manifest.slug}/`;
 const failures = [];
 const fail = (message) => failures.push(message);
 const textExtensions = new Set([".html", ".xml", ".json", ".txt", ".js", ".css", ".map"]);
-const route = `/stories/${manifest.slug}/`;
 
 const exists = async (filePath) => {
   try {
@@ -23,25 +22,26 @@ const exists = async (filePath) => {
   }
 };
 
-if (!manifest.source.path.startsWith("src/manuscripts/da-001/")) {
-  fail(`DA-001 controlled source must remain outside the content collection, received ${manifest.source.path}.`);
+if (manifest.source?.storage !== "private-controlled-source") {
+  fail("DA-001 output gate requires private-controlled-source storage.");
+}
+if (manifest.source?.repositoryPath !== null) {
+  fail("DA-001 output gate found a repository source path.");
+}
+if (manifest.releaseState?.status !== "withheld") {
+  fail(`DA-001 output gate expected status withheld, received ${manifest.releaseState?.status ?? "missing"}.`);
+}
+if (manifest.releaseState?.draft !== true) {
+  fail(`DA-001 output gate expected draft true, received ${String(manifest.releaseState?.draft)}.`);
+}
+if (manifest.releaseState?.publicationDate !== null) {
+  fail("DA-001 output gate requires an unset publication date.");
+}
+if (await exists(privateSourcePath)) {
+  fail("DA-001 manuscript exists under src/manuscripts/.");
 }
 if (await exists(publicContentPath)) {
-  fail(`DA-001 content entry exists before publication approval: ${path.relative(root, publicContentPath)}.`);
-}
-
-const readScalar = (frontmatter, key) =>
-  frontmatter.match(new RegExp(`^${key}:\\s*(.+)$`, "m"))?.[1]?.trim();
-
-const frontmatterMatch = source.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?/);
-if (!frontmatterMatch) {
-  fail("DA-001 controlled source is missing YAML frontmatter.");
-} else {
-  const frontmatter = frontmatterMatch[1];
-  const status = readScalar(frontmatter, "status");
-  const draft = readScalar(frontmatter, "draft");
-  if (status !== "withheld") fail(`DA-001 output gate expected status withheld, received ${status ?? "missing"}.`);
-  if (draft !== "true") fail(`DA-001 output gate expected draft true, received ${draft ?? "missing"}.`);
+  fail("DA-001 public content entry exists before publication approval.");
 }
 
 if (!(await stat(outputDirectory)).isDirectory()) {
@@ -58,21 +58,11 @@ const walk = async (directory) => {
 };
 await walk(outputDirectory);
 
-const forbiddenValues = [
-  manifest.title,
-  manifest.slug,
-  route,
-  "At twenty minutes past three, Bellweather High still belonged to its machinery.",
-  "The long key struck last.",
-];
-
+const forbiddenValues = [manifest.title, manifest.slug, route];
 for (const filePath of files) {
   const relativePath = path.relative(outputDirectory, filePath).replaceAll(path.sep, "/");
   const normalizedPath = relativePath.toLowerCase();
-  if (
-    normalizedPath.includes(manifest.slug) ||
-    normalizedPath.includes("the-building-keeps-the-hour")
-  ) {
+  if (normalizedPath.includes(manifest.slug) || normalizedPath.includes("the-building-keeps-the-hour")) {
     fail(`${relativePath}: withheld DA-001 route or asset path generated`);
   }
   if (!textExtensions.has(path.extname(filePath).toLowerCase())) continue;
@@ -126,5 +116,5 @@ if (failures.length > 0) {
 }
 
 console.log(
-  `DA-001 withheld-output validation passed across ${files.length} deployed files: controlled source remains outside Astro's content collection, and no route, title, slug, excerpt, RSS, sitemap, index, or timeline leakage was detected; DA-002 remains publicly visible at archive position 2 until separate DA-001 publication approval.`,
+  `DA-001 withheld-output validation passed across ${files.length} deployed files: no manuscript exists in the public repository, and no route, title, slug, RSS item, sitemap entry, search/index reference, or timeline entry was deployed.`,
 );
