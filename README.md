@@ -79,6 +79,14 @@ Published stories or cases assigned a timeline position must record `timelineOrd
 
 The approved policy and initial DA-001 → DA-002 sequence are recorded in `docs/editorial/narrative-timeline-standard.md`. `scripts/validate-narrative-timeline.mjs` enforces metadata completeness before development, preview, and production builds; `scripts/validate-narrative-timeline-output.mjs` verifies the generated public chronology.
 
+## DA-001 Release Preparation
+
+DA-001 remains withheld and requires separate publication approval. Its controlled manuscript is locked by Git blob hash, its ten future public section headings are defined as deterministic transforms, and its chronology and shared DA-002 continuity are checked before every build.
+
+`scripts/validate-da001-output.mjs` also confirms that no DA-001 route, title, slug, excerpt, RSS item, sitemap entry, public index reference, or timeline entry appears while the story remains withheld.
+
+The machine-readable preparation record is `src/data/da-001-release-preparation.json`. The editorial audit and release blockers are recorded in `docs/editorial/da-001-release-preparation.md`.
+
 ## Public Repository Boundaries
 
 Do not commit internal development records, raw transcripts, real participant identities, hidden canon, unpublished continuity data, private research notes, or source interview material to this repository.
