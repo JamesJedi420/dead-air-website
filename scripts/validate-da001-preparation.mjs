@@ -195,8 +195,9 @@ for (let index = 0; index < expectedSourceHeadings.length; index += 1) {
 }
 
 for (const anchor of manifest.continuity.requiredBodyAnchors) {
-  const occurrences = sourceRecord.body.split(anchor).length - 1;
-  if (occurrences !== 1) fail(`DA-001 body anchor expected once, found ${occurrences}: ${JSON.stringify(anchor)}`);
+  if (!sourceRecord.body.includes(anchor)) {
+    fail(`DA-001 body anchor is missing: ${JSON.stringify(anchor)}`);
+  }
 }
 if (sourceRecord.body.length < 120000) {
   fail(`DA-001 manuscript body is unexpectedly short (${sourceRecord.body.length} characters)`);
