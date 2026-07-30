@@ -1,33 +1,38 @@
-import { createHash } from "node:crypto";
-import { readFile } from "node:fs/promises";
+import { readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 
 const root = process.cwd();
 const manifestPath = path.join(root, "src", "data", "da-001-release-preparation.json");
 const reservationsPath = path.join(root, "src", "data", "narrative-timeline-reservations.json");
+const successorPath = path.join(root, "src", "content", "stories", "da-002-the-name-in-the-room.md");
+const privateSourcePath = path.join(root, "src", "manuscripts", "da-001", "source.md");
+const publicContentPath = path.join(root, "src", "content", "stories", "da-001-the-building-keeps-the-hour.md");
+const gitignorePath = path.join(root, ".gitignore");
 
 const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
-const sourcePath = path.join(root, ...manifest.source.path.split("/"));
-const successorPath = path.join(root, ...manifest.continuity.successorPath.split("/"));
-const source = await readFile(sourcePath, "utf8");
-const successor = await readFile(successorPath, "utf8");
 const reservations = JSON.parse(await readFile(reservationsPath, "utf8"));
+const successor = await readFile(successorPath, "utf8");
+const gitignore = await readFile(gitignorePath, "utf8");
 
 const failures = [];
 const fail = (message) => failures.push(message);
+
+const exists = async (filePath) => {
+  try {
+    return (await stat(filePath)).isFile();
+  } catch {
+    return false;
+  }
+};
 
 const extractFrontmatter = (content, label) => {
   const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?/);
   if (!match) {
     fail(`${label}: missing YAML frontmatter`);
-    return { frontmatter: "", body: content, match: "" };
+    return "";
   }
-  return {
-    frontmatter: match[1],
-    body: content.slice(match[0].length),
-    match: match[0],
-  };
+  return match[1];
 };
 
 const stripMatchingQuotes = (value) => {
@@ -139,92 +144,65 @@ const readRelationList = (frontmatter, key, label) => {
   return relations;
 };
 
-const gitBlobSha1 = (content) => createHash("sha1")
-  .update(Buffer.from(`blob ${Buffer.byteLength(content, "utf8")}\0`, "utf8"))
-  .update(content, "utf8")
-  .digest("hex");
-
-const sourceRecord = extractFrontmatter(source, "DA-001 source");
-const successorRecord = extractFrontmatter(successor, "DA-002 successor");
-
 if (manifest.slug !== "da-001-the-building-keeps-the-hour") fail("Manifest slug is not DA-001.");
 if (manifest.title !== "The Building Keeps the Hour") fail("Manifest title is not the approved DA-001 title.");
-if (manifest.releaseState.status !== "withheld") fail("DA-001 preparation must remain withheld.");
-if (manifest.releaseState.draft !== true) fail("DA-001 preparation must remain draft true.");
-if (manifest.releaseState.publicationDate !== null) fail("DA-001 publication date must remain unset before release approval.");
-if (manifest.releaseState.requiresSeparateApproval !== true) fail("DA-001 must require separate publication approval.");
 
-const actualSourceSha = gitBlobSha1(source);
-if (actualSourceSha !== manifest.source.gitBlobSha1) {
-  fail(`DA-001 source integrity failed: expected Git blob ${manifest.source.gitBlobSha1}, received ${actualSourceSha}`);
+if (manifest.source?.storage !== "private-controlled-source") {
+  fail("DA-001 source storage must remain private-controlled-source.");
 }
-
-const sourceSlug = readScalar(sourceRecord.frontmatter, "slug");
-const sourceTitle = readScalar(sourceRecord.frontmatter, "title");
-const sourceStatus = readScalar(sourceRecord.frontmatter, "status");
-const sourceDraft = readScalar(sourceRecord.frontmatter, "draft");
-if (sourceSlug !== manifest.slug) fail(`DA-001 source slug mismatch: ${sourceSlug ?? "missing"}`);
-if (sourceTitle !== manifest.title) fail(`DA-001 source title mismatch: ${sourceTitle ?? "missing"}`);
-if (sourceStatus !== manifest.releaseState.status) fail(`DA-001 must remain withheld, received ${sourceStatus ?? "missing"}`);
-if (sourceDraft !== String(manifest.releaseState.draft)) fail(`DA-001 must remain draft true, received ${sourceDraft ?? "missing"}`);
-
-for (const forbiddenKey of [
-  "publicationDate",
-  "timelineOrder",
-  "timelineLabel",
-  "sourceOrder",
-  "datePrecision",
-  "chronologyNote",
-  "follows",
-  "precedes",
-]) {
-  if (new RegExp(`^${forbiddenKey}:`, "m").test(sourceRecord.frontmatter)) {
-    fail(`DA-001 controlled source contains premature release metadata: ${forbiddenKey}`);
-  }
+if (manifest.source?.repositoryPath !== null) {
+  fail("DA-001 manifest must not declare a repository source path.");
+}
+if (manifest.source?.formerGitBlobSha1 !== "784b2bbc7cd634a143845b4b293de73aeb3c5720") {
+  fail("DA-001 former Git blob digest changed.");
+}
+if (manifest.source?.requiresDigestVerificationOnImport !== true) {
+  fail("DA-001 private import must require digest verification.");
+}
+if (await exists(privateSourcePath)) {
+  fail("DA-001 controlled manuscript is present under src/manuscripts/.");
+}
+if (await exists(publicContentPath)) {
+  fail("DA-001 content entry exists before publication approval.");
+}
+if (!gitignore.split(/\r?\n/).includes("src/manuscripts/")) {
+  fail(".gitignore must block src/manuscripts/ from this public repository.");
 }
 
-const sourceHeadings = [...sourceRecord.body.matchAll(/^##\s+(.+?)\s*$/gm)].map((match) => match[1].trim());
-const expectedSourceHeadings = manifest.sections.map((section) => section.source);
-if (sourceHeadings.length !== expectedSourceHeadings.length) {
-  fail(`DA-001 expected ${expectedSourceHeadings.length} source sections, found ${sourceHeadings.length}`);
-}
-for (let index = 0; index < expectedSourceHeadings.length; index += 1) {
-  if (sourceHeadings[index] !== expectedSourceHeadings[index]) {
-    fail(`DA-001 source heading ${index + 1} expected ${JSON.stringify(expectedSourceHeadings[index])}, received ${JSON.stringify(sourceHeadings[index])}`);
-  }
+if (manifest.releaseState?.status !== "withheld") fail("DA-001 preparation must remain withheld.");
+if (manifest.releaseState?.draft !== true) fail("DA-001 preparation must remain draft true.");
+if (manifest.releaseState?.publicationDate !== null) fail("DA-001 publication date must remain unset.");
+if (manifest.releaseState?.requiresSeparateApproval !== true) fail("DA-001 must require separate publication approval.");
+
+if (!Array.isArray(manifest.sections) || manifest.sections.length !== 10) {
+  fail("DA-001 preparation must retain exactly ten section mappings.");
+} else {
+  const seenSource = new Set();
+  const seenPublished = new Set();
+  manifest.sections.forEach((section, index) => {
+    const number = index + 1;
+    const sourceMatch = section.source?.match(new RegExp(`^Scene ${number} — (.+)$`));
+    if (!sourceMatch) {
+      fail(`DA-001 source heading ${number} is not the approved Scene mapping.`);
+      return;
+    }
+    const expectedPublished = `${number}. ${sourceMatch[1]}`;
+    if (section.published !== expectedPublished) {
+      fail(`DA-001 published heading ${number} expected ${JSON.stringify(expectedPublished)}.`);
+    }
+    if (seenSource.has(section.source)) fail(`DA-001 repeats source heading ${JSON.stringify(section.source)}.`);
+    if (seenPublished.has(section.published)) fail(`DA-001 repeats published heading ${JSON.stringify(section.published)}.`);
+    seenSource.add(section.source);
+    seenPublished.add(section.published);
+  });
 }
 
-for (const anchor of manifest.continuity.requiredBodyAnchors) {
-  if (!sourceRecord.body.includes(anchor)) {
-    fail(`DA-001 body anchor is missing: ${JSON.stringify(anchor)}`);
-  }
-}
-if (sourceRecord.body.length < 120000) {
-  fail(`DA-001 manuscript body is unexpectedly short (${sourceRecord.body.length} characters)`);
-}
-if (/^##\s+Fictionalization and Source Note\s*$/m.test(sourceRecord.body)) {
-  fail("DA-001 contains a manuscript-level source-note heading; the shared story note must remain authoritative.");
-}
-
-for (const [field, values] of [
-  ["characters", manifest.continuity.sharedCharacters],
-  ["locations", manifest.continuity.sharedLocations],
-  ["objects", manifest.continuity.sharedObjects],
-  ["mysteries", manifest.continuity.sharedMysteries],
-]) {
-  const sourceValues = new Set(readBlockList(sourceRecord.frontmatter, field, "DA-001 source"));
-  const successorValues = new Set(readBlockList(successorRecord.frontmatter, field, "DA-002 successor"));
-  for (const value of values) {
-    if (!sourceValues.has(value)) fail(`DA-001 source is missing shared ${field} value ${JSON.stringify(value)}`);
-    if (!successorValues.has(value)) fail(`DA-002 successor is missing shared ${field} value ${JSON.stringify(value)}`);
-  }
-}
-
-const chronology = manifest.chronology;
+const chronology = manifest.chronology ?? {};
 if (chronology.timelineOrder !== 1) fail("DA-001 timelineOrder must remain 1.");
 if (chronology.timelineLabel !== "Initial Bellweather investigation") fail("DA-001 timeline label changed.");
 if (chronology.sourceOrder !== "Original investigation") fail("DA-001 source-order label changed.");
 if (chronology.datePrecision !== "relative") fail("DA-001 date precision must remain relative.");
+if (!chronology.chronologyNote?.trim()) fail("DA-001 chronology note is missing.");
 if (!Array.isArray(chronology.follows) || chronology.follows.length !== 0) fail("DA-001 follows must remain an explicit empty list.");
 if (
   !Array.isArray(chronology.precedes) ||
@@ -249,10 +227,11 @@ if (!reservation) {
   }
 }
 
-if (readScalar(successorRecord.frontmatter, "timelineOrder") !== "2") {
-  fail("DA-002 successor is not materialized at timelineOrder 2 before DA-001 preparation validation.");
+const successorFrontmatter = extractFrontmatter(successor, "DA-002 successor");
+if (readScalar(successorFrontmatter, "timelineOrder") !== "2") {
+  fail("DA-002 successor is not materialized at timelineOrder 2.");
 }
-const successorFollows = readRelationList(successorRecord.frontmatter, "follows", "DA-002 successor");
+const successorFollows = readRelationList(successorFrontmatter, "follows", "DA-002 successor");
 if (
   successorFollows.length !== 1 ||
   successorFollows[0]?.collection !== "stories" ||
@@ -261,72 +240,22 @@ if (
   fail("DA-002 successor does not explicitly follow DA-001.");
 }
 
-const chronologyYaml = [
-  `timelineOrder: ${chronology.timelineOrder}`,
-  `timelineLabel: ${chronology.timelineLabel}`,
-  `sourceOrder: ${chronology.sourceOrder}`,
-  `datePrecision: ${chronology.datePrecision}`,
-  `chronologyNote: ${chronology.chronologyNote}`,
-  "follows: []",
-  "precedes:",
-  ...chronology.precedes.flatMap((relation) => [
-    `  - collection: ${relation.collection}`,
-    `    slug: ${relation.slug}`,
-  ]),
-].join("\n");
-
-let candidate = source
-  .replace(/^status: withheld$/m, "status: active")
-  .replace(/^draft: true$/m, "draft: false");
-const candidateFrontmatterEnd = candidate.indexOf("\n---\n");
-if (candidateFrontmatterEnd < 0) {
-  fail("DA-001 candidate frontmatter boundary could not be located.");
-} else {
-  candidate = `${candidate.slice(0, candidateFrontmatterEnd)}\n${chronologyYaml}${candidate.slice(candidateFrontmatterEnd)}`;
-}
-
-for (const [index, section] of manifest.sections.entries()) {
-  const sourceHeading = `## ${section.source}`;
-  const publishedHeading = `## ${section.published}`;
-  const occurrences = candidate.split(sourceHeading).length - 1;
-  if (occurrences !== 1) {
-    fail(`DA-001 candidate expected one source heading ${JSON.stringify(sourceHeading)}, found ${occurrences}`);
-  } else {
-    candidate = candidate.replace(sourceHeading, publishedHeading);
+for (const [field, values] of [
+  ["characters", manifest.continuity?.sharedCharacters ?? []],
+  ["locations", manifest.continuity?.sharedLocations ?? []],
+  ["objects", manifest.continuity?.sharedObjects ?? []],
+  ["mysteries", manifest.continuity?.sharedMysteries ?? []],
+]) {
+  const successorValues = new Set(readBlockList(successorFrontmatter, field, "DA-002 successor"));
+  for (const value of values) {
+    if (!successorValues.has(value)) fail(`DA-002 successor is missing shared ${field} value ${JSON.stringify(value)}`);
   }
-  if (section.published !== `${index + 1}. ${section.source.replace(/^Scene\s+\d+\s+—\s+/, "")}`) {
-    fail(`DA-001 manifest published heading ${index + 1} is not the approved numeric transform.`);
-  }
-}
-
-if (/^##\s+Scene\s+\d+/m.test(candidate)) fail("DA-001 publication candidate retains a Scene heading.");
-const candidateRecord = extractFrontmatter(candidate, "DA-001 publication candidate");
-const publishedHeadings = [...candidateRecord.body.matchAll(/^##\s+(.+?)\s*$/gm)].map((match) => match[1].trim());
-const expectedPublishedHeadings = manifest.sections.map((section) => section.published);
-if (JSON.stringify(publishedHeadings) !== JSON.stringify(expectedPublishedHeadings)) {
-  fail("DA-001 publication candidate headings are missing, reordered, or changed.");
-}
-if (readScalar(candidateRecord.frontmatter, "status") !== "active") fail("DA-001 candidate status is not active.");
-if (readScalar(candidateRecord.frontmatter, "draft") !== "false") fail("DA-001 candidate draft is not false.");
-if (readScalar(candidateRecord.frontmatter, "timelineOrder") !== "1") fail("DA-001 candidate timelineOrder is not 1.");
-if (/^publicationDate:/m.test(candidateRecord.frontmatter)) fail("DA-001 candidate must not invent a publication date during preparation.");
-
-let reverted = candidate;
-for (const section of [...manifest.sections].reverse()) {
-  reverted = reverted.replace(`## ${section.published}`, `## ${section.source}`);
-}
-reverted = reverted
-  .replace(`\n${chronologyYaml}`, "")
-  .replace(/^status: active$/m, "status: withheld")
-  .replace(/^draft: false$/m, "draft: true");
-if (reverted !== source) {
-  fail("DA-001 publication candidate changes content outside the approved metadata and heading transforms.");
 }
 
 if (failures.length > 0) {
-  throw new Error(`DA-001 release-preparation validation failed:\n${failures.join("\n")}`);
+  throw new Error(`DA-001 public release-preparation validation failed:\n${failures.join("\n")}`);
 }
 
 console.log(
-  `DA-001 release preparation passed: controlled manuscript locked at Git blob ${actualSourceSha}; ${manifest.sections.length} source scenes map deterministically to numbered public sections; chronology remains reserved at position 1 before DA-002; shared character, location, object, and mystery continuity is intact; publication date and separate release approval remain required.`,
+  "DA-001 public preparation passed: no manuscript exists in the repository; the former source digest, ten-section transform map, chronology reservation, DA-002 successor relationship, and separate publication approval boundary remain enforced. Byte-level manuscript verification is required during the authorized private-source import workflow.",
 );
