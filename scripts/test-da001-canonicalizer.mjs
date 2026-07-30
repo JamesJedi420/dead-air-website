@@ -28,6 +28,19 @@ assert.equal(sha256Utf8(actual), expectedRecord.canonicalSha256, "fixture SHA-25
 assert.equal(countDa001StoryWords(actual), expectedRecord.wordCount, "fixture word count changed");
 assert.equal(expectedRecord.canonicalization, DA001_CANONICALIZATION_ID);
 
+const withoutBom = input.replace(/^\uFEFF/, "");
+assert.equal(canonicalizeDa001GoogleDocTextV1(withoutBom), expected, "BOM-free export changed canonical output");
+assert.equal(
+  canonicalizeDa001GoogleDocTextV1(withoutBom.replace(/\n/g, "\r\n")),
+  expected,
+  "CRLF export changed canonical output",
+);
+assert.equal(
+  canonicalizeDa001GoogleDocTextV1(withoutBom.replace(/\n/g, "\r")),
+  expected,
+  "CR export changed canonical output",
+);
+
 assert.equal(manifest.source.canonicalization, DA001_CANONICALIZATION_ID);
 assert.equal(manifest.source.approvedCanonicalSha256, DA001_APPROVED_CANONICAL_SHA256);
 assert.equal(manifest.source.approvedWordCount, DA001_APPROVED_WORD_COUNT);
