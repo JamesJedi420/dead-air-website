@@ -6,11 +6,14 @@ DA-001 — *The Building Keeps the Hour* remains a withheld draft. This preparat
 
 The controlled source remains:
 
-- `src/content/stories/da-001-the-building-keeps-the-hour.md`
-- `status: withheld`
-- `draft: true`
-- no publication date
-- Git blob SHA-1 `784b2bbc7cd634a143845b4b293de73aeb3c5720`
+- `src/manuscripts/da-001/source.md`
+- outside Astro’s public content collection;
+- `status: withheld`;
+- `draft: true`;
+- no publication date;
+- Git blob SHA-1 `784b2bbc7cd634a143845b4b293de73aeb3c5720`.
+
+The source was relocated with the existing Git blob rather than copied or rewritten. Its byte content and Git blob SHA remain unchanged. No DA-001 story entry exists under `src/content/stories/` during preparation.
 
 `scripts/validate-da001-preparation.mjs` reconstructs the Git blob hash during every development, preview, and production build. Any prose, frontmatter, whitespace, or line-ending change requires deliberate renewal of the preparation record.
 
@@ -50,7 +53,7 @@ The preparation validator generates this candidate in memory, reverses every app
 
 ## Continuity audit
 
-The DA-001 and DA-002 content records share the following established public continuity anchors:
+The DA-001 controlled source and DA-002 content record share the following established public continuity anchors:
 
 - Bellweather High School;
 - Diane Madsen;
@@ -71,7 +74,7 @@ DA-001 remains unavailable to public indexes until all of the following occur:
 
 1. A final line-level editorial and continuity proof receives approval.
 2. A publication date is chosen deliberately.
-3. A release materializer changes only the approved metadata and heading transformations recorded in `src/data/da-001-release-preparation.json`.
+3. A release materializer reads the controlled manuscript and writes a content entry using only the approved metadata and heading transformations recorded in `src/data/da-001-release-preparation.json`.
 4. A private deploy preview passes desktop and mobile proofing.
 5. The published route, canonical metadata, source note, accessibility landmarks, internal links, RSS, sitemap, indexes, and timeline position pass DA-001-specific release validation.
 6. Separate publication approval authorizes `status: active` and `draft: false`.
@@ -81,6 +84,6 @@ Changing status or draft directly remains prohibited. The preparation manifest c
 ## Build enforcement
 
 - `scripts/validate-da001-preparation.mjs` locks the source, section transform, chronology, and shared continuity.
-- `scripts/validate-da001-output.mjs` confirms that the withheld story remains absent from routes, indexes, RSS, sitemap, excerpts, and the public timeline.
+- `scripts/validate-da001-output.mjs` confirms that the controlled source remains outside the content collection and that the withheld story remains absent from routes, indexes, RSS, sitemap, excerpts, and the public timeline.
 - `src/data/da-001-release-preparation.json` is the machine-readable preparation record.
 - `src/data/narrative-timeline-reservations.json` retains archive position 1 until publication.
