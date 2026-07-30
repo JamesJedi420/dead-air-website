@@ -165,6 +165,19 @@ if (source.formerGitBlobSha1 !== "784b2bbc7cd634a143845b4b293de73aeb3c5720") {
 if (source.formerGitSourceStatus !== "superseded") fail("DA-001 former Git source must remain marked superseded.");
 if (source.requiresDigestVerificationOnImport !== true) fail("DA-001 private import must require digest verification.");
 
+const historicalDisclosure = manifest.historicalDisclosure ?? {};
+if (historicalDisclosure.status !== "accepted-risk") fail("DA-001 historical disclosure decision must remain accepted-risk.");
+if (historicalDisclosure.ownerDecisionDate !== "2026-07-30") fail("DA-001 historical disclosure decision date changed.");
+if (historicalDisclosure.repositoryHistoryRewriteRequired !== false) {
+  fail("DA-001 history rewrite must remain explicitly outside the approved release scope.");
+}
+if (historicalDisclosure.scope !== "active-tree-and-publication-output") {
+  fail("DA-001 disclosure scope must remain active-tree-and-publication-output.");
+}
+if (historicalDisclosure.confidentialityClaim !== false) {
+  fail("DA-001 must not claim historical Git confidentiality while the superseded object remains reachable.");
+}
+
 if (await exists(privateSourcePath)) fail("DA-001 controlled manuscript is present under src/manuscripts/.");
 if (await exists(publicContentPath)) fail("DA-001 content entry exists before publication approval.");
 if (!gitignore.split(/\r?\n/).includes("src/manuscripts/")) {
@@ -261,5 +274,5 @@ if (failures.length > 0) {
 }
 
 console.log(
-  "DA-001 public preparation passed: Final Approved Story v17 remains the authoritative private source; its canonical SHA-256, word count, approved ten-section map, completed editorial proof, chronology reservation, DA-002 continuity, and separate publication boundary are enforced while no manuscript exists in the repository.",
+  "DA-001 public preparation passed: Final Approved Story v17 remains the authoritative private source; its canonical SHA-256, word count, approved ten-section map, completed editorial proof, accepted historical-disclosure scope, chronology reservation, DA-002 continuity, and separate publication boundary are enforced while no manuscript exists in the active repository tree.",
 );
