@@ -6,12 +6,20 @@ import process from "node:process";
 
 const root = process.cwd();
 const probePath = path.join(root, ".da001-boundary-probe.md");
+const fingerprintOne = [
+  "At twenty minutes past three, only Bellweather High’s",
+  " machinery remained active.",
+].join("");
+const fingerprintTwo = [
+  "The following afternoon, Diane found the gray chair in the main lobby beneath a paper sign",
+  " that read PARANORMAL DOCUMENTARY CHECK-IN.",
+].join("");
 const probe = [
   "The Building Keeps the Hour",
   "Scene 1 — Three-Thirty",
-  "At twenty minutes past three, only Bellweather High’s machinery remained active.",
+  fingerprintOne,
   "Scene 2 — Permission Slips",
-  "The following afternoon, Diane found the gray chair in the main lobby beneath a paper sign that read PARANORMAL DOCUMENTARY CHECK-IN.",
+  fingerprintTwo,
   "Scene 3 — The Quiet Test",
   "probe ".repeat(3000),
 ].join("\n\n");
