@@ -85,7 +85,7 @@ The proof changes release metadata only. It introduces no plot, prose, canon, ch
 
 Before publication approval, the active checkout validator rejects:
 
-- every file under `src/manuscripts/`;
+- every file under `src/manuscripts/da-001/`;
 - any `src/content/stories/da-001-the-building-keeps-the-hour.*` entry;
 - a file whose UTF-8 contents equal the approved canonical SHA-256;
 - a text file with at least three approved scene headings and at least 3,000 words;
