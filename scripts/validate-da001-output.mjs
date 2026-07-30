@@ -7,12 +7,28 @@ const outputDirectory = path.join(root, "dist");
 const manifestPath = path.join(root, "src", "data", "da-001-release-preparation.json");
 const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
 const sourcePath = path.join(root, ...manifest.source.path.split("/"));
+const publicContentPath = path.join(root, "src", "content", "stories", `${manifest.slug}.md`);
 const source = await readFile(sourcePath, "utf8");
 
 const failures = [];
 const fail = (message) => failures.push(message);
 const textExtensions = new Set([".html", ".xml", ".json", ".txt", ".js", ".css", ".map"]);
 const route = `/stories/${manifest.slug}/`;
+
+const exists = async (filePath) => {
+  try {
+    return (await stat(filePath)).isFile();
+  } catch {
+    return false;
+  }
+};
+
+if (!manifest.source.path.startsWith("src/manuscripts/da-001/")) {
+  fail(`DA-001 controlled source must remain outside the content collection, received ${manifest.source.path}.`);
+}
+if (await exists(publicContentPath)) {
+  fail(`DA-001 content entry exists before publication approval: ${path.relative(root, publicContentPath)}.`);
+}
 
 const readScalar = (frontmatter, key) =>
   frontmatter.match(new RegExp(`^${key}:\\s*(.+)$`, "m"))?.[1]?.trim();
@@ -68,13 +84,6 @@ for (const filePath of files) {
   }
 }
 
-const exists = async (filePath) => {
-  try {
-    return (await stat(filePath)).isFile();
-  } catch {
-    return false;
-  }
-};
 const outputPath = (relativePath) => path.join(outputDirectory, ...relativePath.split("/"));
 const storyHtmlPath = outputPath(`stories/${manifest.slug}/index.html`);
 if (await exists(storyHtmlPath)) fail(`Withheld DA-001 route was generated at ${route}.`);
@@ -117,5 +126,5 @@ if (failures.length > 0) {
 }
 
 console.log(
-  `DA-001 withheld-output validation passed across ${files.length} deployed files: no route, title, slug, excerpt, RSS, sitemap, index, or timeline leakage detected; DA-002 remains publicly visible at archive position 2 until separate DA-001 publication approval.`,
+  `DA-001 withheld-output validation passed across ${files.length} deployed files: controlled source remains outside Astro's content collection, and no route, title, slug, excerpt, RSS, sitemap, index, or timeline leakage was detected; DA-002 remains publicly visible at archive position 2 until separate DA-001 publication approval.`,
 );
