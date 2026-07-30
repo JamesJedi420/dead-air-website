@@ -2,9 +2,9 @@
 
 ## Current state
 
-DA-001 — *The Building Keeps the Hour* remains a withheld draft. Its controlled manuscript is stored privately outside this public repository. The public repository retains only the release boundary, former Git blob digest, chronology, section map, and continuity identifiers needed to prevent accidental publication.
+DA-001 — *The Building Keeps the Hour* remains a withheld draft. Its controlled manuscript is stored privately outside this public repository. The public repository retains only the publication boundary, approved-source digest, superseded Git-source identifier, chronology, section map, continuity identifiers, and the owner's accepted-risk record needed to prevent accidental active publication.
 
-Private storage currently contains the approved story, website release draft, post-production package, and revision notes. Those files are owner-only and consolidated under the private Drive folder `Dead Air Archive — Private Manuscripts`.
+Private storage contains the definitive approved story, website release draft, post-production package, revision notes, and the archived exact Git source. Those files are owner-only in the Drive folder `Dead Air Archive — Private Manuscripts`.
 
 The public preparation record retains:
 
@@ -12,18 +12,56 @@ The public preparation record retains:
 - `draft: true`;
 - no publication date;
 - separate publication approval;
-- former Git blob SHA-1 `784b2bbc7cd634a143845b4b293de73aeb3c5720`;
-- no repository path to the manuscript.
+- authoritative revision `Final Approved Story v17`;
+- canonical SHA-256 `e219318d0d395d601daa32f4778b207a99c7ba05301f9834631f539eb4a9b415`;
+- canonical word count `23,621`;
+- superseded Git blob SHA-1 `784b2bbc7cd634a143845b4b293de73aeb3c5720`;
+- no repository path to the manuscript;
+- explicit acceptance that historical Git objects remain reachable.
 
-The former digest identifies the repository version that was removed. It is not a substitute for private-source verification. Any future release import must verify the authorized private source before materialization.
+## Approved-source alignment
+
+The July 30, 2026 release-preparation audit compared the archived Git source with the private `Final Approved Story v17` approved by the user on July 25, 2026. The files were not equivalent: 188 manuscript paragraphs differed, and the Git source retained superseded titles for Scenes 4–6.
+
+The private revision record identifies `Final Approved Story v17` as the definitive approved manuscript. The former Git blob remains recorded only as a historical and superseded source identifier. It must not be used for publication.
+
+The approved source is canonicalized as `google-doc-text-v1`:
+
+1. Export the definitive Google Doc as UTF-8 plain text.
+2. Remove the byte-order mark when present.
+3. Discard the first two non-empty identification lines: story title and revision label.
+4. Convert each `Scene N — Title` line to the internal Markdown heading `## Scene N — Title`.
+5. Join all remaining non-empty paragraphs with exactly one blank line.
+6. Prepend the fixed withheld-source frontmatter used by the private import workflow.
+7. Encode with UTF-8 and LF line endings.
+
+The resulting canonical source has SHA-256 `e219318d0d395d601daa32f4778b207a99c7ba05301f9834631f539eb4a9b415` and 23,621 story words. Any authorized release import must reproduce both values before materialization.
+
+## Editorial and continuity proof
+
+The line-level editorial and continuity proof completed on July 30, 2026 with no required manuscript revision.
+
+The proof confirmed:
+
+- ten sequential scene headings matching the definitive v17 document;
+- balanced smart quotation marks and no ASCII-quote contamination;
+- no consecutive duplicate-word errors;
+- no remaining `never`, `did not`, or `didn't` constructions;
+- consistent Bellweather geography, chair arithmetic, key custody, recorder handling, booth access, and final threshold procedure;
+- Diane Madsen, Evan Kruse, Abby Larson, Bellweather High School, the unidentified wet brass key, and the unresolved Bellweather-phenomena relationship carry consistently into DA-002;
+- DA-002 accurately treats DA-001 as the first investigation involving disputed recordings, the relocated chair, Wayne's route, and the unidentified key.
+
+The proof changes release metadata only. It introduces no plot, prose, canon, chronology, or publication-status change.
 
 ## Public repository boundary
 
-No DA-001 manuscript may exist under `src/manuscripts/`, `src/content/stories/`, or any other public repository path before publication approval. The `.gitignore` blocks `src/manuscripts/` as a guardrail.
+No DA-001 manuscript may exist under `src/manuscripts/`, `src/content/stories/`, or any other active repository path before publication approval. The `.gitignore` blocks `src/manuscripts/` as a guardrail.
 
-`scripts/validate-da001-preparation.mjs` enforces source absence, the withheld release state, the ten-section map, chronology position, DA-002 successor relationship, and shared public continuity identifiers during development, preview, and production builds.
+`scripts/validate-da001-preparation.mjs` enforces active-source absence, the authoritative v17 digest record, completed editorial proof, accepted historical-disclosure decision, withheld release state, approved ten-section map, chronology position, DA-002 successor relationship, and shared public continuity identifiers during development, preview, and production builds.
 
 `scripts/validate-da001-output.mjs` confirms that no DA-001 route, title, slug, RSS item, sitemap entry, search/index reference, asset path, or timeline entry reaches deployed output.
+
+This boundary governs the active repository tree and public website. It does not claim that historical Git objects are confidential or inaccessible.
 
 ## Narrative placement
 
@@ -42,16 +80,16 @@ The chronology note preserves only the supportable relationship: DA-001 occurs b
 
 ## Public section map
 
-A future authorized release import will transform the private source headings as follows:
+A future authorized release import will transform the definitive v17 headings as follows:
 
 | Private-source heading | Public heading |
 | --- | --- |
 | Scene 1 — Three-Thirty | 1. Three-Thirty |
 | Scene 2 — Permission Slips | 2. Permission Slips |
 | Scene 3 — The Quiet Test | 3. The Quiet Test |
-| Scene 4 — Come Here, I Have a Joke | 4. Come Here, I Have a Joke |
-| Scene 5 — Teaching the Building | 5. Teaching the Building |
-| Scene 6 — Wayne’s Route | 6. Wayne’s Route |
+| Scene 4 — Four Seconds | 4. Four Seconds |
+| Scene 5 — The Markers | 5. The Markers |
+| Scene 6 — The West Route | 6. The West Route |
 | Scene 7 — The Cut | 7. The Cut |
 | Scene 8 — The Glassless Window | 8. The Glassless Window |
 | Scene 9 — The Key That Is Not Hers | 9. The Key That Is Not Hers |
@@ -59,33 +97,21 @@ A future authorized release import will transform the private source headings as
 
 No publication candidate is generated by the public build.
 
-## Continuity audit
-
-The public preparation record and DA-002 share these established continuity anchors:
-
-- Bellweather High School;
-- Diane Madsen;
-- Evan Kruse;
-- Abby Larson;
-- the unidentified wet brass key;
-- the unresolved relationship among the recorded phenomena at Bellweather High.
-
-DA-002 explicitly follows DA-001. The public validator checks the shared identifiers and successor relationship without reading the private manuscript.
-
 ## Publication blockers
 
 DA-001 remains unavailable to public indexes until all the following occur:
 
-1. The authorized private source is selected and verified against its approved release digest.
-2. A final line-level editorial and continuity proof receives approval.
-3. A publication date is chosen deliberately.
-4. A private release materializer receives the source through a non-repository input and writes a temporary content entry using only the approved metadata and heading transformations.
-5. A private deploy preview passes desktop and mobile proofing.
-6. The published route, canonical metadata, source note, accessibility landmarks, internal links, RSS, sitemap, indexes, and timeline position pass DA-001-specific release validation.
-7. Separate publication approval authorizes `status: active` and `draft: false`.
+1. The authorized private source is imported through `google-doc-text-v1` and matches the approved SHA-256 and word count.
+2. A publication date is chosen deliberately.
+3. A private release materializer receives the source through a non-repository input and writes a temporary content entry using only the approved metadata and heading transformations.
+4. A private deploy preview passes desktop and mobile proofing.
+5. The published route, canonical metadata, source note, accessibility landmarks, internal links, RSS, sitemap, indexes, and timeline position pass DA-001-specific release validation.
+6. Separate publication approval authorizes `status: active` and `draft: false`.
 
 Changing status or draft directly remains prohibited. The public preparation manifest supplies no source path and no automatic release path.
 
-## History cleanup
+## Historical disclosure decision
 
-Removing the manuscript from the current repository tree prevents ordinary browsing and future clones from receiving it through the active branch. Earlier Git commits remain independently addressable until repository history is rewritten and GitHub removes cached or pull-request references. That purge requires an authenticated full Git client and GitHub cache-cleanup support outside the website build workflow.
+The owner explicitly chose on July 30, 2026 to leave repository history unchanged and proceed. Historical Git reachability is therefore an accepted disclosure risk, not a publication blocker. DA-001 is not represented as confidential against people who possess old commit, pull-request, fork, or clone references.
+
+The accepted scope is limited to active-tree and public-output protection: the obsolete source remains excluded from `main`, future ordinary clones, content collections, deployed routes, feeds, indexes, and the timeline. The decision may be revisited if stricter confidentiality requirements arise later.

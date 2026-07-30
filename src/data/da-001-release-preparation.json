@@ -4,14 +4,32 @@
   "source": {
     "storage": "private-controlled-source",
     "repositoryPath": null,
+    "approvedRevision": "Final Approved Story v17",
+    "approvedDocumentTitle": "DA-001 — Final Approved Story v17 — The Building Keeps the Hour",
+    "canonicalization": "google-doc-text-v1",
+    "approvedCanonicalSha256": "e219318d0d395d601daa32f4778b207a99c7ba05301f9834631f539eb4a9b415",
+    "approvedWordCount": 23621,
     "formerGitBlobSha1": "784b2bbc7cd634a143845b4b293de73aeb3c5720",
+    "formerGitSourceStatus": "superseded",
     "requiresDigestVerificationOnImport": true
+  },
+  "historicalDisclosure": {
+    "status": "accepted-risk",
+    "ownerDecisionDate": "2026-07-30",
+    "repositoryHistoryRewriteRequired": false,
+    "scope": "active-tree-and-publication-output",
+    "confidentialityClaim": false
   },
   "releaseState": {
     "status": "withheld",
     "draft": true,
     "publicationDate": null,
-    "requiresSeparateApproval": true
+    "requiresSeparateApproval": true,
+    "editorialProof": {
+      "status": "complete",
+      "verifiedOn": "2026-07-30",
+      "result": "no-required-manuscript-revision"
+    }
   },
   "chronology": {
     "timelineOrder": 1,
@@ -41,16 +59,16 @@
       "published": "3. The Quiet Test"
     },
     {
-      "source": "Scene 4 — Come Here, I Have a Joke",
-      "published": "4. Come Here, I Have a Joke"
+      "source": "Scene 4 — Four Seconds",
+      "published": "4. Four Seconds"
     },
     {
-      "source": "Scene 5 — Teaching the Building",
-      "published": "5. Teaching the Building"
+      "source": "Scene 5 — The Markers",
+      "published": "5. The Markers"
     },
     {
-      "source": "Scene 6 — Wayne’s Route",
-      "published": "6. Wayne’s Route"
+      "source": "Scene 6 — The West Route",
+      "published": "6. The West Route"
     },
     {
       "source": "Scene 7 — The Cut",

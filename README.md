@@ -81,11 +81,13 @@ The approved policy and initial DA-001 → DA-002 sequence are recorded in `docs
 
 ## DA-001 Release Preparation
 
-DA-001 remains withheld and requires separate publication approval. Its manuscript is stored privately outside this repository. The public repository retains only the former source digest, ten-section transformation map, chronology reservation, continuity identifiers, and release-boundary controls.
+DA-001 remains withheld and requires separate publication approval. Its manuscript is stored privately outside this repository. The authoritative source is `Final Approved Story v17`; the public repository retains its canonical SHA-256 and word count, the superseded Git-source identifier, the approved ten-section transformation map, completed editorial-proof status, chronology reservation, continuity identifiers, and release-boundary controls.
 
-`scripts/validate-da001-preparation.mjs` rejects any DA-001 manuscript or public story entry in the repository and validates the remaining preparation metadata. `scripts/validate-da001-output.mjs` confirms that no DA-001 route, title, slug, RSS item, sitemap entry, search/index reference, asset path, or timeline entry reaches deployed output.
+`scripts/validate-da001-preparation.mjs` rejects any DA-001 manuscript or public story entry in the active repository tree and validates the remaining preparation metadata. `scripts/validate-da001-output.mjs` confirms that no DA-001 route, title, slug, RSS item, sitemap entry, search/index reference, asset path, or timeline entry reaches deployed output.
 
-The machine-readable preparation record is `src/data/da-001-release-preparation.json`. The private-source boundary, editorial audit, history-cleanup limitation, and remaining release blockers are recorded in `docs/editorial/da-001-release-preparation.md`.
+The owner accepted the historical Git disclosure risk on July 30, 2026 and chose to leave repository history unchanged. These controls govern the active tree and public output; they make no claim that old Git objects are confidential or inaccessible.
+
+The machine-readable preparation record is `src/data/da-001-release-preparation.json`. The private-source canonicalization, source-alignment audit, editorial proof, accepted historical-disclosure decision, and remaining release blockers are recorded in `docs/editorial/da-001-release-preparation.md`.
 
 ## Public Repository Boundaries
 
