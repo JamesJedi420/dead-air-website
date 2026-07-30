@@ -1,0 +1,28 @@
+name: Export DA-001 private source
+
+on:
+  push:
+    branches:
+      - agent/export-da001-private
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify source digest
+        shell: bash
+        run: |
+          test -f src/manuscripts/da-001/source.md
+          actual=$(git hash-object src/manuscripts/da-001/source.md)
+          test "$actual" = "784b2bbc7cd634a143845b4b293de73aeb3c5720"
+      - name: Package exact controlled source
+        uses: actions/upload-artifact@v4
+        with:
+          name: da-001-controlled-source
+          path: src/manuscripts/da-001/source.md
+          if-no-files-found: error
+          retention-days: 1
