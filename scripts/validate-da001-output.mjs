@@ -13,7 +13,6 @@ const failures = [];
 const fail = (message) => failures.push(message);
 const textExtensions = new Set([".html", ".xml", ".json", ".txt", ".js", ".css", ".map"]);
 const route = `/stories/${manifest.slug}/`;
-const canonicalUrl = `https://dead-air-website.netlify.app${route}`;
 
 const readScalar = (frontmatter, key) =>
   frontmatter.match(new RegExp(`^${key}:\\s*(.+)$`, "m"))?.[1]?.trim();
@@ -47,7 +46,6 @@ const forbiddenValues = [
   manifest.title,
   manifest.slug,
   route,
-  canonicalUrl,
   "At twenty minutes past three, Bellweather High still belonged to its machinery.",
   "The long key struck last.",
 ];
@@ -100,7 +98,7 @@ if (availableSitemaps.length === 0) {
   fail("Sitemap output missing.");
 } else {
   const sitemapText = (await Promise.all(availableSitemaps.map((file) => readFile(file, "utf8")))).join("\n");
-  if (sitemapText.includes(canonicalUrl) || sitemapText.includes(route)) fail("Sitemap includes withheld DA-001.");
+  if (sitemapText.includes(route)) fail("Sitemap includes withheld DA-001.");
 }
 
 const timelinePath = outputPath("timeline/index.html");
