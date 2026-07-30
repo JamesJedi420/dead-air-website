@@ -7,10 +7,10 @@ const manifestPath = path.join(root, "src", "data", "da-001-release-preparation.
 const reservationsPath = path.join(root, "src", "data", "narrative-timeline-reservations.json");
 const successorPath = path.join(root, "src", "content", "stories", "da-002-the-name-in-the-room.md");
 const privateSourcePath = path.join(root, "src", "manuscripts", "da-001", "source.md");
-const publicContentPath = path.join(root, "src", "content", "stories", "da-001-the-building-keeps-the-hour.md");
 const gitignorePath = path.join(root, ".gitignore");
 
 const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
+const publicContentPath = path.join(root, "src", "content", "stories", `${manifest.slug}.md`);
 const reservations = JSON.parse(await readFile(reservationsPath, "utf8"));
 const successor = await readFile(successorPath, "utf8");
 const gitignore = await readFile(gitignorePath, "utf8");
@@ -241,11 +241,15 @@ if (
 }
 
 for (const [field, values] of [
-  ["characters", manifest.continuity?.sharedCharacters ?? []],
-  ["locations", manifest.continuity?.sharedLocations ?? []],
-  ["objects", manifest.continuity?.sharedObjects ?? []],
-  ["mysteries", manifest.continuity?.sharedMysteries ?? []],
+  ["characters", manifest.continuity?.sharedCharacters],
+  ["locations", manifest.continuity?.sharedLocations],
+  ["objects", manifest.continuity?.sharedObjects],
+  ["mysteries", manifest.continuity?.sharedMysteries],
 ]) {
+  if (!Array.isArray(values)) {
+    fail(`DA-001 continuity manifest is missing shared ${field} list.`);
+    continue;
+  }
   const successorValues = new Set(readBlockList(successorFrontmatter, field, "DA-002 successor"));
   for (const value of values) {
     if (!successorValues.has(value)) fail(`DA-002 successor is missing shared ${field} value ${JSON.stringify(value)}`);
