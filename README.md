@@ -89,7 +89,7 @@ DA-001 remains withheld and requires separate publication approval. Its manuscri
 npm run verify:da001-private-source -- /private/path/da-001-v17.txt
 ```
 
-`scripts/validate-da001-preparation.mjs` scans the active checkout for a canonical-source hash, manuscript-like section structure, approved scene fragments, files under `src/manuscripts/`, and a premature DA-001 content entry. `scripts/validate-da001-output.mjs` confirms that no DA-001 route, title, slug, RSS item, sitemap entry, search/index reference, asset path, or timeline entry reaches deployed output.
+`scripts/validate-da001-preparation.mjs` scans the active checkout for a canonical-source hash, manuscript-like section structure, approved scene fragments, files under `src/manuscripts/da-001/`, and a premature DA-001 content entry. `scripts/validate-da001-output.mjs` confirms that no DA-001 route, title, slug, RSS item, sitemap entry, search/index reference, asset path, or timeline entry reaches deployed output.
 
 The owner accepted the historical Git disclosure risk on July 30, 2026 and chose to leave repository history unchanged. These controls govern the active tree and public output; they make no claim that old Git objects are confidential or inaccessible.
 
