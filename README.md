@@ -81,13 +81,23 @@ The approved policy and initial DA-001 → DA-002 sequence are recorded in `docs
 
 ## DA-001 Release Preparation
 
-DA-001 remains withheld and requires separate publication approval. Its manuscript is stored privately outside this repository. The authoritative source is `Final Approved Story v17`; the public repository retains its canonical SHA-256 and word count, the superseded Git-source identifier, the approved ten-section transformation map, completed editorial-proof status, chronology reservation, continuity identifiers, and release-boundary controls.
+DA-001 remains withheld and requires separate publication approval. Its manuscript is stored privately outside this repository. The authoritative source is `Final Approved Story v17`.
 
-`scripts/validate-da001-preparation.mjs` rejects any DA-001 manuscript or public story entry in the active repository tree and validates the remaining preparation metadata. `scripts/validate-da001-output.mjs` confirms that no DA-001 route, title, slug, RSS item, sitemap entry, search/index reference, asset path, or timeline entry reaches deployed output.
+`scripts/lib/da001-canonicalizer-v1.mjs` defines the complete `google-doc-text-v1` transformation, fixed withheld frontmatter, section sequence, word-count expression, and approved digest constants. `scripts/test-da001-canonicalizer.mjs` tests the transformation against committed synthetic fixtures and checks the private-source attestation against the release manifest. An authorized operator verifies an actual private Google Docs text export with:
+
+```bash
+npm run verify:da001-private-source -- /private/path/da-001-v17.txt
+```
+
+`scripts/validate-da001-preparation.mjs` scans the active checkout for a canonical-source hash, manuscript-like section structure, approved scene fragments, files under `src/manuscripts/`, and a premature DA-001 content entry. `scripts/validate-da001-output.mjs` confirms that no DA-001 route, title, slug, RSS item, sitemap entry, search/index reference, asset path, or timeline entry reaches deployed output.
 
 The owner accepted the historical Git disclosure risk on July 30, 2026 and chose to leave repository history unchanged. These controls govern the active tree and public output; they make no claim that old Git objects are confidential or inaccessible.
 
-The machine-readable preparation record is `src/data/da-001-release-preparation.json`. The private-source canonicalization, source-alignment audit, editorial proof, accepted historical-disclosure decision, and remaining release blockers are recorded in `docs/editorial/da-001-release-preparation.md`.
+The machine-readable records are `src/data/da-001-release-preparation.json` and `src/data/da-001-canonicalization-attestation.json`. The full release boundary is recorded in `docs/editorial/da-001-release-preparation.md`.
+
+## Repository Branch
+
+Development, pull requests, and Netlify production use `main`. GitHub's repository default branch must also be `main` so code search, review bots, and branch protections evaluate the production branch.
 
 ## Public Repository Boundaries
 
