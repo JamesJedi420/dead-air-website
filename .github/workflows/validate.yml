@@ -1,0 +1,32 @@
+name: Validate
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.12.0
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Run canonicalizer fixture
+        run: npm run test:da001-canonicalizer
+      - name: Validate DA-001 preparation
+        run: npm run validate:da001-preparation
+      - name: Build site
+        run: npm run build
