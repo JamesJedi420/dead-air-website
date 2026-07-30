@@ -2,7 +2,7 @@
 
 ## Current state
 
-DA-001 — *The Building Keeps the Hour* remains a withheld draft. Its controlled manuscript is stored privately outside this public repository. The public repository retains only the release boundary, approved-source digest, superseded Git-source identifier, chronology, section map, and continuity identifiers needed to prevent accidental publication.
+DA-001 — *The Building Keeps the Hour* remains a withheld draft. Its controlled manuscript is stored privately outside this public repository. The public repository retains only the publication boundary, approved-source digest, superseded Git-source identifier, chronology, section map, continuity identifiers, and the owner's accepted-risk record needed to prevent accidental active publication.
 
 Private storage contains the definitive approved story, website release draft, post-production package, revision notes, and the archived exact Git source. Those files are owner-only in the Drive folder `Dead Air Archive — Private Manuscripts`.
 
@@ -16,7 +16,8 @@ The public preparation record retains:
 - canonical SHA-256 `e219318d0d395d601daa32f4778b207a99c7ba05301f9834631f539eb4a9b415`;
 - canonical word count `23,621`;
 - superseded Git blob SHA-1 `784b2bbc7cd634a143845b4b293de73aeb3c5720`;
-- no repository path to the manuscript.
+- no repository path to the manuscript;
+- explicit acceptance that historical Git objects remain reachable.
 
 ## Approved-source alignment
 
@@ -54,11 +55,13 @@ The proof changes release metadata only. It introduces no plot, prose, canon, ch
 
 ## Public repository boundary
 
-No DA-001 manuscript may exist under `src/manuscripts/`, `src/content/stories/`, or any other public repository path before publication approval. The `.gitignore` blocks `src/manuscripts/` as a guardrail.
+No DA-001 manuscript may exist under `src/manuscripts/`, `src/content/stories/`, or any other active repository path before publication approval. The `.gitignore` blocks `src/manuscripts/` as a guardrail.
 
-`scripts/validate-da001-preparation.mjs` enforces source absence, the authoritative v17 digest record, completed editorial proof, withheld release state, approved ten-section map, chronology position, DA-002 successor relationship, and shared public continuity identifiers during development, preview, and production builds.
+`scripts/validate-da001-preparation.mjs` enforces active-source absence, the authoritative v17 digest record, completed editorial proof, accepted historical-disclosure decision, withheld release state, approved ten-section map, chronology position, DA-002 successor relationship, and shared public continuity identifiers during development, preview, and production builds.
 
 `scripts/validate-da001-output.mjs` confirms that no DA-001 route, title, slug, RSS item, sitemap entry, search/index reference, asset path, or timeline entry reaches deployed output.
+
+This boundary governs the active repository tree and public website. It does not claim that historical Git objects are confidential or inaccessible.
 
 ## Narrative placement
 
@@ -107,6 +110,8 @@ DA-001 remains unavailable to public indexes until all the following occur:
 
 Changing status or draft directly remains prohibited. The public preparation manifest supplies no source path and no automatic release path.
 
-## History cleanup
+## Historical disclosure decision
 
-The manuscript is absent from the active repository tree and production output. Earlier historical Git objects remain a deferred hardening issue rather than a publication blocker. The project will leave repository history unchanged unless stricter confidentiality requirements arise later.
+The owner explicitly chose on July 30, 2026 to leave repository history unchanged and proceed. Historical Git reachability is therefore an accepted disclosure risk, not a publication blocker. DA-001 is not represented as confidential against people who possess old commit, pull-request, fork, or clone references.
+
+The accepted scope is limited to active-tree and public-output protection: the obsolete source remains excluded from `main`, future ordinary clones, content collections, deployed routes, feeds, indexes, and the timeline. The decision may be revisited if stricter confidentiality requirements arise later.
