@@ -2,8 +2,10 @@
   "slug": "da-001-the-building-keeps-the-hour",
   "title": "The Building Keeps the Hour",
   "source": {
-    "path": "src/manuscripts/da-001/source.md",
-    "gitBlobSha1": "784b2bbc7cd634a143845b4b293de73aeb3c5720"
+    "storage": "private-controlled-source",
+    "repositoryPath": null,
+    "formerGitBlobSha1": "784b2bbc7cd634a143845b4b293de73aeb3c5720",
+    "requiresDigestVerificationOnImport": true
   },
   "releaseState": {
     "status": "withheld",
@@ -82,12 +84,6 @@
     ],
     "sharedMysteries": [
       "relationship-among-the-recorded-phenomena-at-bellweather-high"
-    ],
-    "requiredBodyAnchors": [
-      "At twenty minutes past three, Bellweather High still belonged to its machinery.",
-      "Come here, I have a joke.",
-      "The key entered fully.",
-      "The long key struck last."
     ]
   }
 }

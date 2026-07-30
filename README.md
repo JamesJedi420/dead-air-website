@@ -81,14 +81,14 @@ The approved policy and initial DA-001 → DA-002 sequence are recorded in `docs
 
 ## DA-001 Release Preparation
 
-DA-001 remains withheld and requires separate publication approval. Its controlled manuscript is locked by Git blob hash, its ten future public section headings are defined as deterministic transforms, and its chronology and shared DA-002 continuity are checked before every build.
+DA-001 remains withheld and requires separate publication approval. Its manuscript is stored privately outside this repository. The public repository retains only the former source digest, ten-section transformation map, chronology reservation, continuity identifiers, and release-boundary controls.
 
-`scripts/validate-da001-output.mjs` also confirms that no DA-001 route, title, slug, excerpt, RSS item, sitemap entry, public index reference, or timeline entry appears while the story remains withheld.
+`scripts/validate-da001-preparation.mjs` rejects any DA-001 manuscript or public story entry in the repository and validates the remaining preparation metadata. `scripts/validate-da001-output.mjs` confirms that no DA-001 route, title, slug, RSS item, sitemap entry, search/index reference, asset path, or timeline entry reaches deployed output.
 
-The machine-readable preparation record is `src/data/da-001-release-preparation.json`. The editorial audit and release blockers are recorded in `docs/editorial/da-001-release-preparation.md`.
+The machine-readable preparation record is `src/data/da-001-release-preparation.json`. The private-source boundary, editorial audit, history-cleanup limitation, and remaining release blockers are recorded in `docs/editorial/da-001-release-preparation.md`.
 
 ## Public Repository Boundaries
 
-Do not commit internal development records, raw transcripts, real participant identities, hidden canon, unpublished continuity data, private research notes, or source interview material to this repository.
+Do not commit internal development records, raw transcripts, real participant identities, hidden canon, unpublished manuscripts, unpublished continuity data, private research notes, or source interview material to this repository.
 
-The `.gitignore` includes common private-material folder names as a guardrail, but the main protection is editorial discipline: only publish deliberate, public-facing archive text.
+The `.gitignore` blocks common private-material paths, including `src/manuscripts/`, as a guardrail. The primary protection remains editorial discipline: only deliberate public-facing archive text belongs in this repository.
