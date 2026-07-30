@@ -1,0 +1,93 @@
+{
+  "slug": "da-001-the-building-keeps-the-hour",
+  "title": "The Building Keeps the Hour",
+  "source": {
+    "path": "src/manuscripts/da-001/source.md",
+    "gitBlobSha1": "784b2bbc7cd634a143845b4b293de73aeb3c5720"
+  },
+  "releaseState": {
+    "status": "withheld",
+    "draft": true,
+    "publicationDate": null,
+    "requiresSeparateApproval": true
+  },
+  "chronology": {
+    "timelineOrder": 1,
+    "timelineLabel": "Initial Bellweather investigation",
+    "sourceOrder": "Original investigation",
+    "datePrecision": "relative",
+    "chronologyNote": "Placed before DA-002 according to the approximate order of the source investigations and transcripts; the exact interval is fictionalized or withheld.",
+    "follows": [],
+    "precedes": [
+      {
+        "collection": "stories",
+        "slug": "da-002-the-name-in-the-room"
+      }
+    ]
+  },
+  "sections": [
+    {
+      "source": "Scene 1 — Three-Thirty",
+      "published": "1. Three-Thirty"
+    },
+    {
+      "source": "Scene 2 — Permission Slips",
+      "published": "2. Permission Slips"
+    },
+    {
+      "source": "Scene 3 — The Quiet Test",
+      "published": "3. The Quiet Test"
+    },
+    {
+      "source": "Scene 4 — Come Here, I Have a Joke",
+      "published": "4. Come Here, I Have a Joke"
+    },
+    {
+      "source": "Scene 5 — Teaching the Building",
+      "published": "5. Teaching the Building"
+    },
+    {
+      "source": "Scene 6 — Wayne’s Route",
+      "published": "6. Wayne’s Route"
+    },
+    {
+      "source": "Scene 7 — The Cut",
+      "published": "7. The Cut"
+    },
+    {
+      "source": "Scene 8 — The Glassless Window",
+      "published": "8. The Glassless Window"
+    },
+    {
+      "source": "Scene 9 — The Key That Is Not Hers",
+      "published": "9. The Key That Is Not Hers"
+    },
+    {
+      "source": "Scene 10 — Source Track",
+      "published": "10. Source Track"
+    }
+  ],
+  "continuity": {
+    "successorPath": "src/content/stories/da-002-the-name-in-the-room.md",
+    "sharedCharacters": [
+      "diane-madsen",
+      "evan-kruse",
+      "abby-larson"
+    ],
+    "sharedLocations": [
+      "Bellweather High School"
+    ],
+    "sharedObjects": [
+      "unidentified-wet-brass-key"
+    ],
+    "sharedMysteries": [
+      "relationship-among-the-recorded-phenomena-at-bellweather-high"
+    ],
+    "requiredBodyAnchors": [
+      "At twenty minutes past three, Bellweather High still belonged to its machinery.",
+      "Come here, I have a joke.",
+      "The key entered fully.",
+      "The long key struck last."
+    ]
+  }
+}
