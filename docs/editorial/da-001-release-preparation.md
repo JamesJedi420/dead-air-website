@@ -74,7 +74,7 @@ DA-002 explicitly follows DA-001. The public validator checks the shared identif
 
 ## Publication blockers
 
-DA-001 remains unavailable to public indexes until all of the following occur:
+DA-001 remains unavailable to public indexes until all the following occur:
 
 1. The authorized private source is selected and verified against its approved release digest.
 2. A final line-level editorial and continuity proof receives approval.
