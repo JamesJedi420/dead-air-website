@@ -35,9 +35,7 @@ const fail = (message) => failures.push(message);
 const normalizeScalar = (rawValue) => {
   let value = rawValue.trim();
   if (!value.startsWith('"') && !value.startsWith("'")) value = value.replace(/\s+#.*$/, "").trim();
-  if (value.length >= 2 && value[0] === value.at(-1) && (value[0] === '"' || value[0] === "'")) {
-    return value.slice(1, -1);
-  }
+  if (value.length >= 2 && value[0] === value.at(-1) && (value[0] === '"' || value[0] === "'")) return value.slice(1, -1);
   return value;
 };
 
@@ -162,7 +160,7 @@ const scanActiveRepository = async () => {
   const canonicalSourcePath = `src/content/stories/${manifest.slug}.md`;
   for (const absolutePath of await walkFiles(root)) {
     const relativePath = toRepositoryPath(absolutePath);
-    if (relativePath.startsWith("src/manuscripts/")) {
+    if (relativePath.startsWith("src/manuscripts/da-001/")) {
       fail(`DA-001 private-source directory contains active file ${relativePath}.`);
       continue;
     }
@@ -177,9 +175,7 @@ const scanActiveRepository = async () => {
     if (bytes.includes(0)) continue;
     const text = bytes.toString("utf8");
     const wordCount = text.match(new RegExp(DA001_WORD_PATTERN_SOURCE, "gu"))?.length ?? 0;
-    const sceneHeadingCount = DA001_SOURCE_SECTION_TITLES.filter((title, index) =>
-      text.includes(`Scene ${index + 1} — ${title}`),
-    ).length;
+    const sceneHeadingCount = DA001_SOURCE_SECTION_TITLES.filter((title, index) => text.includes(`Scene ${index + 1} — ${title}`)).length;
     const fingerprintCount = manuscriptFingerprints.filter((fingerprint) => text.includes(fingerprint)).length;
     const suspiciousPath = /(?:^|[/_. -])da[-_ ]?001(?:[/_. -]|$)|building[-_ ]keeps[-_ ]the[-_ ]hour/i.test(relativePath);
     if (sha256Utf8(text) === DA001_APPROVED_CANONICAL_SHA256) fail(`DA-001 canonical manuscript is present at ${relativePath}.`);
