@@ -1,0 +1,13 @@
+{
+  "case": "DA-001",
+  "canonicalization": "google-doc-text-v1",
+  "approvedRevision": "Final Approved Story v17",
+  "sourceDocumentId": "1ftFFygxUKADwJwtKetBCJQ_GkVMzUvqvuDB1cQRzkSE",
+  "privateExportSha256": "eaba2ab84b2949382e99f4eef29afffffbe5cf8d7491b47cb680e6272967a518",
+  "canonicalSha256": "e219318d0d395d601daa32f4778b207a99c7ba05301f9834631f539eb4a9b415",
+  "wordCount": 23621,
+  "wordPattern": "\\b\\w+(?:[’'-]\\w+)*\\b",
+  "verificationStatus": "verified-against-private-source",
+  "verifiedOn": "2026-07-30",
+  "sourceStorage": "private-google-drive"
+}
