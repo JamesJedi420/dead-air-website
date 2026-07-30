@@ -13,6 +13,13 @@
     "formerGitSourceStatus": "superseded",
     "requiresDigestVerificationOnImport": true
   },
+  "historicalDisclosure": {
+    "status": "accepted-risk",
+    "ownerDecisionDate": "2026-07-30",
+    "repositoryHistoryRewriteRequired": false,
+    "scope": "active-tree-and-publication-output",
+    "confidentialityClaim": false
+  },
   "releaseState": {
     "status": "withheld",
     "draft": true,
