@@ -1,0 +1,48 @@
+---
+slug: da-001-the-building-keeps-the-hour
+title: The Building Keeps the Hour
+approvedRevision: Final Approved Story v17
+sourceDocumentId: 1ftFFygxUKADwJwtKetBCJQ_GkVMzUvqvuDB1cQRzkSE
+status: withheld
+draft: true
+---
+
+## Scene 1 — Three-Thirty
+
+A relay clicked. The keys remained still.
+
+## Scene 2 — Permission Slips
+
+Diane recorded the boundary.
+
+## Scene 3 — The Quiet Test
+
+Abby preserved the source card.
+
+## Scene 4 — Four Seconds
+
+The gap remained measurable.
+
+## Scene 5 — The Markers
+
+Labels changed what the group heard.
+
+## Scene 6 — The West Route
+
+The route became legible after disclosure.
+
+## Scene 7 — The Cut
+
+The edit rearranged cause and response.
+
+## Scene 8 — The Glassless Window
+
+The monitor retained delay and uncertainty.
+
+## Scene 9 — The Key That Is Not Hers
+
+Water coated the unidentified key.
+
+## Scene 10 — Source Track
+
+The final cadence remained unexplained.
