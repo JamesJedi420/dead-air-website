@@ -8,15 +8,20 @@ type EdgeContext = {
   next(): Promise<Response>;
 };
 
-const unauthorized = () =>
-  new Response("Private preview authentication required.", {
-    status: 401,
+const privateResponse = (body: string, status: number) =>
+  new Response(body, {
+    status,
     headers: {
-      "WWW-Authenticate": 'Basic realm="Dead Air private preview", charset="UTF-8"',
       "Cache-Control": "private, no-store",
       "X-Robots-Tag": "noindex, nofollow, noarchive",
     },
   });
+
+const unauthorized = () => {
+  const response = privateResponse("Private preview authentication required.", 401);
+  response.headers.set("WWW-Authenticate", 'Basic realm="Dead Air private preview", charset="UTF-8"');
+  return response;
+};
 
 const constantTimeEqual = (left: string, right: string) => {
   const encoder = new TextEncoder();
@@ -54,15 +59,16 @@ export default async (request: Request, context: EdgeContext) => {
     return context.next();
   }
 
+  const expectedBranch = Netlify.env.get("DA001_PRIVATE_PREVIEW_BRANCH") ?? "agent/da001-private-preview";
+  const deployContext = Netlify.env.get("CONTEXT");
+  const headBranch = Netlify.env.get("HEAD");
+  if (deployContext !== "deploy-preview" || headBranch !== expectedBranch) {
+    return privateResponse("Private preview activation context is invalid.", 503);
+  }
+
   const expectedPassword = Netlify.env.get("DA001_PREVIEW_PASSWORD");
   if (!expectedPassword || expectedPassword.length < 32) {
-    return new Response("Private preview access is not configured securely.", {
-      status: 503,
-      headers: {
-        "Cache-Control": "private, no-store",
-        "X-Robots-Tag": "noindex, nofollow, noarchive",
-      },
-    });
+    return privateResponse("Private preview access is not configured securely.", 503);
   }
 
   const credentials = readBasicCredentials(request);
