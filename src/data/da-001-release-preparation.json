@@ -36,6 +36,73 @@
       "result": "no-required-manuscript-revision"
     }
   },
+  "preview": {
+    "branch": "agent/da001-private-preview",
+    "route": "/stories/da-001-the-building-keeps-the-hour/",
+    "access": "password-gated-netlify-deploy-preview",
+    "searchIndexing": "blocked",
+    "metadata": {
+      "summary": "A veteran custodian supervises a student documentary investigation at Bellweather High, where disputed recordings and after-hours incidents test the boundary between evidence and interpretation.",
+      "classification": "Literary paranormal horror",
+      "readingTime": "105 minutes",
+      "canonicalStatus": "established canon",
+      "tags": [
+        "literary paranormal horror",
+        "documentary horror",
+        "institutional horror",
+        "psychological horror"
+      ],
+      "phenomenon": [
+        "contested audio",
+        "disputed visual evidence",
+        "object displacement",
+        "institutional haunting"
+      ],
+      "evidenceType": [
+        "video",
+        "audio",
+        "recorder files",
+        "metadata",
+        "software cache",
+        "access records",
+        "interviews",
+        "physical object custody",
+        "maintenance logs",
+        "building plans",
+        "source comparisons"
+      ],
+      "locations": [
+        "Bellweather High School"
+      ],
+      "contentWarnings": [
+        "Death and grief involving a former coworker",
+        "Claustrophobic maintenance spaces",
+        "Disputed voices and images",
+        "Unsafe crawlspace access",
+        "Institutional conflict"
+      ],
+      "contentNotes": [
+        "No graphic violence."
+      ],
+      "cases": [
+        "da-001"
+      ],
+      "characters": [
+        "diane-madsen",
+        "evan-kruse",
+        "abby-larson",
+        "wayne-nissen"
+      ],
+      "objects": [
+        "unidentified-wet-brass-key"
+      ],
+      "mysteries": [
+        "origin-and-ownership-of-the-wet-brass-key",
+        "identity-and-meaning-of-the-answering-key-cadence",
+        "relationship-among-the-recorded-phenomena-at-bellweather-high"
+      ]
+    }
+  },
   "chronology": {
     "timelineOrder": 1,
     "timelineLabel": "Initial Bellweather investigation",
