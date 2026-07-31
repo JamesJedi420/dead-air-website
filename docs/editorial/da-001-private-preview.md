@@ -4,7 +4,7 @@ DA-001 remains withheld and unpublished. The private preview path exists only to
 
 ## Activation boundary
 
-The materializer runs only when all of the following are true:
+The materializer runs only when all the following are true:
 
 - `DA001_PRIVATE_PREVIEW=1`;
 - Netlify `CONTEXT=deploy-preview`;
@@ -17,7 +17,7 @@ Without activation, the materializer deletes any ignored generated DA-001 conten
 
 ## Secret input format
 
-The UTF-8 Google Docs text export is gzip-compressed, base64 encoded, and divided into ordered build-only variables:
+The UTF-8 Google Docs text export is gzip-compressed, base64-encoded, and divided into ordered build-only variables:
 
 - `DA001_PRIVATE_SOURCE_CHUNK_COUNT`;
 - `DA001_PRIVATE_SOURCE_GZIP_B64_000` through the final declared chunk.
@@ -32,6 +32,6 @@ The post-build validator requires the preview route, all ten public headings, th
 
 ## Access control
 
-`netlify/edge-functions/da001-preview-auth.ts` applies HTTP Basic authentication whenever the preview flag is enabled. The username is `preview`; the password comes from the runtime-only secret `DA001_PREVIEW_PASSWORD`. Authorized and unauthorized responses receive private no-store caching and `X-Robots-Tag: noindex, nofollow, noarchive` headers.
+`netlify/edge-functions/da001-preview-auth.ts` applies HTTP Basic authentication only when the preview flag, deploy-preview context, and exact authorized branch all match. The username is `preview`; the password comes from the runtime-only secret `DA001_PREVIEW_PASSWORD` and must contain at least 32 characters. Authorized and unauthorized responses receive private no-store caching and `X-Robots-Tag: noindex, nofollow, noarchive` headers.
 
 The source chunks and password must remain scoped only to Netlify deploy previews. Activating the flag before all source chunks and the password are configured is expected to fail closed.
