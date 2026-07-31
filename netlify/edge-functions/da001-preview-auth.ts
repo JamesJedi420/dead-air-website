@@ -55,8 +55,8 @@ export default async (request: Request, context: EdgeContext) => {
   }
 
   const expectedPassword = Netlify.env.get("DA001_PREVIEW_PASSWORD");
-  if (!expectedPassword) {
-    return new Response("Private preview access is not configured.", {
+  if (!expectedPassword || expectedPassword.length < 32) {
+    return new Response("Private preview access is not configured securely.", {
       status: 503,
       headers: {
         "Cache-Control": "private, no-store",
