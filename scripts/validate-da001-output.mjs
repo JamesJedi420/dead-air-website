@@ -1,6 +1,7 @@
 import { readdir, readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
+import { validateDa001PreviewContext } from "./lib/da001-preview-context.mjs";
 
 const root = process.cwd();
 const outputDirectory = path.join(root, "dist");
@@ -116,13 +117,8 @@ if (!previewEnabled) {
     }
   }
 } else {
-  const expectedBranch = process.env.DA001_PRIVATE_PREVIEW_BRANCH ?? manifest.preview?.branch;
-  if (process.env.CONTEXT !== "deploy-preview") {
-    fail(`DA-001 private preview output requires deploy-preview context, received ${process.env.CONTEXT ?? "missing"}.`);
-  }
-  if (!expectedBranch || process.env.HEAD !== expectedBranch) {
-    fail(`DA-001 private preview output requires head branch ${expectedBranch ?? "missing"}, received ${process.env.HEAD ?? "missing"}.`);
-  }
+  validateDa001PreviewContext({ manifest, env: process.env, reportFailure: fail });
+
   if (!(await exists(generatedContentPath))) {
     fail("DA-001 private preview content entry was not materialized.");
   }
