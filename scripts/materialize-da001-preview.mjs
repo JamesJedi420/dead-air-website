@@ -8,6 +8,7 @@ import {
   extractDa001CanonicalBody,
   verifyApprovedDa001Export,
 } from "./lib/da001-canonicalizer-v1.mjs";
+import { validateDa001PreviewContext } from "./lib/da001-preview-context.mjs";
 
 const root = process.cwd();
 const manifest = JSON.parse(
@@ -24,13 +25,13 @@ if (!enabled) {
   process.exit(0);
 }
 
-const expectedBranch = process.env.DA001_PRIVATE_PREVIEW_BRANCH ?? manifest.preview?.branch;
-if (process.env.CONTEXT !== "deploy-preview") {
-  throw new Error(`DA-001 private preview requires Netlify deploy-preview context, received ${process.env.CONTEXT ?? "missing"}.`);
-}
-if (!expectedBranch || process.env.HEAD !== expectedBranch) {
-  throw new Error(`DA-001 private preview requires head branch ${expectedBranch ?? "missing"}, received ${process.env.HEAD ?? "missing"}.`);
-}
+validateDa001PreviewContext({
+  manifest,
+  env: process.env,
+  reportFailure: (message) => {
+    throw new Error(message);
+  },
+});
 
 const chunkCount = Number.parseInt(process.env.DA001_PRIVATE_SOURCE_CHUNK_COUNT ?? "", 10);
 if (!Number.isSafeInteger(chunkCount) || chunkCount < 1 || chunkCount > 100) {
@@ -62,14 +63,27 @@ if (rawSha256 !== manifest.source.approvedPrivateExportSha256) {
 const rawText = rawBytes.toString("utf8");
 const { canonicalText, canonicalSha256, wordCount } = verifyApprovedDa001Export(rawText);
 let body = extractDa001CanonicalBody(canonicalText);
+const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const sourceHeadings = new Set(manifest.sections.map((section) => `## ${section.source}`));
+const publishedHeadings = manifest.sections.map((section) => `## ${section.published}`);
+if (new Set(publishedHeadings).size !== publishedHeadings.length) {
+  throw new Error("DA-001 private preview contains duplicate published section headings.");
+}
+for (const publishedHeading of publishedHeadings) {
+  if (sourceHeadings.has(publishedHeading)) {
+    throw new Error(`DA-001 private preview published heading conflicts with a source heading: ${JSON.stringify(publishedHeading)}.`);
+  }
+}
+
 for (const section of manifest.sections) {
   const sourceHeading = `## ${section.source}`;
   const publishedHeading = `## ${section.published}`;
-  const occurrences = body.split(sourceHeading).length - 1;
+  const headingPattern = new RegExp(`^${escapeRegExp(sourceHeading)}$`, "gm");
+  const occurrences = (body.match(headingPattern) ?? []).length;
   if (occurrences !== 1) {
     throw new Error(`DA-001 private preview expected exactly one heading ${JSON.stringify(sourceHeading)}, found ${occurrences}.`);
   }
-  body = body.replace(sourceHeading, publishedHeading);
+  body = body.replace(headingPattern, publishedHeading);
 }
 if (/^##\s+Scene\s+\d+/m.test(body)) {
   throw new Error("DA-001 private preview retained a private-source scene heading.");
@@ -125,8 +139,12 @@ const frontmatter = [
   body,
 ].join("\n");
 
-await mkdir(path.dirname(outputPath), { recursive: true });
-await writeFile(outputPath, frontmatter, "utf8");
+try {
+  await mkdir(path.dirname(outputPath), { recursive: true });
+  await writeFile(outputPath, frontmatter, "utf8");
+} catch (error) {
+  throw new Error(`DA-001 private preview failed to write output file: ${error instanceof Error ? error.message : String(error)}`);
+}
 console.log(
   `Materialized password-gated DA-001 private preview from ${chunkCount} secret chunks (${rawSha256} raw; ${canonicalSha256} canonical; ${wordCount} words).`,
 );
