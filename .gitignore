@@ -15,3 +15,6 @@ participants/
 continuity/
 notes/internal/
 src/manuscripts/
+
+# Generated only during the password-gated DA-001 Deploy Preview.
+src/content/stories/da-001-the-building-keeps-the-hour.md
