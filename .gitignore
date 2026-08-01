@@ -14,7 +14,6 @@ private/
 participants/
 continuity/
 notes/internal/
-src/manuscripts/
 
-# Generated only during the password-gated DA-001 Deploy Preview.
+# Generated deterministically from approved repository fragments during build.
 src/content/stories/da-001-the-building-keeps-the-hour.md
