@@ -38,12 +38,15 @@ The deploy preview must:
 - `DA001_PRIVATE_SOURCE_CHUNK_COUNT`: **14**
 - `DA001_PRIVATE_PREVIEW`: **1**
 - GitHub validation: **Passed**
-- Previous missing-environment-variable failure: **Corrected**
+- Private-source materialization: **Passed**
+- Astro check and static build: **Passed with zero diagnostics**
+- Secret scanning: **Passed**
 - Lighthouse: **Passed** — Performance 100, Accessibility 100, Best Practices 100, SEO 100
-- Netlify deploy result: **Clean retest triggered after all environment writes completed**
+- Previous deployment failure: **Netlify platform HTTP 500 during deploy API update**
+- Netlify deploy result: **Retry triggered without code or source changes**
 - Visual proof: **Pending successful deploy-preview route**
 - Public release authorized: **No**
 - Public publication date: **Unset**
-- Final proof result: **Pending corrected deployment retest**
+- Final proof result: **Pending platform retry**
 
 A separate public-release pull request must not be opened until the preview route deploys successfully and receives visual proof.
