@@ -40,13 +40,25 @@ The deploy preview must:
 - GitHub validation: **Passed**
 - Private-source materialization: **Passed**
 - Astro check and static build: **Passed with zero diagnostics**
+- Generated output count: **111 files; below the 500-file Starter-plan limit**
 - Secret scanning: **Passed**
 - Lighthouse: **Passed** — Performance 100, Accessibility 100, Best Practices 100, SEO 100
-- Previous deployment failure: **Netlify platform HTTP 500 during deploy API update**
-- Netlify deploy result: **Second platform retry triggered without application changes**
-- Visual proof: **Pending successful deploy-preview route**
+- Netlify deployment attempts: **Three reproducible HTTP 500 failures during `PUT /sites/{site_id}/deploys/{deploy_id}` after successful build and upload calculation**
+- Netlify public status at escalation: **All systems operational**
+- Failure classification: **Netlify platform deploy-API defect; no remaining repository, manuscript, validation, file-count, or environment-variable failure identified**
+- Visual proof: **Blocked because Netlify does not finalize the deploy-preview route**
 - Public release authorized: **No**
 - Public publication date: **Unset**
-- Final proof result: **Pending platform retry**
+- Final proof result: **Blocked pending Netlify support or successful platform recovery**
+
+## Support escalation data
+
+- Site ID: `78053981-b72d-428f-9622-1b7177ace21d`
+- Repository: `JamesJedi420/dead-air-website`
+- Pull request: `#19`
+- Preview branch: `agent/da001-private-preview`
+- Verified failing commit: `947d264b7a3d69659bbd89175787e9e970c635be`
+- Failure stage: deploy finalization after successful Astro build, output validation, secret scan, and file calculation
+- Netlify error: `[PUT /sites/{site_id}/deploys/{deploy_id}][500]`
 
 A separate public-release pull request must not be opened until the preview route deploys successfully and receives visual proof.
