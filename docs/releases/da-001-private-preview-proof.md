@@ -9,6 +9,7 @@ Trigger and document the password-gated deploy preview for **DA-001 — The Buil
 - Revision: Final Approved Story v17
 - Editorial proof: complete; no required manuscript revision
 - Storage: private controlled source outside the public repository
+- Raw private-export SHA-256: `eaba2ab84b2949382e99f4eef29afffffbe5cf8d7491b47cb680e6272967a518`
 - Canonical source SHA-256: `e219318d0d395d601daa32f4778b207a99c7ba05301f9834631f539eb4a9b415`
 - Approved word count: 23,621
 
@@ -30,8 +31,9 @@ The deploy preview must:
 
 - Preview branch: `agent/da001-private-preview`
 - Private source environment: configured for deploy-preview builds
+- Secret source sequence: rebuilt on 2026-08-01 from one verified plain-text Drive export
 - Public release authorized: **No**
 - Public publication date: **Unset**
-- Final proof result: **Pending deploy-preview checks and visual review**
+- Final proof result: **Pending retried deploy-preview checks and visual review**
 
 A separate release pull request is required after this preview passes and receives publication approval.
