@@ -34,10 +34,11 @@ The deploy preview must:
 - Secret source sequence: rebuilt on 2026-08-01 from one verified plain-text Drive export
 - Active source chunk count: **14**
 - Obsolete source chunks `014`–`023`: **Removed from Netlify configuration**
+- Active manuscript chunk scopes: **Build-only**
 - GitHub validation: **Passed**
 - Source-chunk import failure: **Resolved**
 - Lighthouse: **Passed** — Performance 100, Accessibility 100, Best Practices 100, SEO 100
-- Netlify deploy result: **Retest pending after stale secret cleanup**
+- Netlify deploy result: **Retest pending after environment-scope correction**
 - Visual proof: **Pending successful deploy-preview route**
 - Public release authorized: **No**
 - Public publication date: **Unset**
