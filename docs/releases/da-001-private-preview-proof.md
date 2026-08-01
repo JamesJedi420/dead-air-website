@@ -33,12 +33,15 @@ The deploy preview must:
 - Private source environment: configured for deploy-preview builds
 - Secret source sequence: rebuilt on 2026-08-01 from one verified plain-text Drive export
 - Active source chunk count: **14**
+- Source variables `DA001_PRIVATE_SOURCE_GZIP_B64_000`–`013`: **Restored with explicit values**
 - Obsolete source chunks `014`–`023`: **Removed from Netlify configuration**
-- Active manuscript chunk scopes: **Build-only**
+- Active manuscript chunk scopes: **Deploy-preview / build-only**
+- `DA001_PRIVATE_SOURCE_CHUNK_COUNT`: **14**
+- `DA001_PRIVATE_PREVIEW`: **1**
 - GitHub validation: **Passed**
-- Source-chunk import failure: **Resolved**
+- Previous missing-environment-variable failure: **Corrected**
 - Lighthouse: **Passed** — Performance 100, Accessibility 100, Best Practices 100, SEO 100
-- Netlify deploy result: **Retest pending after environment-scope correction**
+- Netlify deploy result: **Retest triggered after full environment restoration**
 - Visual proof: **Pending successful deploy-preview route**
 - Public release authorized: **No**
 - Public publication date: **Unset**
