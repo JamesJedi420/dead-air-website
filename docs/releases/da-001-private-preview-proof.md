@@ -35,13 +35,12 @@ The deploy preview must:
 - Active source chunk count: **14**
 - Source variables `DA001_PRIVATE_SOURCE_GZIP_B64_000`–`013`: **Restored with explicit values**
 - Obsolete source chunks `014`–`023`: **Removed from Netlify configuration**
-- Active manuscript chunk scopes: **Deploy-preview / build-only**
 - `DA001_PRIVATE_SOURCE_CHUNK_COUNT`: **14**
 - `DA001_PRIVATE_PREVIEW`: **1**
 - GitHub validation: **Passed**
 - Previous missing-environment-variable failure: **Corrected**
 - Lighthouse: **Passed** — Performance 100, Accessibility 100, Best Practices 100, SEO 100
-- Netlify deploy result: **Retest triggered after full environment restoration**
+- Netlify deploy result: **Clean retest triggered after all environment writes completed**
 - Visual proof: **Pending successful deploy-preview route**
 - Public release authorized: **No**
 - Public publication date: **Unset**
