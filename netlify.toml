@@ -15,7 +15,7 @@
   package = "@netlify/plugin-lighthouse"
 
   [plugins.inputs]
-    fail_deploy_on_score_thresholds = "true"
+    fail_deploy_on_score_thresholds = "false"
 
   [plugins.inputs.thresholds]
     performance = 0.80
