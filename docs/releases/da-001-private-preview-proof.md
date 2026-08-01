@@ -32,8 +32,13 @@ The deploy preview must:
 - Preview branch: `agent/da001-private-preview`
 - Private source environment: configured for deploy-preview builds
 - Secret source sequence: rebuilt on 2026-08-01 from one verified plain-text Drive export
+- GitHub validation: **Passed**
+- Source-chunk import failure: **Resolved**
+- Lighthouse: **Passed** — Performance 100, Accessibility 100, Best Practices 100, SEO 100
+- Netlify deploy result: **Failed after build** — exit code 4
+- Visual proof: **Blocked because no deploy-preview route was published**
 - Public release authorized: **No**
 - Public publication date: **Unset**
-- Final proof result: **Pending retried deploy-preview checks and visual review**
+- Final proof result: **Failed release gate; deployment-stage diagnosis required**
 
-A separate release pull request is required after this preview passes and receives publication approval.
+A separate public-release pull request must not be opened until the preview route deploys successfully and receives visual proof.
