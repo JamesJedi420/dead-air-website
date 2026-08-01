@@ -43,7 +43,7 @@ The deploy preview must:
 - Secret scanning: **Passed**
 - Lighthouse: **Passed** — Performance 100, Accessibility 100, Best Practices 100, SEO 100
 - Previous deployment failure: **Netlify platform HTTP 500 during deploy API update**
-- Netlify deploy result: **Retry triggered without code or source changes**
+- Netlify deploy result: **Second platform retry triggered without application changes**
 - Visual proof: **Pending successful deploy-preview route**
 - Public release authorized: **No**
 - Public publication date: **Unset**
