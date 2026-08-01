@@ -2,20 +2,14 @@
   "slug": "da-001-the-building-keeps-the-hour",
   "title": "The Building Keeps the Hour",
   "source": {
-    "storage": "private-controlled-source",
-    "repositoryPath": null,
+    "storage": "repository-fragments",
+    "repositoryPath": "src/manuscripts/da-001",
     "approvedRevision": "Final Approved Story v17",
     "approvedDocumentTitle": "DA-001 — Final Approved Story v17 — The Building Keeps the Hour",
     "sourceDocumentId": "1ftFFygxUKADwJwtKetBCJQ_GkVMzUvqvuDB1cQRzkSE",
-    "canonicalization": "google-doc-text-v1",
-    "canonicalizerModule": "scripts/lib/da001-canonicalizer-v1.mjs",
-    "attestationPath": "src/data/da-001-canonicalization-attestation.json",
-    "wordPattern": "\\b\\w+(?:[’'-]\\w+)*\\b",
-    "approvedPrivateExportSha256": "eaba2ab84b2949382e99f4eef29afffffbe5cf8d7491b47cb680e6272967a518",
-    "approvedCanonicalSha256": "e219318d0d395d601daa32f4778b207a99c7ba05301f9834631f539eb4a9b415",
-    "approvedWordCount": 23621,
-    "formerGitBlobSha1": "784b2bbc7cd634a143845b4b293de73aeb3c5720",
-    "formerGitSourceStatus": "superseded",
+    "approvedSourceSha256": "175680113c552fe71b8aea3cdc553755e06909202928cf6675c1a0ab41228aba",
+    "fragmentPattern": "part-\\d{2}\\.mdfrag",
+    "fragmentCount": 2,
     "requiresDigestVerificationOnImport": true
   },
   "historicalDisclosure": {
@@ -26,10 +20,10 @@
     "confidentialityClaim": false
   },
   "releaseState": {
-    "status": "withheld",
-    "draft": true,
-    "publicationDate": null,
-    "requiresSeparateApproval": true,
+    "status": "active",
+    "draft": false,
+    "publicationDate": "2026-08-01",
+    "requiresSeparateApproval": false,
     "editorialProof": {
       "status": "complete",
       "verifiedOn": "2026-07-30",
@@ -37,70 +31,21 @@
     }
   },
   "preview": {
-    "branch": "agent/da001-private-preview",
-    "route": "/stories/da-001-the-building-keeps-the-hour/",
-    "access": "password-gated-netlify-deploy-preview",
-    "searchIndexing": "blocked",
     "metadata": {
       "summary": "A veteran custodian supervises a student documentary investigation at Bellweather High, where disputed recordings and after-hours incidents test the boundary between evidence and interpretation.",
       "classification": "Literary paranormal horror",
       "readingTime": "105 minutes",
       "canonicalStatus": "established canon",
-      "tags": [
-        "literary paranormal horror",
-        "documentary horror",
-        "institutional horror",
-        "psychological horror"
-      ],
-      "phenomenon": [
-        "contested audio",
-        "disputed visual evidence",
-        "object displacement",
-        "institutional haunting"
-      ],
-      "evidenceType": [
-        "video",
-        "audio",
-        "recorder files",
-        "metadata",
-        "software cache",
-        "access records",
-        "interviews",
-        "physical object custody",
-        "maintenance logs",
-        "building plans",
-        "source comparisons"
-      ],
-      "locations": [
-        "Bellweather High School"
-      ],
-      "contentWarnings": [
-        "Death and grief involving a former coworker",
-        "Claustrophobic maintenance spaces",
-        "Disputed voices and images",
-        "Unsafe crawlspace access",
-        "Institutional conflict"
-      ],
-      "contentNotes": [
-        "No graphic violence."
-      ],
-      "cases": [
-        "da-001"
-      ],
-      "characters": [
-        "diane-madsen",
-        "evan-kruse",
-        "abby-larson",
-        "wayne-nissen"
-      ],
-      "objects": [
-        "unidentified-wet-brass-key"
-      ],
-      "mysteries": [
-        "origin-and-ownership-of-the-wet-brass-key",
-        "identity-and-meaning-of-the-answering-key-cadence",
-        "relationship-among-the-recorded-phenomena-at-bellweather-high"
-      ]
+      "tags": ["literary paranormal horror", "documentary horror", "institutional horror", "psychological horror"],
+      "phenomenon": ["contested audio", "disputed visual evidence", "object displacement", "institutional haunting"],
+      "evidenceType": ["video", "audio", "recorder files", "metadata", "software cache", "access records", "interviews", "physical object custody", "maintenance logs", "building plans", "source comparisons"],
+      "locations": ["Bellweather High School"],
+      "contentWarnings": ["Death and grief involving a former coworker", "Claustrophobic maintenance spaces", "Disputed voices and images", "Unsafe crawlspace access", "Institutional conflict"],
+      "contentNotes": ["No graphic violence."],
+      "cases": ["da-001"],
+      "characters": ["diane-madsen", "evan-kruse", "abby-larson", "wayne-nissen"],
+      "objects": ["unidentified-wet-brass-key"],
+      "mysteries": ["origin-and-ownership-of-the-wet-brass-key", "identity-and-meaning-of-the-answering-key-cadence", "relationship-among-the-recorded-phenomena-at-bellweather-high"]
     }
   },
   "chronology": {
@@ -110,70 +55,25 @@
     "datePrecision": "relative",
     "chronologyNote": "Placed before DA-002 according to the approximate order of the source investigations and transcripts; the exact interval is fictionalized or withheld.",
     "follows": [],
-    "precedes": [
-      {
-        "collection": "stories",
-        "slug": "da-002-the-name-in-the-room"
-      }
-    ]
+    "precedes": [{"collection": "stories", "slug": "da-002-the-name-in-the-room"}]
   },
   "sections": [
-    {
-      "source": "Scene 1 — Three-Thirty",
-      "published": "1. Three-Thirty"
-    },
-    {
-      "source": "Scene 2 — Permission Slips",
-      "published": "2. Permission Slips"
-    },
-    {
-      "source": "Scene 3 — The Quiet Test",
-      "published": "3. The Quiet Test"
-    },
-    {
-      "source": "Scene 4 — Four Seconds",
-      "published": "4. Four Seconds"
-    },
-    {
-      "source": "Scene 5 — The Markers",
-      "published": "5. The Markers"
-    },
-    {
-      "source": "Scene 6 — The West Route",
-      "published": "6. The West Route"
-    },
-    {
-      "source": "Scene 7 — The Cut",
-      "published": "7. The Cut"
-    },
-    {
-      "source": "Scene 8 — The Glassless Window",
-      "published": "8. The Glassless Window"
-    },
-    {
-      "source": "Scene 9 — The Key That Is Not Hers",
-      "published": "9. The Key That Is Not Hers"
-    },
-    {
-      "source": "Scene 10 — Source Track",
-      "published": "10. Source Track"
-    }
+    {"source": "Scene 1 — Three-Thirty", "published": "1. Three-Thirty"},
+    {"source": "Scene 2 — Permission Slips", "published": "2. Permission Slips"},
+    {"source": "Scene 3 — The Quiet Test", "published": "3. The Quiet Test"},
+    {"source": "Scene 4 — Four Seconds", "published": "4. Four Seconds"},
+    {"source": "Scene 5 — The Markers", "published": "5. The Markers"},
+    {"source": "Scene 6 — The West Route", "published": "6. The West Route"},
+    {"source": "Scene 7 — The Cut", "published": "7. The Cut"},
+    {"source": "Scene 8 — The Glassless Window", "published": "8. The Glassless Window"},
+    {"source": "Scene 9 — The Key That Is Not Hers", "published": "9. The Key That Is Not Hers"},
+    {"source": "Scene 10 — Source Track", "published": "10. Source Track"}
   ],
   "continuity": {
     "successorPath": "src/content/stories/da-002-the-name-in-the-room.md",
-    "sharedCharacters": [
-      "diane-madsen",
-      "evan-kruse",
-      "abby-larson"
-    ],
-    "sharedLocations": [
-      "Bellweather High School"
-    ],
-    "sharedObjects": [
-      "unidentified-wet-brass-key"
-    ],
-    "sharedMysteries": [
-      "relationship-among-the-recorded-phenomena-at-bellweather-high"
-    ]
+    "sharedCharacters": ["diane-madsen", "evan-kruse", "abby-larson"],
+    "sharedLocations": ["Bellweather High School"],
+    "sharedObjects": ["unidentified-wet-brass-key"],
+    "sharedMysteries": ["relationship-among-the-recorded-phenomena-at-bellweather-high"]
   }
 }
