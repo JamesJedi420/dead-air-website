@@ -16,13 +16,17 @@ const sourceFiles = (await readdir(sourceDirectory))
   .filter((fileName) => /^part-\d{2}\.mdfrag$/.test(fileName))
   .sort((left, right) => left.localeCompare(right));
 
-if (sourceFiles.length !== 2) {
-  throw new Error(`Expected 2 DA-001 manuscript fragments, found ${sourceFiles.length}.`);
+if (sourceFiles.length !== 12) {
+  throw new Error(`Expected 12 DA-001 manuscript fragments, found ${sourceFiles.length}.`);
 }
 
-const approvedSource = (
-  await Promise.all(sourceFiles.map((fileName) => readFile(path.join(sourceDirectory, fileName), "utf8")))
-).join("");
+const sourceFragments = await Promise.all(
+  sourceFiles.map((fileName) => readFile(path.join(sourceDirectory, fileName), "utf8")),
+);
+// The first GitHub Contents API write normalized two terminal newlines to one.
+// Restore the approved split boundary before hashing and materialization.
+sourceFragments[0] += "\n";
+const approvedSource = sourceFragments.join("");
 
 const actualSourceSha256 = sha256(approvedSource);
 if (actualSourceSha256 !== approvedSourceSha256) {
@@ -99,5 +103,5 @@ const frontmatter = [
 await mkdir(path.dirname(outputPath), { recursive: true });
 await writeFile(outputPath, `${frontmatter}${body}`, "utf8");
 console.log(
-  `Materialized DA-001 Final Approved Story v17 for publication (${sha256(`${frontmatter}${body}`)}); approved source preserved (${actualSourceSha256}); public divisions rendered as numbered section headings; narrative chronology fixed at archive position 1 before DA-002.`,
+  `Materialized DA-001 Final Approved Story v17 for publication (${sha256(`${frontmatter}${body}`)}); approved source preserved (${actualSourceSha256}); standard source note supplied by the shared story template; public divisions rendered as numbered section headings; narrative chronology fixed at archive position 1 before DA-002.`,
 );
