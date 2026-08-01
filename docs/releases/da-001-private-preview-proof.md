@@ -29,6 +29,7 @@ The deploy preview must:
 ## Proof record
 
 - Preview branch: `agent/da001-private-preview`
+- Private source environment: configured for deploy-preview builds
 - Public release authorized: **No**
 - Public publication date: **Unset**
 - Final proof result: **Pending deploy-preview checks and visual review**
