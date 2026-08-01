@@ -9,7 +9,7 @@
     "sourceDocumentId": "1ftFFygxUKADwJwtKetBCJQ_GkVMzUvqvuDB1cQRzkSE",
     "approvedSourceSha256": "175680113c552fe71b8aea3cdc553755e06909202928cf6675c1a0ab41228aba",
     "fragmentPattern": "part-\\d{2}\\.mdfrag",
-    "fragmentCount": 2,
+    "fragmentCount": 12,
     "requiresDigestVerificationOnImport": true
   },
   "historicalDisclosure": {
