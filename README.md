@@ -79,21 +79,15 @@ Published stories or cases assigned a timeline position must record `timelineOrd
 
 The approved policy and initial DA-001 → DA-002 sequence are recorded in `docs/editorial/narrative-timeline-standard.md`. `scripts/validate-narrative-timeline.mjs` enforces metadata completeness before development, preview, and production builds; `scripts/validate-narrative-timeline-output.mjs` verifies the generated public chronology.
 
-## DA-001 Release Preparation
+## DA-001 Publication
 
-DA-001 remains withheld and requires separate publication approval. Its manuscript is stored privately outside this repository. The authoritative source is `Final Approved Story v17`.
+DA-001 — *The Building Keeps the Hour* is published from Final Approved Story v17.
 
-`scripts/lib/da001-canonicalizer-v1.mjs` defines the complete `google-doc-text-v1` transformation, fixed withheld frontmatter, section sequence, word-count expression, and approved digest constants. `scripts/test-da001-canonicalizer.mjs` tests the transformation against committed synthetic fixtures and checks the private-source attestation against the release manifest. An authorized operator verifies an actual private Google Docs text export with:
+The approved manuscript is divided into twelve ordered repository fragments under `src/manuscripts/da-001/`. `scripts/materialize-da001.mjs` assembles them during development and production builds, verifies the approved source SHA-256, converts the private scene headings to the ten numbered public section headings, and writes the generated story entry.
 
-```bash
-npm run verify:da001-private-source -- /private/path/da-001-v17.txt
-```
+`scripts/validate-da001-output.mjs` verifies the published route, source note, ten sections, search entry, RSS item, and sitemap entry. `scripts/validate-narrative-timeline.mjs` and `scripts/validate-narrative-timeline-output.mjs` verify archive position 1 before DA-002. The GitHub validation workflow also captures segmented desktop and iPhone 13 visual proof at the page top, Section 5, Section 10, and footer.
 
-`scripts/validate-da001-preparation.mjs` scans the active checkout for a canonical-source hash, manuscript-like section structure, approved scene fragments, files under `src/manuscripts/da-001/`, and a premature DA-001 content entry. `scripts/validate-da001-output.mjs` confirms that no DA-001 route, title, slug, RSS item, sitemap entry, search/index reference, asset path, or timeline entry reaches deployed output.
-
-The owner accepted the historical Git disclosure risk on July 30, 2026 and chose to leave repository history unchanged. These controls govern the active tree and public output; they make no claim that old Git objects are confidential or inaccessible.
-
-The machine-readable records are `src/data/da-001-release-preparation.json` and `src/data/da-001-canonicalization-attestation.json`. The full release boundary is recorded in `docs/editorial/da-001-release-preparation.md`.
+The completed release evidence is recorded in `docs/editorial/da-001-release-checklist.md`. Superseded withheld-release and secret-chunk preview records are retained under `docs/archive/da-001/` and must not be used as active release instructions.
 
 ## Repository Branch
 
