@@ -24,9 +24,20 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci
-      - name: Run canonicalizer fixture
-        run: npm run test:da001-canonicalizer
-      - name: Validate DA-001 preparation
-        run: npm run validate:da001-preparation
-      - name: Build site
+      - name: Build and validate site
         run: npm run build
+      - name: Install Playwright Chromium
+        run: |
+          npm install --no-save --package-lock=false playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Capture DA-001 desktop and mobile visual proof
+        run: |
+          python3 -m http.server 4173 --directory dist > /tmp/dead-air-http.log 2>&1 &
+          node scripts/capture-da001-visual-proof.mjs
+      - name: Upload DA-001 visual proof
+        uses: actions/upload-artifact@v4
+        with:
+          name: da001-visual-proof
+          path: artifacts/da001-visual-proof/*.png
+          if-no-files-found: error
+          retention-days: 30
