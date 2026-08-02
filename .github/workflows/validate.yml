@@ -28,11 +28,26 @@ jobs:
         run: npm run build
       - name: Install Playwright Chromium
         run: |
+          # Pin the proof runner exactly without changing the production dependency lockfile.
           npm install --no-save --package-lock=false playwright@1.55.0
           npx playwright install --with-deps chromium
       - name: Capture DA-001 desktop and mobile visual proof
         run: |
           python3 -m http.server 4173 --directory dist > /tmp/dead-air-http.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+
+          for attempt in {1..60}; do
+            if curl -fsS http://127.0.0.1:4173/stories/da-001-the-building-keeps-the-hour/ > /dev/null; then
+              break
+            fi
+            if [ "$attempt" -eq 60 ]; then
+              cat /tmp/dead-air-http.log
+              exit 1
+            fi
+            sleep 0.5
+          done
+
           node scripts/capture-da001-visual-proof.mjs
       - name: Upload DA-001 visual proof
         uses: actions/upload-artifact@v4
