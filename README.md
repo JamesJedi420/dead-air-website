@@ -85,7 +85,7 @@ DA-001 — *The Building Keeps the Hour* is published from Final Approved Story 
 
 The approved manuscript is divided into twelve ordered repository fragments under `src/manuscripts/da-001/`. `scripts/materialize-da001.mjs` assembles them during development and production builds, verifies the approved source SHA-256, converts the private scene headings to the ten numbered public section headings, and writes the generated story entry.
 
-`scripts/validate-da001-output.mjs` verifies the published route, source note, ten sections, search entry, RSS item, sitemap entry, and archive position 1 before DA-002. The GitHub validation workflow also captures segmented desktop and iPhone 13 visual proof at the page top, Section 5, Section 10, and footer.
+`scripts/validate-da001-output.mjs` verifies the published route, source note, ten sections, search entry, RSS item, and sitemap entry. `scripts/validate-narrative-timeline.mjs` and `scripts/validate-narrative-timeline-output.mjs` verify archive position 1 before DA-002. The GitHub validation workflow also captures segmented desktop and iPhone 13 visual proof at the page top, Section 5, Section 10, and footer.
 
 The completed release evidence is recorded in `docs/editorial/da-001-release-checklist.md`. Superseded withheld-release and secret-chunk preview records are retained under `docs/archive/da-001/` and must not be used as active release instructions.
 
