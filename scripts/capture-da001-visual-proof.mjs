@@ -62,13 +62,50 @@ const verifyStoryContent = async (page) => {
     )
     .waitFor();
 
+  const sectionOffsets = [];
   for (const section of sections) {
-    assert.equal(
-      await page.getByRole("heading", { name: section, exact: true }).count(),
-      1,
-      `Expected exactly one published section heading ${JSON.stringify(section)}.`,
+    const heading = page.getByRole("heading", { name: section, exact: true });
+    assert.equal(await heading.count(), 1, `Expected exactly one published section heading ${JSON.stringify(section)}.`);
+    sectionOffsets.push(await heading.evaluate((element) => element.getBoundingClientRect().top + window.scrollY));
+  }
+  for (let index = 1; index < sectionOffsets.length; index += 1) {
+    assert(
+      sectionOffsets[index] > sectionOffsets[index - 1],
+      `Published section ${index + 1} must render after section ${index}.`,
     );
   }
+};
+
+const settleAfterScroll = async (page) => {
+  await page.evaluate(
+    () =>
+      new Promise((resolve) => {
+        requestAnimationFrame(() => requestAnimationFrame(resolve));
+      }),
+  );
+};
+
+const captureViewportProof = async (page, prefix) => {
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await settleAfterScroll(page);
+  await page.screenshot({ path: path.join(outputDirectory, `${prefix}-top.png`) });
+
+  for (const [heading, suffix] of [
+    ["5. The Markers", "section-5"],
+    ["10. Source Track", "section-10"],
+  ]) {
+    const locator = page.getByRole("heading", { name: heading, exact: true });
+    await locator.scrollIntoViewIfNeeded();
+    await settleAfterScroll(page);
+    const box = await locator.boundingBox();
+    assert(box && box.y >= 0 && box.y < (await page.evaluate(() => window.innerHeight)), `${heading} is not visible after scrolling.`);
+    await page.screenshot({ path: path.join(outputDirectory, `${prefix}-${suffix}.png`) });
+  }
+
+  const footer = page.locator("footer");
+  await footer.scrollIntoViewIfNeeded();
+  await settleAfterScroll(page);
+  await page.screenshot({ path: path.join(outputDirectory, `${prefix}-footer.png`) });
 };
 
 const desktopContext = await browser.newContext({ viewport: { width: 1440, height: 1200 }, deviceScaleFactor: 1 });
@@ -76,10 +113,7 @@ const desktopPage = await desktopContext.newPage();
 await openWithRetry(desktopPage, `${baseUrl}${storyPath}`);
 await verifyStoryContent(desktopPage);
 await assertNoHorizontalOverflow(desktopPage, "Desktop DA-001 page");
-await desktopPage.screenshot({
-  path: path.join(outputDirectory, "da001-desktop-1440.png"),
-  fullPage: true,
-});
+await captureViewportProof(desktopPage, "da001-desktop-1440");
 
 const storiesHref = await desktopPage.getByRole("link", { name: "Stories", exact: true }).first().getAttribute("href");
 const timelineHref = await desktopPage.getByRole("link", { name: "Timeline", exact: true }).first().getAttribute("href");
@@ -119,15 +153,12 @@ const mobilePage = await mobileContext.newPage();
 await openWithRetry(mobilePage, `${baseUrl}${storyPath}`);
 await verifyStoryContent(mobilePage);
 await assertNoHorizontalOverflow(mobilePage, "Mobile DA-001 page");
-await mobilePage.screenshot({
-  path: path.join(outputDirectory, "da001-mobile-iphone-13.png"),
-  fullPage: true,
-});
+await captureViewportProof(mobilePage, "da001-mobile-iphone-13");
 
 await mobileContext.close();
 await desktopContext.close();
 await browser.close();
 
 console.log(
-  "DA-001 visual proof passed: desktop and iPhone 13 layouts have no horizontal overflow; story metadata, source note, ten sections, stories-index link, navigation paths, and DA-001 → DA-002 chronology are correct.",
+  "DA-001 visual proof passed: desktop and iPhone 13 viewport captures cover the page top, Section 5, Section 10, and footer; layouts have no horizontal overflow; story metadata, source note, ten ordered sections, stories-index link, navigation paths, and DA-001 → DA-002 chronology are correct.",
 );
