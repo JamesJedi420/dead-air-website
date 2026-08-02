@@ -8,15 +8,17 @@ on:
 
 permissions:
   contents: write
+  pull-requests: read
 
 jobs:
   cleanup:
     if: github.repository == 'JamesJedi420/dead-air-website'
     runs-on: ubuntu-latest
     steps:
-      - name: Delete retired DA-001 branch refs
+      - name: Preflight and delete retired DA-001 branch refs
         env:
           GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: 546cee08219739013e627b97dc02cf6e0d5971ff
         run: |
           set -euo pipefail
 
@@ -33,10 +35,55 @@ jobs:
             "agent/one-time-da001-branch-cleanup"
           )
 
+          ref_exists() {
+            local branch="$1"
+            local output
+            local status
+
+            set +e
+            output="$(gh api "repos/${GITHUB_REPOSITORY}/git/ref/heads/${branch}" 2>&1)"
+            status=$?
+            set -e
+
+            if [ "$status" -eq 0 ]; then
+              return 0
+            fi
+            if grep -q "HTTP 404" <<<"$output"; then
+              return 1
+            fi
+
+            echo "$output" >&2
+            exit "$status"
+          }
+
+          blocked=0
           for branch in "${branches[@]}"; do
-            if gh api "repos/${GITHUB_REPOSITORY}/git/ref/heads/${branch}" > /dev/null 2>&1; then
+            open_pr_count="$(
+              gh api --method GET "repos/${GITHUB_REPOSITORY}/pulls" \
+                -f state="open" \
+                -f head="${GITHUB_REPOSITORY_OWNER}:${branch}" \
+                -F per_page=1 \
+                --jq 'length'
+            )"
+            if [ "$open_pr_count" -ne 0 ]; then
+              echo "Open pull request still uses ${branch}; refusing deletion." >&2
+              blocked=1
+            fi
+          done
+
+          if [ "$blocked" -ne 0 ]; then
+            exit 1
+          fi
+
+          for branch in "${branches[@]}"; do
+            if ref_exists "$branch"; then
+              echo "Repointing ${branch} to ${TARGET_SHA}"
+              gh api --method PATCH "repos/${GITHUB_REPOSITORY}/git/refs/heads/${branch}" \
+                -f sha="${TARGET_SHA}" \
+                -F force=true > /dev/null
+
               echo "Deleting ${branch}"
-              gh api --method DELETE "repos/${GITHUB_REPOSITORY}/git/refs/heads/${branch}"
+              gh api --method DELETE "repos/${GITHUB_REPOSITORY}/git/refs/heads/${branch}" > /dev/null
             else
               echo "Already absent: ${branch}"
             fi
@@ -61,8 +108,29 @@ jobs:
             "agent/one-time-da001-branch-cleanup"
           )
 
+          ref_exists() {
+            local branch="$1"
+            local output
+            local status
+
+            set +e
+            output="$(gh api "repos/${GITHUB_REPOSITORY}/git/ref/heads/${branch}" 2>&1)"
+            status=$?
+            set -e
+
+            if [ "$status" -eq 0 ]; then
+              return 0
+            fi
+            if grep -q "HTTP 404" <<<"$output"; then
+              return 1
+            fi
+
+            echo "$output" >&2
+            exit "$status"
+          }
+
           for branch in "${branches[@]}"; do
-            if gh api "repos/${GITHUB_REPOSITORY}/git/ref/heads/${branch}" > /dev/null 2>&1; then
+            if ref_exists "$branch"; then
               echo "Branch still exists: ${branch}" >&2
               exit 1
             fi
