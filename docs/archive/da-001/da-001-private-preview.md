@@ -2,7 +2,7 @@
 
 > **Status:** Superseded on August 1, 2026. DA-001 was published through the repository-native twelve-fragment materializer. The secret-chunk materializer, preview password gate, edge function, and Netlify variables described below were removed. This record is retained only as historical deployment documentation and must not be used as an active release procedure.
 
-DA-001 remains withheld and unpublished. The private preview path exists only to proof the approved Final Approved Story v17 without committing its manuscript to the active repository tree.
+**Historical context:** DA-001 remained withheld and unpublished while this preview system operated. The private preview path existed only to proof the approved Final Approved Story v17 without committing its manuscript to the active repository tree.
 
 ## Activation boundary
 
