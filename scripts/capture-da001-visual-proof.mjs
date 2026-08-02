@@ -92,13 +92,26 @@ assert.equal(await storyIndexLink.count(), 1, "Stories index must link to DA-001
 assert.equal(new URL(await storyIndexLink.getAttribute("href"), desktopPage.url()).pathname, storyPath);
 
 await openWithRetry(desktopPage, `${baseUrl}/timeline/`);
-const timelineText = await desktopPage.locator("main").innerText();
-const positionOne = timelineText.indexOf("Archive position 1");
-const da001 = timelineText.indexOf("The Building Keeps the Hour");
-const positionTwo = timelineText.indexOf("Archive position 2");
-const da002 = timelineText.indexOf("The Name in the Room");
-assert(positionOne >= 0 && da001 > positionOne, "Timeline must place DA-001 at archive position 1.");
-assert(positionTwo > da001 && da002 > positionTwo, "Timeline must place DA-002 at archive position 2 after DA-001.");
+const timelineItems = desktopPage.locator(".timeline-list > li");
+let da001Index = -1;
+let da002Index = -1;
+let da001Text = "";
+let da002Text = "";
+for (let index = 0; index < (await timelineItems.count()); index += 1) {
+  const text = await timelineItems.nth(index).innerText();
+  if (text.includes("The Building Keeps the Hour")) {
+    da001Index = index;
+    da001Text = text;
+  }
+  if (text.includes("The Name in the Room")) {
+    da002Index = index;
+    da002Text = text;
+  }
+}
+assert(da001Index >= 0, "Timeline must contain the DA-001 story entry.");
+assert(da002Index > da001Index, "Timeline must place the DA-002 story entry after DA-001.");
+assert.match(da001Text, /Archive position\s+1/i, "DA-001 timeline card must show archive position 1.");
+assert.match(da002Text, /Archive position\s+2/i, "DA-002 timeline card must show archive position 2.");
 await assertNoHorizontalOverflow(desktopPage, "Desktop timeline page");
 
 const mobileContext = await browser.newContext({ ...devices["iPhone 13"] });
