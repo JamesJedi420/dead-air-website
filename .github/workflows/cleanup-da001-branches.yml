@@ -1,0 +1,156 @@
+name: One-time DA-001 branch cleanup
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  cleanup:
+    if: github.repository == 'JamesJedi420/dead-air-website'
+    runs-on: ubuntu-latest
+    env:
+      TARGET_SHA: 546cee08219739013e627b97dc02cf6e0d5971ff
+      CLEANUP_BRANCH: agent/one-time-da001-branch-cleanup
+      CLEANUP_PR_NUMBER: "23"
+      BRANCH_ALLOWLIST: |
+        agent/align-da001-approved-source
+        agent/archive-da001-preview-records
+        agent/da001-private-preview
+        agent/da001-visual-proof
+        agent/da-001-release-preparation
+        agent/export-da001-private
+        agent/harden-da001-release-controls
+        agent/publish-da001-repository-materializer
+        agent/remove-da001-public-source
+        agent/one-time-da001-branch-cleanup
+    steps:
+      - name: Preflight, align, delete, and verify retired refs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+
+          mapfile -t branches < <(printf '%s\n' "$BRANCH_ALLOWLIST" | sed '/^[[:space:]]*$/d')
+          existing_branches=()
+          blocked=0
+
+          get_ref_status() {
+            local branch="$1"
+            local body_file="$2"
+
+            curl --silent --show-error --location \
+              --output "$body_file" \
+              --write-out '%{http_code}' \
+              --header "Authorization: Bearer ${GH_TOKEN}" \
+              --header 'Accept: application/vnd.github+json' \
+              --header 'X-GitHub-Api-Version: 2022-11-28' \
+              "https://api.github.com/repos/${GITHUB_REPOSITORY}/git/ref/heads/${branch}"
+          }
+
+          for branch in "${branches[@]}"; do
+            open_pr_count="$(
+              gh api --method GET "repos/${GITHUB_REPOSITORY}/pulls" \
+                -f state="open" \
+                -f head="${GITHUB_REPOSITORY_OWNER}:${branch}" \
+                -F per_page=1 \
+                --jq 'length'
+            )"
+            if [ "$open_pr_count" -ne 0 ]; then
+              echo "Open pull request still uses ${branch}; refusing cleanup." >&2
+              blocked=1
+              continue
+            fi
+
+            body_file="$(mktemp)"
+            status_code="$(get_ref_status "$branch" "$body_file")"
+
+            case "$status_code" in
+              200)
+                current_sha="$(jq -r '.object.sha' "$body_file")"
+                if [ "$branch" = "$CLEANUP_BRANCH" ]; then
+                  cleanup_pr="$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${CLEANUP_PR_NUMBER}")"
+                  cleanup_merged_at="$(jq -r '.merged_at // empty' <<<"$cleanup_pr")"
+                  cleanup_head_ref="$(jq -r '.head.ref' <<<"$cleanup_pr")"
+                  cleanup_head_sha="$(jq -r '.head.sha' <<<"$cleanup_pr")"
+
+                  if [ -z "$cleanup_merged_at" ] || [ "$cleanup_head_ref" != "$CLEANUP_BRANCH" ] || [ "$cleanup_head_sha" != "$current_sha" ]; then
+                    echo "Cleanup branch is not the verified merged head of PR #${CLEANUP_PR_NUMBER}; refusing deletion." >&2
+                    blocked=1
+                  else
+                    existing_branches+=("$branch")
+                  fi
+                elif [ "$current_sha" != "$TARGET_SHA" ]; then
+                  echo "${branch} points to ${current_sha}, not verified retired commit ${TARGET_SHA}; refusing deletion." >&2
+                  blocked=1
+                else
+                  existing_branches+=("$branch")
+                fi
+                ;;
+              404)
+                echo "Already absent: ${branch}"
+                ;;
+              *)
+                echo "Unexpected GitHub API response ${status_code} while reading ${branch}:" >&2
+                cat "$body_file" >&2
+                rm -f "$body_file"
+                exit 1
+                ;;
+            esac
+
+            rm -f "$body_file"
+          done
+
+          if [ "$blocked" -ne 0 ]; then
+            exit 1
+          fi
+
+          for branch in "${existing_branches[@]}"; do
+            echo "Aligning ${branch} to ${TARGET_SHA}"
+            gh api --method PATCH "repos/${GITHUB_REPOSITORY}/git/refs/heads/${branch}" \
+              -f sha="${TARGET_SHA}" \
+              -F force=true > /dev/null
+
+            echo "Deleting ${branch}"
+            gh api --method DELETE "repos/${GITHUB_REPOSITORY}/git/refs/heads/${branch}" > /dev/null
+          done
+
+          for branch in "${branches[@]}"; do
+            body_file="$(mktemp)"
+            status_code="$(get_ref_status "$branch" "$body_file")"
+
+            case "$status_code" in
+              404)
+                ;;
+              200)
+                echo "Branch still exists after cleanup: ${branch}" >&2
+                rm -f "$body_file"
+                exit 1
+                ;;
+              *)
+                echo "Unexpected GitHub API response ${status_code} while verifying ${branch}:" >&2
+                cat "$body_file" >&2
+                rm -f "$body_file"
+                exit 1
+                ;;
+            esac
+
+            rm -f "$body_file"
+          done
+
+      - name: Remove one-time workflow
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          workflow_path=".github/workflows/cleanup-da001-branches.yml"
+          workflow_sha="$(gh api "repos/${GITHUB_REPOSITORY}/contents/${workflow_path}?ref=main" --jq .sha)"
+          gh api --method DELETE "repos/${GITHUB_REPOSITORY}/contents/${workflow_path}" \
+            -f message="Remove one-time DA-001 branch cleanup workflow" \
+            -f sha="${workflow_sha}" \
+            -f branch="main"
