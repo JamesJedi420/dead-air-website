@@ -1,0 +1,43 @@
+name: One-time default branch switch
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  switch-default:
+    if: contains(github.event.head_commit.message, '[one-time-default-switch]')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Switch repository default branch to main
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+
+          current_default="$(gh api "repos/${GITHUB_REPOSITORY}" --jq .default_branch)"
+          if [ "$current_default" = "main" ]; then
+            echo "main is already the default branch."
+            exit 0
+          fi
+
+          if [ "$current_default" != "feature/site-foundation" ]; then
+            echo "Unexpected current default branch: ${current_default}" >&2
+            exit 1
+          fi
+
+          gh api --method PATCH "repos/${GITHUB_REPOSITORY}" \
+            -f default_branch="main" > /tmp/default-branch-response.json
+
+          updated_default="$(gh api "repos/${GITHUB_REPOSITORY}" --jq .default_branch)"
+          if [ "$updated_default" != "main" ]; then
+            echo "GitHub accepted the request but default branch is ${updated_default}." >&2
+            cat /tmp/default-branch-response.json >&2
+            exit 1
+          fi
+
+          echo "Default branch changed to main."
