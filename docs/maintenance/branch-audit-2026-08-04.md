@@ -28,4 +28,4 @@ A branch is eligible for deletion only when:
 
 ## Preserved branches
 
-No other non-`main` branch was present at audit time. The cleanup workflow also verifies open pull requests and exact branch tips immediately before deletion, so any branch that changes after this audit is preserved by failing the cleanup.
+No other non-`main` branch was present at audit time. Immediately before deletion, the cleanup workflow rechecks open pull requests and exact branch tips. If any audited branch has changed, the workflow skips deletion and fails closed so the changed branch remains intact.
