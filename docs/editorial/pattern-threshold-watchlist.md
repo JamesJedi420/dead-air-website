@@ -103,4 +103,19 @@ Only a separate Pattern Threshold Review under the governing protocol may consid
 
 ## Maintenance rule
 
-Keep the Watchlist small. Prefer a few precise, falsifiable dimensions over broad thematic similarities. Do not add a candidate solely because it would be useful for a future plot. Do not promote vocabulary, numbers, symbols, equipment responses, entity labels, or witness theories merely because they recur superficially. Every active candidate must state what future evidence could weaken or falsify it.
+Keep the Watchlist small. Prefer a few precise, falsifiable dimensions over broad thematic similarities.
+
+### New candidate admission gate
+
+Add a new PTW candidate only when a precise, falsifiable observation genuinely warrants continued attention across future cases. A proposed candidate must satisfy all of the following before admission:
+
+- **Precise observation:** State the proposed pattern narrowly enough that a later case can meaningfully match, contradict, or fail to reproduce it. Broad themes, moods, symbols, or generic paranormal similarities do not qualify.
+- **Concrete basis:** Cite the exact source-derived or approved-story observation that prompted consideration, with provenance and evidence layer preserved. A candidate cannot be created solely from creative extrapolation, plot utility, or an investigator/witness theory.
+- **Distinct analytical value:** Explain why the observation is not already adequately covered by an existing PTW entry, Open Mystery item, Contradiction Farming record, or Cross-Case Pattern Observatory candidate.
+- **Falsifiability:** State in advance what future evidence, failed recurrence, ordinary explanation, dependency, or material difference would weaken, split, retire, or falsify the candidate.
+- **Continued-attention value:** Explain what future observation could test the proposition without changing intake, adaptation, research, or story decisions to seek a match.
+- **Ordinary alternatives:** Record plausible technical, environmental, psychological, investigative, editorial, cultural, coincidence, contamination, or unknown alternatives relevant to the proposed observation.
+
+If any admission requirement is missing, do not create a PTW number. Preserve the observation in its proper case-specific record and revisit it only if later evidence independently supplies the missing justification.
+
+Do not add a candidate solely because it would be useful for a future plot. Do not promote vocabulary, numbers, symbols, equipment responses, entity labels, or witness theories merely because they recur superficially. Every active candidate must state what future evidence could weaken or falsify it.
