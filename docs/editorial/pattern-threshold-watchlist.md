@@ -14,6 +14,10 @@ Maintain a small, actively pruned list of details worth noticing when reading ne
 - Negative evidence, failed resemblance, ordinary explanations, and material differences count as useful results.
 - Do not count a resemblance as a completed cross-case recurrence while the case is unfinished.
 
+## DA-003 grandfathering boundary
+
+DA-003 predates Pattern-Threshold Watchlist activation. Do not apply PTW-001 through PTW-005 retroactively to its completed intake, Transcript Notes, Adaptation Plan, incident selection, story architecture, approved scenes, assembled manuscript, or completed revision decisions. The Watchlist must not be used to reinterpret, reselect, reframe, or revise DA-003 development to create a match. Any later resemblance belongs only to the normal Cross-Case Pattern Observatory reconciliation after DA-003 reaches approved completed-case status and cannot be treated as evidence that the earlier adaptation was built around the Watchlist.
+
 ## Intake workflow
 
 During every future Source Transcript Intake, consult the current Watchlist after the source has been preserved and its observable material has been recorded neutrally.
