@@ -6,9 +6,9 @@ import process from "node:process";
 
 const root = process.cwd();
 const storyPath = path.join(root, "src", "content", "stories", "da-003-the-recorder-kept-running.md");
-const coverPath = path.join(root, "public", "images", "da-003-cover-option-a-preview.jpg");
+const coverPath = path.join(root, "public", "images", "da-003-cover-option-a-evidence-crop-preview.jpg");
 const expectedSourceSha256 = "522786572da7ddd784045b07adb7ca79ab0e4165ed7d0418af9ef3ec0a2f401f";
-const expectedCoverSha256 = "d26ba04cb9567cc87dfb826292eb4b6dd3ba3a2a0fde2101a6581a08d63af5d5";
+const expectedCoverSha256 = "4747217629b0ddaa2da7d3e8d7b236d5dbd1d2f8cedbd990b1d46db60986ec04";
 const keyHex = process.env.DA003_PREVIEW_KEY_HEX;
 const context = process.env.CONTEXT ?? process.env.NETLIFY_CONTEXT ?? "local";
 
@@ -80,14 +80,14 @@ if (coverPayload) {
     if (coverHash !== expectedCoverSha256) throw new Error(`expected ${expectedCoverSha256}, got ${coverHash}`);
     await mkdir(path.dirname(coverPath), { recursive: true });
     await writeFile(coverPath, coverBytes);
-    coverFrontmatter = "coverImage: /images/da-003-cover-option-a-preview.jpg\ncoverAlt: Dark waterside artwork with a portable recorder in the foreground; no visible apparition or identified paranormal feature.\n";
+    coverFrontmatter = "coverImage: /images/da-003-cover-option-a-evidence-crop-preview.jpg\ncoverAlt: Portable recorder resting on wet rocks beside dark water beneath the Dead Air mark; no person, structure, grave marker, or apparition is visible.\n";
   } catch (error) {
     await rm(coverPath, { force: true });
-    console.warn(`DA-003 approved cover could not be materialized; preview continues for manuscript QA only: ${error.message}`);
+    console.warn(`DA-003 approved cover crop could not be materialized; preview continues for manuscript QA only: ${error.message}`);
   }
 } else {
   await rm(coverPath, { force: true });
-  console.warn("DA-003 approved cover payload is incomplete; preview continues for manuscript QA only.");
+  console.warn("DA-003 approved cover crop payload is incomplete; preview continues for manuscript QA only.");
 }
 
 const frontmatter = `---\nslug: da-003-the-recorder-kept-running\ntitle: The Recorder Kept Running\nsummary: After a scouting trip leaves her friend injured and unable to explain what happened, Maren returns to a wooded preserve under strict rules—and discovers that the hardest evidence to control may be the story they tell about it.\nstatus: active\nclassification: Literary paranormal horror\nreadingTime: 86–108 minutes\nrevision: Final Approved Story v8\ncanonicalStatus: established canon\ndraft: false\npreviewOnly: true\ntags:\n  - literary paranormal horror\n  - documentary horror\n  - psychological horror\n  - wilderness horror\nphenomenon:\n  - ambiguous recorded sound\n  - unexplained impact\n  - disputed physical disturbance\n  - speech-like modulation\n  - unresolved unattended recording\nevidenceType:\n  - direct perception\n  - camera recordings\n  - audio recordings\n  - phone voice memo\n  - radio contact\n  - maps and site records\n  - environmental comparisons\n  - negative observations\n  - evidence custody\nlocations:\n  - Harrow River State Preserve\ncontentWarnings:\n  - Psychological distress and panic\n  - Minor hand injury\n  - Memory loss and uncertainty\n  - References to murder and violence in contested site lore\n  - Ambiguous audio and impacts\n  - Nighttime wilderness and off-trail risk\ncontentNotes:\n  - Fictionalized literary horror; disputed folklore and unresolved recordings are not presented as verified paranormal fact.\n${coverFrontmatter}---\n\n`;
