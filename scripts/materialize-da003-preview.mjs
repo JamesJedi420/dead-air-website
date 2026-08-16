@@ -11,6 +11,7 @@ const manuscriptCipherPath = path.join(root, "src", "private-payloads", "da-003"
 const coverCipherPath = path.join(root, "src", "private-payloads", "da-003", "cover.enc.json");
 const expectedSourceSha256 = "522786572da7ddd784045b07adb7ca79ab0e4165ed7d0418af9ef3ec0a2f401f";
 const expectedCoverSha256 = "d5ebd224f85842f4d5e7a362e71eb6031c95e898dcf2801288c7cfcccc049019";
+// The public branch stores authenticated ciphertext only; Netlify deploy-preview supplies the decryption key.
 const keyHex = process.env.DA003_PREVIEW_KEY_HEX;
 const context = process.env.CONTEXT ?? process.env.NETLIFY_CONTEXT ?? "local";
 
