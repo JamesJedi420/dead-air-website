@@ -4,7 +4,9 @@ import process from "node:process";
 
 const root = process.cwd();
 const context = process.env.CONTEXT ?? process.env.NETLIFY_CONTEXT ?? "local";
-const manuscriptPresent = Boolean(process.env.DA003_MANUSCRIPT_GZ_B64);
+const manuscriptPresent = Boolean(
+  process.env.DA003_MANUSCRIPT_GZ_B64_00 && process.env.DA003_MANUSCRIPT_GZ_B64_01,
+);
 
 const routePath = path.join(root, "dist", "stories", "da-003-the-recorder-kept-running", "index.html");
 const storySource = path.join(root, "src", "content", "stories", "da-003-the-recorder-kept-running.md");
