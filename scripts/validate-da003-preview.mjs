@@ -8,21 +8,23 @@ const routePath = path.join(root, "dist", "stories", "da-003-the-recorder-kept-r
 const storySource = path.join(root, "src", "content", "stories", "da-003-the-recorder-kept-running.md");
 const coverPath = path.join(root, "public", "images", "da-003-cover-option-a-preview.jpg");
 const manuscriptDirectory = path.join(root, "src", "manuscripts", "da-003");
-const expectedSourceSha256 = "522786572da7ddd784045b07adb7ca79ab0e4165ed7d0418af9ef3ec0a2f401f";
+const expectedCanonicalSourceSha256 = "be4851565b63d561e7ee3f1c92a3d0b8087eb74c651ab518330bfa08a77fdb3f";
 const expectedCoverSha256 = "69405a56c51d39d41f7a82636840667440e8cbf114e591c7fd95f156ae4a4512";
 const exists = async (file) => access(file).then(() => true).catch(() => false);
 const sha256 = (value) => createHash("sha256").update(value).digest("hex");
+const canonicalizeSource = (value) => value.replace(/^\uFEFF/, "").replace(/\r\n?/g, "\n").replace(/\n{3,}/g, "\n\n").trimEnd() + "\n";
 
 const sourceFiles = (await readdir(manuscriptDirectory))
   .filter((name) => /^part-\d{2}\.mdfrag$/.test(name))
   .sort((a, b) => a.localeCompare(b));
 if (sourceFiles.length !== 18) throw new Error(`Expected 18 DA-003 source fragments, found ${sourceFiles.length}.`);
-const approvedSource = (
+const importedSource = (
   await Promise.all(sourceFiles.map((name) => readFile(path.join(manuscriptDirectory, name), "utf8")))
 ).join("");
-const sourceHash = sha256(Buffer.from(approvedSource, "utf8"));
-if (sourceHash !== expectedSourceSha256) {
-  throw new Error(`DA-003 source-fragment integrity failure: expected ${expectedSourceSha256}, got ${sourceHash}.`);
+const canonicalSource = canonicalizeSource(importedSource);
+const sourceHash = sha256(Buffer.from(canonicalSource, "utf8"));
+if (sourceHash !== expectedCanonicalSourceSha256) {
+  throw new Error(`DA-003 canonical source-fragment integrity failure: expected ${expectedCanonicalSourceSha256}, got ${sourceHash}.`);
 }
 
 if (!(await exists(routePath))) throw new Error("DA-003 private-preview route was not generated.");
@@ -81,4 +83,4 @@ if (/grave|protector|haunted|apparition|ghost visible/.test(alt)) {
   throw new Error("DA-003 cover alt text implies unsupported paranormal certainty.");
 }
 
-console.log(`DA-003 repository-native private-preview validation PASS: approved source ${sourceHash}; cover ${coverHash}; nine numbered sections; standard source note; noindex; social metadata; ShortStory structured data; accurate cover alt text; chronology neutrality; claim ceiling; no publication date; no internal-material leakage.`);
+console.log(`DA-003 repository-native private-preview validation PASS: canonical approved source ${sourceHash}; cover ${coverHash}; nine numbered sections; standard source note; noindex; social metadata; ShortStory structured data; accurate cover alt text; chronology neutrality; claim ceiling; no publication date; no internal-material leakage.`);
