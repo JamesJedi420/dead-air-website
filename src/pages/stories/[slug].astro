@@ -16,6 +16,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).toString(
 const image = storyEntry.data.coverImage
   ? new URL(storyEntry.data.coverImage, Astro.site ?? Astro.url).toString()
   : undefined;
+const isDa003 = storyEntry.data.slug === "da-003-the-recorder-kept-running";
 const structuredData = {
   "@context": "https://schema.org",
   "@type": "ShortStory",
@@ -42,7 +43,13 @@ const structuredData = {
   <ArchiveEntryPage collection={collection} entry={storyEntry} relatedEntries={relatedEntries}>
     {storyEntry.data.coverImage && (
       <figure class="story-cover">
-        <img src={storyEntry.data.coverImage} alt={storyEntry.data.coverAlt ?? ""} loading="eager" decoding="async" />
+        <img
+          src={storyEntry.data.coverImage}
+          alt={storyEntry.data.coverAlt ?? ""}
+          class={isDa003 ? "da003-evidence-crop" : undefined}
+          loading="eager"
+          decoding="async"
+        />
       </figure>
     )}
     <StorySourceNote />
@@ -54,6 +61,7 @@ const structuredData = {
   .story-cover {
     margin: 0 auto 2rem;
     max-width: 36rem;
+    overflow: hidden;
   }
 
   .story-cover img {
@@ -61,5 +69,11 @@ const structuredData = {
     width: 100%;
     height: auto;
     border: 1px solid var(--border, rgba(255, 255, 255, 0.18));
+  }
+
+  .story-cover img.da003-evidence-crop {
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    object-position: center 88%;
   }
 </style>
