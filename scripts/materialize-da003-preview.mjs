@@ -75,7 +75,7 @@ if (coverPayload) {
     if (coverHash !== expectedCoverSha256) throw new Error(`expected ${expectedCoverSha256}, got ${coverHash}`);
     await mkdir(path.dirname(coverPath), { recursive: true });
     await writeFile(coverPath, coverBytes);
-    coverFrontmatter = "coverImage: /images/da-003-cover-option-a-preview.jpg\ncoverAlt: Nighttime wooded-preserve cover artwork with a recorder in the foreground and a dark structure beyond; no visible apparition.\n";
+    coverFrontmatter = "coverImage: /images/da-003-cover-option-a-preview.jpg\ncoverAlt: Dark waterside artwork with a portable recorder in the foreground; no visible apparition or identified paranormal feature.\n";
   } catch (error) {
     await rm(coverPath, { force: true });
     console.warn(`DA-003 approved cover could not be materialized; preview continues for manuscript QA only: ${error.message}`);
