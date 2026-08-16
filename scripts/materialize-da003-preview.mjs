@@ -9,10 +9,11 @@ const storyPath = path.join(root, "src", "content", "stories", "da-003-the-recor
 const coverPath = path.join(root, "public", "images", "da-003-cover-option-a-evidence-crop-preview.jpg");
 const expectedSourceSha256 = "522786572da7ddd784045b07adb7ca79ab0e4165ed7d0418af9ef3ec0a2f401f";
 const expectedCoverSha256 = "4747217629b0ddaa2da7d3e8d7b236d5dbd1d2f8cedbd990b1d46db60986ec04";
-const keyHex = process.env.DA003_PREVIEW_KEY_HEX;
+const previewSecret = process.env.DA003_PREVIEW_SECRET;
 const context = process.env.CONTEXT ?? process.env.NETLIFY_CONTEXT ?? "local";
 
 const sha256 = (value) => createHash("sha256").update(value).digest("hex");
+const deriveKey = () => createHash("sha256").update(previewSecret ?? "").digest();
 
 const readJoinedEnv = (prefix, count) => {
   const pieces = Array.from({ length: count }, (_, index) => process.env[`${prefix}_${String(index).padStart(2, "0")}`]);
@@ -21,19 +22,17 @@ const readJoinedEnv = (prefix, count) => {
 };
 
 const decryptPayload = (serialized) => {
-  if (!keyHex) throw new Error("DA003_PREVIEW_KEY_HEX is required for private-preview decryption.");
+  if (!previewSecret) throw new Error("DA003_PREVIEW_SECRET is required for private-preview decryption.");
   let payload;
   try {
     payload = JSON.parse(serialized);
   } catch (error) {
     throw new Error(`Invalid DA-003 preview payload JSON: ${error.message}`);
   }
-  const key = Buffer.from(keyHex, "hex");
-  if (key.length !== 32) throw new Error("DA003_PREVIEW_KEY_HEX must decode to 32 bytes.");
   const encrypted = Buffer.from(payload.ciphertext, "base64");
   const tag = encrypted.subarray(encrypted.length - 16);
   const ciphertext = encrypted.subarray(0, encrypted.length - 16);
-  const decipher = createDecipheriv("aes-256-gcm", key, Buffer.from(payload.iv, "base64"));
+  const decipher = createDecipheriv("aes-256-gcm", deriveKey(), Buffer.from(payload.iv, "base64"));
   decipher.setAAD(Buffer.from(payload.aad, "utf8"));
   decipher.setAuthTag(tag);
   return gunzipSync(Buffer.concat([decipher.update(ciphertext), decipher.final()]));
@@ -41,7 +40,7 @@ const decryptPayload = (serialized) => {
 
 const manuscriptPayload = readJoinedEnv("DA003_MANUSCRIPT_PART", 5);
 const coverPayload = readJoinedEnv("DA003_COVER_PART", 5);
-const secretMaterialPresent = Boolean(keyHex || manuscriptPayload || coverPayload);
+const secretMaterialPresent = Boolean(previewSecret || manuscriptPayload || coverPayload);
 
 if (context === "production" && secretMaterialPresent) {
   throw new Error("DA-003 private-preview materialization is forbidden in production context.");
@@ -54,7 +53,7 @@ if (context !== "deploy-preview") {
   process.exit(0);
 }
 
-if (!keyHex || !manuscriptPayload) {
+if (!previewSecret || !manuscriptPayload) {
   await rm(storyPath, { force: true });
   await rm(coverPath, { force: true });
   console.log("DA-003 manuscript payload incomplete or unavailable; readable manuscript remains withheld from this preview build.");
