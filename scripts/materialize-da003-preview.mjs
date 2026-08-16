@@ -8,10 +8,12 @@ const sourceDirectory = path.join(root, "src", "manuscripts", "da-003");
 const coverSourcePath = path.join(root, "public", "images", "da-003-cover-option-a-preview.jpg.base64");
 const outputPath = path.join(root, "src", "content", "stories", "da-003-the-recorder-kept-running.md");
 const coverOutputPath = path.join(root, "public", "images", "da-003-cover-option-a-preview.jpg");
-const approvedSourceSha256 = "522786572da7ddd784045b07adb7ca79ab0e4165ed7d0418af9ef3ec0a2f401f";
+const approvedRawExportSha256 = "522786572da7ddd784045b07adb7ca79ab0e4165ed7d0418af9ef3ec0a2f401f";
+const approvedCanonicalSourceSha256 = "be4851565b63d561e7ee3f1c92a3d0b8087eb74c651ab518330bfa08a77fdb3f";
 const approvedCoverPreviewSha256 = "69405a56c51d39d41f7a82636840667440e8cbf114e591c7fd95f156ae4a4512";
 
 const sha256 = (value) => createHash("sha256").update(value).digest("hex");
+const canonicalizeSource = (value) => value.replace(/^\uFEFF/, "").replace(/\r\n?/g, "\n").replace(/\n{3,}/g, "\n\n").trimEnd() + "\n";
 
 const sourceFiles = (await readdir(sourceDirectory))
   .filter((fileName) => /^part-\d{2}\.mdfrag$/.test(fileName))
@@ -21,21 +23,17 @@ if (sourceFiles.length !== 18) {
   throw new Error(`Expected 18 DA-003 manuscript fragments, found ${sourceFiles.length}.`);
 }
 
-const sourceBytes = Buffer.from(
-  (
-    await Promise.all(sourceFiles.map((fileName) => readFile(path.join(sourceDirectory, fileName), "utf8")))
-  ).join(""),
-  "utf8",
-);
-
-const actualSourceSha256 = sha256(sourceBytes);
-if (actualSourceSha256 !== approvedSourceSha256) {
+const importedSource = (
+  await Promise.all(sourceFiles.map((fileName) => readFile(path.join(sourceDirectory, fileName), "utf8")))
+).join("");
+const approvedSource = canonicalizeSource(importedSource);
+const actualCanonicalSourceSha256 = sha256(Buffer.from(approvedSource, "utf8"));
+if (actualCanonicalSourceSha256 !== approvedCanonicalSourceSha256) {
   throw new Error(
-    `DA-003 approved-source integrity check failed. Expected ${approvedSourceSha256}, received ${actualSourceSha256}.`,
+    `DA-003 canonical approved-source integrity check failed. Expected ${approvedCanonicalSourceSha256}, received ${actualCanonicalSourceSha256}. Raw authoritative Google export remains separately frozen as ${approvedRawExportSha256}.`,
   );
 }
 
-const approvedSource = sourceBytes.toString("utf8");
 const headings = [...approvedSource.matchAll(/^Scene (\d+) — (.+)$/gm)];
 if (headings.length !== 9) {
   throw new Error(`Expected 9 DA-003 scene headings in approved source, found ${headings.length}.`);
@@ -63,5 +61,5 @@ await writeFile(outputPath, `${frontmatter}${body}`, "utf8");
 await writeFile(coverOutputPath, coverBytes);
 
 console.log(
-  `Materialized DA-003 Final Approved Story v8 for private website proof (${sha256(Buffer.from(`${frontmatter}${body}`, "utf8"))}); approved source preserved (${actualSourceSha256}); approved Option A preview derivative preserved (${actualCoverSha256}); public divisions rendered as nine numbered headings; cross-case chronology remains unspecified; publication remains unauthorized.`,
+  `Materialized DA-003 Final Approved Story v8 for private website proof (${sha256(Buffer.from(`${frontmatter}${body}`, "utf8"))}); canonical approved source preserved (${actualCanonicalSourceSha256}; raw approved export ${approvedRawExportSha256}); approved Option A preview derivative preserved (${actualCoverSha256}); public divisions rendered as nine numbered headings; cross-case chronology remains unspecified; publication remains unauthorized.`,
 );
