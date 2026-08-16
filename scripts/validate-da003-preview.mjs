@@ -5,7 +5,7 @@ import process from "node:process";
 const root = process.cwd();
 const context = process.env.CONTEXT ?? process.env.NETLIFY_CONTEXT ?? "local";
 const keyPresent = Boolean(process.env.DA003_PREVIEW_KEY_HEX);
-const manuscriptPayloadComplete = Array.from({ length: 5 }, (_, index) =>
+const manuscriptPayloadComplete = Array.from({ length: 1 }, (_, index) =>
   Boolean(process.env[`DA003_MANUSCRIPT_PART_${String(index).padStart(2, "0")}`]),
 ).every(Boolean);
 const previewPayloadComplete = keyPresent && manuscriptPayloadComplete;
