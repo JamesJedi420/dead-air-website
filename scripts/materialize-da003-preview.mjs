@@ -39,8 +39,8 @@ const decryptPayload = (serialized) => {
   return gunzipSync(Buffer.concat([decipher.update(ciphertext), decipher.final()]));
 };
 
-const manuscriptPayload = readJoinedEnv("DA003_MANUSCRIPT_PART", 5);
-const coverPayload = readJoinedEnv("DA003_COVER_PART", 5);
+const manuscriptPayload = readJoinedEnv("DA003_MANUSCRIPT_PART", 1);
+const coverPayload = readJoinedEnv("DA003_COVER_PART", 1);
 const secretMaterialPresent = Boolean(keyHex || manuscriptPayload || coverPayload);
 
 if (context === "production" && secretMaterialPresent) {
