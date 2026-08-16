@@ -1,3 +1,4 @@
+// DA-003 deploy-preview QA gate; this commit intentionally triggers a fresh SSO-protected preview build.
 import { access, readFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
