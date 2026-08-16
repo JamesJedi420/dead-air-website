@@ -4,11 +4,11 @@ import process from "node:process";
 
 const root = process.cwd();
 const context = process.env.CONTEXT ?? process.env.NETLIFY_CONTEXT ?? "local";
-const keyPresent = Boolean(process.env.DA003_PREVIEW_KEY_HEX);
+const secretPresent = Boolean(process.env.DA003_PREVIEW_SECRET);
 const manuscriptPayloadComplete = Array.from({ length: 5 }, (_, index) =>
   Boolean(process.env[`DA003_MANUSCRIPT_PART_${String(index).padStart(2, "0")}`]),
 ).every(Boolean);
-const previewPayloadComplete = keyPresent && manuscriptPayloadComplete;
+const previewPayloadComplete = secretPresent && manuscriptPayloadComplete;
 
 const routePath = path.join(root, "dist", "stories", "da-003-the-recorder-kept-running", "index.html");
 const storySource = path.join(root, "src", "content", "stories", "da-003-the-recorder-kept-running.md");
