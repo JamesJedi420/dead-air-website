@@ -14,8 +14,7 @@ const sha256 = (value) => createHash("sha256").update(value).digest("hex");
 
 const readJoinedEnv = (prefix, count) => {
   const pieces = Array.from({ length: count }, (_, index) => process.env[`${prefix}_${String(index).padStart(2, "0")}`]);
-  if (pieces.every((piece) => !piece)) return null;
-  if (pieces.some((piece) => !piece)) throw new Error(`Incomplete encrypted DA-003 payload for ${prefix}.`);
+  if (pieces.some((piece) => !piece)) return null;
   return pieces.join("");
 };
 
