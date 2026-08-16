@@ -19,7 +19,26 @@ const publicationDate = entry.data.publicationDate ?? entry.data.date;
   publishedTime={publicationDate}
 >
   <ArchiveEntryPage collection={collection} entry={entry} relatedEntries={relatedEntries}>
+    {entry.data.coverImage && (
+      <figure class="story-cover">
+        <img src={entry.data.coverImage} alt={entry.data.coverAlt ?? ""} loading="eager" decoding="async" />
+      </figure>
+    )}
     <StorySourceNote />
     <Content />
   </ArchiveEntryPage>
 </SiteLayout>
+
+<style>
+  .story-cover {
+    margin: 0 auto 2rem;
+    max-width: 36rem;
+  }
+
+  .story-cover img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--border, rgba(255, 255, 255, 0.18));
+  }
+</style>
