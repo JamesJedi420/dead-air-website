@@ -21,6 +21,9 @@ const readJoinedEnv = (prefix, count) => {
   return pieces.join("");
 };
 
+const decodeEnvelope = (joinedBase64) =>
+  joinedBase64 ? Buffer.from(joinedBase64, "base64").toString("utf8") : null;
+
 const decryptPayload = (serialized) => {
   if (!previewSecret) throw new Error("DA003_PREVIEW_SECRET is required for private-preview decryption.");
   let payload;
@@ -38,8 +41,8 @@ const decryptPayload = (serialized) => {
   return gunzipSync(Buffer.concat([decipher.update(ciphertext), decipher.final()]));
 };
 
-const manuscriptPayload = readJoinedEnv("DA003_MANUSCRIPT_PART", 5);
-const coverPayload = readJoinedEnv("DA003_COVER_PART", 5);
+const manuscriptPayload = decodeEnvelope(readJoinedEnv("DA003_MANUSCRIPT_B64", 5));
+const coverPayload = decodeEnvelope(readJoinedEnv("DA003_COVER_B64", 2));
 const secretMaterialPresent = Boolean(previewSecret || manuscriptPayload || coverPayload);
 
 if (context === "production" && secretMaterialPresent) {
