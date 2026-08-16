@@ -9,7 +9,7 @@ const storyPath = path.join(root, "src", "content", "stories", "da-003-the-recor
 const coverPath = path.join(root, "public", "images", "da-003-cover-option-a-evidence-crop-preview.jpg");
 const expectedSourceSha256 = "522786572da7ddd784045b07adb7ca79ab0e4165ed7d0418af9ef3ec0a2f401f";
 const expectedCoverSha256 = "4747217629b0ddaa2da7d3e8d7b236d5dbd1d2f8cedbd990b1d46db60986ec04";
-const manuscriptParts = [process.env.DA003_MANUSCRIPT_GZ_B64_00, process.env.DA003_MANUSCRIPT_GZ_B64_01];
+const manuscriptParts = [0, 1, 2, 3].map((index) => process.env[`DA003_MANUSCRIPT_GZ_B64_${String(index).padStart(2, "0")}`]);
 const manuscriptBase64 = manuscriptParts.every(Boolean) ? manuscriptParts.join("") : null;
 const coverBase64 = process.env.DA003_COVER_JPG_B64;
 const context = process.env.CONTEXT ?? process.env.NETLIFY_CONTEXT ?? "local";
