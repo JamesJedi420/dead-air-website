@@ -53,8 +53,7 @@ if (context !== "deploy-preview") {
 
 if (!keyHex) {
   await removeMaterializedAssets();
-  console.log("DA-003 deploy-preview key is unavailable; readable manuscript and cover remain withheld.");
-  process.exit(0);
+  throw new Error("DA-003 deploy-preview decryption key is unavailable. Protected preview must fail closed rather than report a successful withheld build.");
 }
 
 const sourceBytes = await decryptPayload(manuscriptCipherPath);
