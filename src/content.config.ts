@@ -51,6 +51,7 @@ const baseEntry = {
   provenance: z.string().optional(),
   contentNotes: z.array(z.string()).default([]),
   draft: z.boolean().default(false),
+  previewOnly: z.boolean().default(false),
 };
 
 const stories = defineCollection({
@@ -97,11 +98,11 @@ const locations = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/locations" }),
   schema: z.object({
     ...baseEntry,
-    region: z.string().optional(),
-    classification: z.string().optional(),
-    cases: z.array(z.string()).default([]),
+    locationType: z.string(),
     stories: z.array(z.string()).default([]),
+    cases: z.array(z.string()).default([]),
     characters: z.array(z.string()).default([]),
+    mysteries: z.array(z.string()).default([]),
   }),
 });
 
@@ -109,11 +110,10 @@ const objects = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/objects" }),
   schema: z.object({
     ...baseEntry,
-    objectType: z.string().optional(),
-    custody: z.string().optional(),
+    objectType: z.string(),
     stories: z.array(z.string()).default([]),
     cases: z.array(z.string()).default([]),
-    locations: z.array(z.string()).default([]),
+    mysteries: z.array(z.string()).default([]),
   }),
 });
 
@@ -121,18 +121,12 @@ const mysteries = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/mysteries" }),
   schema: z.object({
     ...baseEntry,
-    relatedCases: z.array(z.string()).default([]),
+    mysteryType: z.string(),
     stories: z.array(z.string()).default([]),
-    characters: z.array(z.string()).default([]),
+    cases: z.array(z.string()).default([]),
+    locations: z.array(z.string()).default([]),
     objects: z.array(z.string()).default([]),
   }),
 });
 
-export const collections = {
-  stories,
-  cases,
-  characters,
-  locations,
-  objects,
-  mysteries,
-};
+export const collections = { stories, cases, characters, locations, objects, mysteries };
