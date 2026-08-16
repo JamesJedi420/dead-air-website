@@ -22,7 +22,12 @@ const readJoinedEnv = (prefix, count) => {
 
 const decryptPayload = (serialized) => {
   if (!keyHex) throw new Error("DA003_PREVIEW_KEY_HEX is required for private-preview decryption.");
-  const payload = JSON.parse(serialized);
+  let payload;
+  try {
+    payload = JSON.parse(serialized);
+  } catch (error) {
+    throw new Error(`Invalid DA-003 preview payload JSON: ${error.message}`);
+  }
   const key = Buffer.from(keyHex, "hex");
   if (key.length !== 32) throw new Error("DA003_PREVIEW_KEY_HEX must decode to 32 bytes.");
   const encrypted = Buffer.from(payload.ciphertext, "base64");
