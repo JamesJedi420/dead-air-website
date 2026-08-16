@@ -12,14 +12,14 @@ const previewPayloadComplete = keyPresent && manuscriptPayloadComplete;
 
 const routePath = path.join(root, "dist", "stories", "da-003-the-recorder-kept-running", "index.html");
 const storySource = path.join(root, "src", "content", "stories", "da-003-the-recorder-kept-running.md");
-const coverPath = path.join(root, "public", "images", "da-003-cover-option-a-preview.jpg");
+const coverPath = path.join(root, "public", "images", "da-003-cover-option-a-evidence-crop-preview.jpg");
 const exists = async (file) => access(file).then(() => true).catch(() => false);
 
 if (context !== "deploy-preview" || !previewPayloadComplete) {
   if (await exists(storySource)) throw new Error(`DA-003 readable story source exists outside a complete deploy-preview gate (${context}).`);
   if (await exists(routePath)) throw new Error(`DA-003 route leaked into a non-preview or incomplete build (${context}).`);
-  if (await exists(coverPath)) throw new Error(`DA-003 cover leaked into a non-preview or incomplete build (${context}).`);
-  console.log(`DA-003 withheld validation passed for ${context}: no readable source, route, or cover leaked.`);
+  if (await exists(coverPath)) throw new Error(`DA-003 cover crop leaked into a non-preview or incomplete build (${context}).`);
+  console.log(`DA-003 withheld validation passed for ${context}: no readable source, route, or cover crop leaked.`);
   process.exit(0);
 }
 
@@ -58,21 +58,20 @@ if (/timelineOrder|follows:\s*da-002|precedes:/i.test(await readFile(storySource
 const hasCover = await exists(coverPath);
 if (hasCover) {
   for (const needle of [
-    "da-003-cover-option-a-preview.jpg",
-    'class="da003-evidence-crop"',
+    "da-003-cover-option-a-evidence-crop-preview.jpg",
     'property="og:image"',
     'name="twitter:image"',
     'name="twitter:card" content="summary_large_image"',
   ]) {
-    if (!html.includes(needle)) throw new Error(`DA-003 approved cover was materialized but metadata/rendering is missing ${JSON.stringify(needle)}.`);
+    if (!html.includes(needle)) throw new Error(`DA-003 approved cover crop was materialized but metadata/rendering is missing ${JSON.stringify(needle)}.`);
   }
-  const imgMatch = html.match(/<img[^>]+da-003-cover-option-a-preview\.jpg[^>]+alt="([^"]*)"/);
-  if (!imgMatch || !imgMatch[1].trim()) throw new Error("DA-003 preview cover is missing descriptive alt text.");
+  const imgMatch = html.match(/<img[^>]+da-003-cover-option-a-evidence-crop-preview\.jpg[^>]+alt="([^"]*)"/);
+  if (!imgMatch || !imgMatch[1].trim()) throw new Error("DA-003 preview cover crop is missing descriptive alt text.");
   const alt = imgMatch[1].toLowerCase();
   if (/unfinished|cabin|grave|protector|haunted|apparition visible|ghost visible/.test(alt)) {
     throw new Error("DA-003 cover alt text implies unsupported geography or paranormal certainty.");
   }
-  console.log("DA-003 private-preview validation PASS: approved v8 route, nine numbered sections, source note, noindex, structured data, constrained cover crop, neutral alt text, social image metadata, and claim ceiling verified.");
+  console.log("DA-003 private-preview validation PASS: approved v8 route, nine numbered sections, source note, noindex, structured data, pinned evidence-focused cover crop, neutral alt text, social image metadata, and claim ceiling verified.");
 } else {
-  console.warn("DA-003 private-preview validation PARTIAL PASS: manuscript, source note, noindex, structured data, and claim ceiling verified; approved cover payload is not yet materialized and remains a release-verification blocker.");
+  console.warn("DA-003 private-preview validation PARTIAL PASS: manuscript, source note, noindex, structured data, and claim ceiling verified; approved evidence-focused cover crop is not yet materialized and remains a release-verification blocker.");
 }
