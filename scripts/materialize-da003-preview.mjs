@@ -40,7 +40,7 @@ const decryptPayload = (serialized) => {
 };
 
 const manuscriptPayload = readJoinedEnv("DA003_MANUSCRIPT_PART", 5);
-const coverPayload = readJoinedEnv("DA003_COVER_PART", 1);
+const coverPayload = readJoinedEnv("DA003_COVER_PART", 5);
 const secretMaterialPresent = Boolean(keyHex || manuscriptPayload || coverPayload);
 
 if (context === "production" && secretMaterialPresent) {
