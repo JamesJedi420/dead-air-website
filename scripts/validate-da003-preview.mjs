@@ -4,18 +4,14 @@ import process from "node:process";
 
 const root = process.cwd();
 const context = process.env.CONTEXT ?? process.env.NETLIFY_CONTEXT ?? "local";
-const secretPresent = Boolean(process.env.DA003_PREVIEW_SECRET);
-const manuscriptPayloadComplete = Array.from({ length: 5 }, (_, index) =>
-  Boolean(process.env[`DA003_MANUSCRIPT_B64_${String(index).padStart(2, "0")}`]),
-).every(Boolean);
-const previewPayloadComplete = secretPresent && manuscriptPayloadComplete;
+const manuscriptPresent = Boolean(process.env.DA003_MANUSCRIPT_GZ_B64);
 
 const routePath = path.join(root, "dist", "stories", "da-003-the-recorder-kept-running", "index.html");
 const storySource = path.join(root, "src", "content", "stories", "da-003-the-recorder-kept-running.md");
 const coverPath = path.join(root, "public", "images", "da-003-cover-option-a-evidence-crop-preview.jpg");
 const exists = async (file) => access(file).then(() => true).catch(() => false);
 
-if (context !== "deploy-preview" || !previewPayloadComplete) {
+if (context !== "deploy-preview" || !manuscriptPresent) {
   if (await exists(storySource)) throw new Error(`DA-003 readable story source exists outside a complete deploy-preview gate (${context}).`);
   if (await exists(routePath)) throw new Error(`DA-003 route leaked into a non-preview or incomplete build (${context}).`);
   if (await exists(coverPath)) throw new Error(`DA-003 cover crop leaked into a non-preview or incomplete build (${context}).`);
