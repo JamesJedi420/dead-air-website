@@ -57,12 +57,22 @@ if (/timelineOrder|follows:\s*da-002|precedes:/i.test(await readFile(storySource
 
 const hasCover = await exists(coverPath);
 if (hasCover) {
-  for (const needle of ["da-003-cover-option-a-preview.jpg", 'property="og:image"', 'name="twitter:image"', 'name="twitter:card" content="summary_large_image"']) {
+  for (const needle of [
+    "da-003-cover-option-a-preview.jpg",
+    'class="da003-evidence-crop"',
+    'property="og:image"',
+    'name="twitter:image"',
+    'name="twitter:card" content="summary_large_image"',
+  ]) {
     if (!html.includes(needle)) throw new Error(`DA-003 approved cover was materialized but metadata/rendering is missing ${JSON.stringify(needle)}.`);
   }
   const imgMatch = html.match(/<img[^>]+da-003-cover-option-a-preview\.jpg[^>]+alt="([^"]*)"/);
   if (!imgMatch || !imgMatch[1].trim()) throw new Error("DA-003 preview cover is missing descriptive alt text.");
-  console.log("DA-003 private-preview validation PASS: approved v8 route, nine numbered sections, source note, noindex, structured data, cover rendering, social image metadata, and claim ceiling verified.");
+  const alt = imgMatch[1].toLowerCase();
+  if (/unfinished|cabin|grave|protector|haunted|apparition visible|ghost visible/.test(alt)) {
+    throw new Error("DA-003 cover alt text implies unsupported geography or paranormal certainty.");
+  }
+  console.log("DA-003 private-preview validation PASS: approved v8 route, nine numbered sections, source note, noindex, structured data, constrained cover crop, neutral alt text, social image metadata, and claim ceiling verified.");
 } else {
   console.warn("DA-003 private-preview validation PARTIAL PASS: manuscript, source note, noindex, structured data, and claim ceiling verified; approved cover payload is not yet materialized and remains a release-verification blocker.");
 }
