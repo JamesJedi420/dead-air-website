@@ -12,6 +12,22 @@ const { collection, entry, relatedEntries } = Astro.props;
 const storyEntry = entry as CollectionEntry<"stories">;
 const { Content } = await render(storyEntry);
 const publicationDate = storyEntry.data.publicationDate ?? storyEntry.data.date;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).toString();
+const image = storyEntry.data.coverImage
+  ? new URL(storyEntry.data.coverImage, Astro.site ?? Astro.url).toString()
+  : undefined;
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "ShortStory",
+  name: storyEntry.data.title,
+  description: storyEntry.data.summary,
+  url: canonical,
+  ...(image ? { image } : {}),
+  isPartOf: {
+    "@type": "CreativeWorkSeries",
+    name: "Dead Air",
+  },
+};
 ---
 
 <SiteLayout
@@ -19,7 +35,10 @@ const publicationDate = storyEntry.data.publicationDate ?? storyEntry.data.date;
   description={storyEntry.data.summary}
   ogType="article"
   publishedTime={publicationDate}
+  image={storyEntry.data.coverImage}
+  noindex={storyEntry.data.previewOnly}
 >
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(structuredData)} />
   <ArchiveEntryPage collection={collection} entry={storyEntry} relatedEntries={relatedEntries}>
     {storyEntry.data.coverImage && (
       <figure class="story-cover">
