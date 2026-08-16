@@ -1,11 +1,10 @@
 import { createDecipheriv, createHash } from "node:crypto";
 import { gunzipSync } from "node:zlib";
-import { mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
+import { mkdir, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 
 const root = process.cwd();
-const payloadDir = path.join(root, "src", "private-payloads", "da-003");
 const storyPath = path.join(root, "src", "content", "stories", "da-003-the-recorder-kept-running.md");
 const coverPath = path.join(root, "public", "images", "da-003-cover-option-a-preview.jpg");
 const expectedSourceSha256 = "522786572da7ddd784045b07adb7ca79ab0e4165ed7d0418af9ef3ec0a2f401f";
@@ -13,15 +12,15 @@ const keyHex = process.env.DA003_PREVIEW_KEY_HEX;
 
 const sha256 = (value) => createHash("sha256").update(value).digest("hex");
 
-const readJoined = async (prefix) => {
-  const files = (await readdir(payloadDir)).filter((name) => name.startsWith(prefix)).sort();
-  if (!files.length) throw new Error(`No encrypted DA-003 ${prefix} payload parts found.`);
-  return files.map(async (name) => readFile(path.join(payloadDir, name), "utf8"));
+const readJoinedEnv = (prefix, count) => {
+  const pieces = Array.from({ length: count }, (_, index) => process.env[`${prefix}_${String(index).padStart(2, "0")}`]);
+  if (pieces.every((piece) => !piece)) return null;
+  if (pieces.some((piece) => !piece)) throw new Error(`Incomplete encrypted DA-003 payload for ${prefix}.`);
+  return pieces.join("");
 };
 
-const decryptPayload = async (prefix) => {
-  const pieces = await Promise.all(await readJoined(prefix));
-  const payload = JSON.parse(pieces.join(""));
+const decryptPayload = (serialized) => {
+  const payload = JSON.parse(serialized);
   const key = Buffer.from(keyHex, "hex");
   if (key.length !== 32) throw new Error("DA003_PREVIEW_KEY_HEX must decode to 32 bytes.");
   const encrypted = Buffer.from(payload.ciphertext, "base64");
@@ -33,14 +32,17 @@ const decryptPayload = async (prefix) => {
   return gunzipSync(Buffer.concat([decipher.update(ciphertext), decipher.final()]));
 };
 
-if (!keyHex) {
+const manuscriptPayload = readJoinedEnv("DA003_MANUSCRIPT_PART", 5);
+const coverPayload = readJoinedEnv("DA003_COVER_PART", 5);
+
+if (!keyHex || !manuscriptPayload || !coverPayload) {
   await rm(storyPath, { force: true });
   await rm(coverPath, { force: true });
-  console.log("DA-003 preview key absent; private manuscript and cover remain withheld from this build.");
+  console.log("DA-003 private payload incomplete or unavailable; readable manuscript and cover remain withheld from this build.");
   process.exit(0);
 }
 
-const sourceBytes = await decryptPayload("manuscript-part-");
+const sourceBytes = decryptPayload(manuscriptPayload);
 const actualHash = sha256(sourceBytes);
 if (actualHash !== expectedSourceSha256) {
   throw new Error(`DA-003 source integrity failure: expected ${expectedSourceSha256}, got ${actualHash}.`);
@@ -56,8 +58,8 @@ const frontmatter = `---\nslug: da-003-the-recorder-kept-running\ntitle: The Rec
 await mkdir(path.dirname(storyPath), { recursive: true });
 await writeFile(storyPath, frontmatter + body, "utf8");
 
-const coverBytes = await decryptPayload("cover-part-");
+const coverBytes = decryptPayload(coverPayload);
 await mkdir(path.dirname(coverPath), { recursive: true });
 await writeFile(coverPath, coverBytes);
 
-console.log(`Materialized password/SSO-protected DA-003 private preview from approved v8 (${actualHash}); no production publication state changed.`);
+console.log(`Materialized SSO-protected DA-003 private preview from approved v8 (${actualHash}); no production publication state changed.`);
