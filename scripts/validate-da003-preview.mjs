@@ -6,7 +6,7 @@ const root = process.cwd();
 const context = process.env.CONTEXT ?? process.env.NETLIFY_CONTEXT ?? "local";
 const secretPresent = Boolean(process.env.DA003_PREVIEW_SECRET);
 const manuscriptPayloadComplete = Array.from({ length: 5 }, (_, index) =>
-  Boolean(process.env[`DA003_MANUSCRIPT_PART_${String(index).padStart(2, "0")}`]),
+  Boolean(process.env[`DA003_MANUSCRIPT_B64_${String(index).padStart(2, "0")}`]),
 ).every(Boolean);
 const previewPayloadComplete = secretPresent && manuscriptPayloadComplete;
 
