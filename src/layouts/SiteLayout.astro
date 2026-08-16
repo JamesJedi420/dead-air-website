@@ -9,9 +9,11 @@ interface Props {
   description: string;
   ogType?: "website" | "article";
   publishedTime?: Date | string;
+  image?: string;
+  noindex?: boolean;
 }
 
-const { title, description, ogType = "website", publishedTime } = Astro.props;
+const { title, description, ogType = "website", publishedTime, image, noindex = false } = Astro.props;
 ---
 
 <!doctype html>
@@ -25,7 +27,10 @@ const { title, description, ogType = "website", publishedTime } = Astro.props;
       description={description}
       ogType={ogType}
       publishedTime={publishedTime}
+      image={image}
+      noindex={noindex}
     />
+    <slot name="head" />
   </head>
   <body>
     <Header />
