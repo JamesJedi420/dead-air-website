@@ -10,8 +10,8 @@ const manifest = JSON.parse(
 );
 const outputPath = path.join(root, "src", "content", "stories", `${manifest.slug}.md`);
 const approvedSourceSha256 = "175680113c552fe71b8aea3cdc553755e06909202928cf6675c1a0ab41228aba";
-const correctedRevision = "Final Approved Story v18";
-const correctiveReplacements = [
+const correctedRevision = "Final Approved Story v19";
+const v18CorrectiveReplacements = [
   ["Her shoes made two measured contacts with the concrete.", "Her shoes struck the concrete twice, evenly spaced."],
   ["Two contacts came from the other side, accompanied by the soft collision of keys.", "Two steps came from the other side, accompanied by the soft collision of keys."],
   ["“No,” Ron said. “The point of your project is whatever you put after my voice.”", "“No,” Ron said. “The point of your project is going to be however you frame my takes.”"],
@@ -21,6 +21,49 @@ const correctiveReplacements = [
   ["“Compression changes duration. This changes causality.”", "“Cutting time is one thing. Put those sounds together and it looks like one caused the next.”"],
   ["“I recognized something. Recognition establishes what happened inside me. It establishes nothing about what produced the sound.”", "“I recognized something. That tells you what I heard. It doesn’t tell you what made the sound.”"],
   ["“The story is uncertainty.”", "“Then leave it uncertain.”"],
+];
+const v19SpokenNaturalnessReplacements = [
+  ["“You researched an employee,” she said. “That grants you no access to his life.”", "“You found his name online,” she said. “That doesn’t give you the right to dig through his life.”"],
+  ["“Certainty belongs after inspection.”", "“Ask me after I inspect it.”"],
+  ["“It produced sound. The cause comes after inspection.”", "“It made a sound. We inspect it before we decide why.”"],
+  ["“Thinking and having it are separate.”", "“You think it was unlocked. That’s not the same as having it on camera.”"],
+  ["“Something like that gives us no baseline.”", "“If you don’t know the count, we don’t have a baseline.”"],
+  ["“I’m describing what the camera can support.”", "“I’m saying what the camera shows.”"],
+  ["“Reliable observation. Known controls. Repeatable conditions. Complete access records. Original files. Independent review.”", "“Show me it twice under the same conditions. Show me who could get in. Keep the original files. Then I’ll tell you we have something worth arguing about.”"],
+  ["“I’m closing the last argument.”", "“I’m trying to end this.”"],
+  ["“That’s what every next test becomes.”", "“There’s always one more test.”"],
+  ["Ron’s voice dropped. “My reaction belongs to me.”", "Ron’s voice dropped. “You don’t get to use how I feel as evidence.”"],
+  ["“Markers record your attention, not the event’s identity.”", "“A marker tells me what you noticed. It doesn’t tell me what made the sound.”"],
+  ["“That is a position in your project, not a device timestamp.”", "“That tells me where you put it in the project. It doesn’t tell me when the device made it.”"],
+  ["“It resembles those words after you supplied them.”", "“I hear those words now because you told me what to listen for.”"],
+  ["“Categories keep people from turning fear into instructions.”", "“Because once people get scared, they start treating every sound like an instruction.”"],
+  ["“They are where explanations begin.”", "“No. They’re where you start looking.”"],
+  ["She pointed toward the exit. “Now you know why expectation matters. Every sound from here forward arrives with a name attached. Every route looks intentional. Every key sounds like his.”", "She pointed toward the exit. “Now you know why I didn’t tell you. From here on, every key you hear is going to sound like his. Every hallway is going to look like his route.”"],
+  ["“It is a conclusion with empty spaces.”", "“You already wrote the answer. You’re just filling in the blanks.”"],
+  ["“I need to show you something before you erase the context.”", "“I need to show you something before you turn these into separate clips.”"],
+  ["“Context remains in the original files.”", "“They are separate clips.”"],
+  ["“That is interpretation.”", "“That’s what you think they do together.”"],
+  ["Evan kept one hand on the trackpad. “Raw files do not explain themselves. By tomorrow, everyone in this room will remember a different night. I am trying to make one account that survives us.”", "Evan kept one hand on the trackpad. “Tomorrow Ron remembers one thing, Abby remembers another, and you tell me none of it belongs together. I’m trying to put down what happened before we all change it.”"],
+  ["“One account is the problem,” Diane said.", "“You’re cutting four people into one answer,” Diane said."],
+  ["“You have seen incidents. You have avoided their relationship.”", "“You keep looking at every piece by itself.”"],
+  ["“The components happened,” Evan answered.", "“They all happened,” Evan answered."],
+  ["“That matters to us, not to the source.”", "“That changes how we hear it. It doesn’t change the recording.”"],
+  ["“You selected a question from one hour and placed it beside a sound from another.”", "“You took a question from one hour and put a sound from another right behind it.”"],
+  ["“I hear what you trained me to hear.”", "“I hear it now because you kept telling me what to listen for.”"],
+  ["Evan rotated the laptop toward her. “The question is simple. If the pattern is editing, the empty booth gives us room tone. If the pattern follows the route, the booth gives us the next event. Either result helps.”", "Evan rotated the laptop toward her. “If this is us doing it with edits, the booth gives us nothing. If it isn’t, maybe the booth gives us something. Ten minutes.”"],
+  ["“I want to stop because Ron withdrew, Diane set an end point, and you keep treating every boundary as another dramatic obstacle.”", "“Ron said he was done. Diane said we were done. You keep hearing no and turning it into the next scene.”"],
+  ["“That gives you no claim on him,” Diane said.", "“He told you to stop. You don’t get to use this to pull him back in,” Diane said."],
+  ["“It gives the pattern another repetition.”", "“It happened again.”"],
+  ["“It gives a tired man an experience in a mechanical building after you spent an hour telling him what the building was doing.”", "“It gives you a tired man who heard something after you spent an hour telling him what to listen for.”"],
+  ["“It suggests your attention has narrowed around one destination.”", "“You wrote booth before you found the sound. Now everything points to booth.”"],
+  ["“Let us rule out the booth,” he said.", "“Then let’s rule out the booth,” he said."],
+  ["“Internal labels guide every cut after them,” Diane said.", "“Once you label it, you start cutting toward the label,” Diane said."],
+  ["“They tell you what the material means before you compare it.”", "“You named it before you checked it against the other files.”"],
+  ["“I agreed to review evidence and discuss a limited student documentary. I gave no agreement for this sentence.”", "“I agreed to review the files and talk about a limited student documentary. I never agreed to you saying this as fact.”"],
+  ["“It is a conclusion wearing an opening’s clothes.”", "“You’re opening with the answer.”"],
+  ["Diane kept her eyes on Evan. “Ambiguity protects everyone here from claims the material cannot support. It protects Wayne from becoming a character in your episode. It protects Ron from having fear turned into evidence. It protects Abby from having her continuous record replaced by a cleaner story. It protects you from saying more than you know.”", "Diane kept her eyes on Evan. “Wayne stays out of your episode unless you can prove it was him. Ron said stop. Abby’s raw track stays raw. And you don’t get to call a cleaner edit a truer one.”"],
+  ["“This is responsibility.”", "“No. It means Ron gets to say no, and Wayne doesn’t get named because a file sounds close.”"],
+  ["“It is the boundary you keep crossing.”", "“No. It’s the difference between what I heard and what you want to put in the narration.”"],
 ];
 
 const sha256 = (value) => createHash("sha256").update(value, "utf8").digest("hex");
@@ -51,15 +94,22 @@ let body = approvedSource
   .replace(/^# \*\*﻿?The Building Keeps the Hour\*\*\r?\n+/u, "")
   .replace(/^## \*DA-001 — Final Approved Story v17\*\r?\n+/u, "");
 
-// Preserve the frozen v17 repository import and apply only the user-authorized v18
-// corrective layer during materialization. Each target must occur exactly once.
-for (const [before, after] of correctiveReplacements) {
-  const occurrences = body.split(before).length - 1;
-  if (occurrences !== 1) {
-    throw new Error(`Expected exactly one DA-001 corrective target ${JSON.stringify(before)}, found ${occurrences}.`);
+const applyCorrectiveLayer = (label, replacements) => {
+  for (const [before, after] of replacements) {
+    const occurrences = body.split(before).length - 1;
+    if (occurrences !== 1) {
+      throw new Error(
+        `Expected exactly one DA-001 ${label} corrective target ${JSON.stringify(before)}, found ${occurrences}.`,
+      );
+    }
+    body = body.replace(before, after);
   }
-  body = body.replace(before, after);
-}
+};
+
+// Preserve the frozen v17 repository import and apply only approved bounded
+// corrective layers during materialization. Every target must occur exactly once.
+applyCorrectiveLayer("v18", v18CorrectiveReplacements);
+applyCorrectiveLayer("v19 spoken-naturalness", v19SpokenNaturalnessReplacements);
 
 for (const section of manifest.sections) {
   const sourceHeading = `# **${section.source}**`;
@@ -124,6 +174,7 @@ const frontmatter = [
 
 await mkdir(path.dirname(outputPath), { recursive: true });
 await writeFile(outputPath, `${frontmatter}${body}`, "utf8");
+const materializedSha256 = sha256(`${frontmatter}${body}`);
 console.log(
-  `Materialized DA-001 ${correctedRevision} for publication (${sha256(`${frontmatter}${body}`)}); frozen v17 repository source preserved (${actualSourceSha256}); bounded corrective layer applied; standard source note supplied by the shared story template; public divisions rendered as numbered section headings; narrative chronology fixed at archive position 1 before DA-002.`,
+  `Materialized DA-001 ${correctedRevision} for release preparation (${materializedSha256}); frozen v17 repository source preserved (${actualSourceSha256}); bounded v18 and v19 corrective layers applied; standard source note supplied by the shared story template; public divisions rendered as numbered section headings; narrative chronology fixed at archive position 1 before DA-002.`,
 );
