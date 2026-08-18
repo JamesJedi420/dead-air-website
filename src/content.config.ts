@@ -51,6 +51,7 @@ const baseEntry = {
   provenance: z.string().optional(),
   contentNotes: z.array(z.string()).default([]),
   draft: z.boolean().default(false),
+  previewOnly: z.boolean().default(false),
 };
 
 const stories = defineCollection({
@@ -63,6 +64,8 @@ const stories = defineCollection({
     characters: z.array(z.string()).default([]),
     objects: z.array(z.string()).default([]),
     mysteries: z.array(z.string()).default([]),
+    coverImage: z.string().optional(),
+    coverAlt: z.string().optional(),
   }),
 });
 

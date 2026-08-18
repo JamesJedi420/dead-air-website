@@ -56,3 +56,30 @@ jobs:
           path: artifacts/da001-visual-proof/*.png
           if-no-files-found: error
           retention-days: 30
+      - name: Capture DA-003 private-preview desktop and mobile proof
+        if: github.event_name == 'pull_request' && github.event.pull_request.number == 35
+        run: |
+          python3 -m http.server 4174 --directory dist > /tmp/dead-air-da003-http.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+
+          for attempt in {1..60}; do
+            if curl -fsS http://127.0.0.1:4174/stories/da-003-the-recorder-kept-running/ > /dev/null; then
+              break
+            fi
+            if [ "$attempt" -eq 60 ]; then
+              cat /tmp/dead-air-da003-http.log
+              exit 1
+            fi
+            sleep 0.5
+          done
+
+          VISUAL_BASE_URL=http://127.0.0.1:4174 node scripts/capture-da003-preview-proof.mjs
+      - name: Upload DA-003 private-preview proof
+        if: github.event_name == 'pull_request' && github.event.pull_request.number == 35
+        uses: actions/upload-artifact@v4
+        with:
+          name: da003-private-preview-proof
+          path: artifacts/da003-preview-proof/*.png
+          if-no-files-found: error
+          retention-days: 30
