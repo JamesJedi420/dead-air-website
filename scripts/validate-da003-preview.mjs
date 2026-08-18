@@ -11,6 +11,7 @@ const manuscriptDirectory = path.join(root, "src", "manuscripts", "da-003");
 const expectedCanonicalSourceSha256 = "be4851565b63d561e7ee3f1c92a3d0b8087eb74c651ab518330bfa08a77fdb3f";
 const expectedRawExportSha256 = "522786572da7ddd784045b07adb7ca79ab0e4165ed7d0418af9ef3ec0a2f401f";
 const expectedCoverSha256 = "d5ebd224f85842f4d5e7a362e71eb6031c95e898dcf2801288c7cfcccc049019";
+const expectedCoverAlt = "Portable recorder resting on wet rocks beside dark water beneath the Dead Air mark; no person, grave marker, or apparition is visible.";
 const exists = async (file) => access(file).then(() => true).catch(() => false);
 const sha256 = (value) => createHash("sha256").update(value).digest("hex");
 const canonicalizeSource = (value) => value.replace(/^\uFEFF/, "").replace(/\r\n?/g, "\n").replace(/\n{3,}/g, "\n\n").trimEnd() + "\n";
@@ -80,9 +81,8 @@ if (/Source Transcript|Transcript Notes|PPC-DA-003|Contradiction Farming|Hidden 
 
 const imgMatch = html.match(/<img[^>]+da-003-cover-option-a-evidence-crop-preview\.jpg[^>]+alt="([^"]*)"/);
 if (!imgMatch || !imgMatch[1].trim()) throw new Error("DA-003 preview cover is missing descriptive alt text.");
-const alt = imgMatch[1].toLowerCase();
-if (/grave|protector|haunted|apparition|ghost visible/.test(alt)) {
-  throw new Error("DA-003 cover alt text implies unsupported paranormal certainty.");
+if (imgMatch[1] !== expectedCoverAlt) {
+  throw new Error("DA-003 preview cover alt text differs from the approved neutral evidence description.");
 }
 
 console.log(`DA-003 repository-native private-preview validation PASS: canonical approved source ${sourceHash} (raw approved export ${expectedRawExportSha256}); cover ${coverHash}; nine numbered sections; standard source note; noindex; social metadata; ShortStory structured data; accurate cover alt text; chronology neutrality; claim ceiling; no publication date; no internal-material leakage.`);
