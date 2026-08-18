@@ -10,6 +10,18 @@ const manifest = JSON.parse(
 );
 const outputPath = path.join(root, "src", "content", "stories", `${manifest.slug}.md`);
 const approvedSourceSha256 = "175680113c552fe71b8aea3cdc553755e06909202928cf6675c1a0ab41228aba";
+const correctedRevision = "Final Approved Story v18";
+const correctiveReplacements = [
+  ["Her shoes made two measured contacts with the concrete.", "Her shoes struck the concrete twice, evenly spaced."],
+  ["Two contacts came from the other side, accompanied by the soft collision of keys.", "Two steps came from the other side, accompanied by the soft collision of keys."],
+  ["“No,” Ron said. “The point of your project is whatever you put after my voice.”", "“No,” Ron said. “The point of your project is going to be however you frame my takes.”"],
+  ["She said the word clearly enough that no edit was necessary.", "She said it clearly."],
+  ["“A route can survive the worker. Labels, schedules, objects, habits. This school repeats thousands of people every day without containing any of them.”", "“We still run the same route. Same labels. Same times. Same rooms. That doesn’t mean Wayne is here.”"],
+  ["“Context is the pattern between files.”", "“The files don’t mean much by themselves. The pattern is what they do together.”"],
+  ["“Compression changes duration. This changes causality.”", "“Cutting time is one thing. Put those sounds together and it looks like one caused the next.”"],
+  ["“I recognized something. Recognition establishes what happened inside me. It establishes nothing about what produced the sound.”", "“I recognized something. That tells you what I heard. It doesn’t tell you what made the sound.”"],
+  ["“The story is uncertainty.”", "“Then leave it uncertain.”"],
+];
 
 const sha256 = (value) => createHash("sha256").update(value, "utf8").digest("hex");
 const sourceFiles = (await readdir(sourceDirectory))
@@ -38,6 +50,16 @@ if (actualSourceSha256 !== approvedSourceSha256) {
 let body = approvedSource
   .replace(/^# \*\*﻿?The Building Keeps the Hour\*\*\r?\n+/u, "")
   .replace(/^## \*DA-001 — Final Approved Story v17\*\r?\n+/u, "");
+
+// Preserve the frozen v17 repository import and apply only the user-authorized v18
+// corrective layer during materialization. Each target must occur exactly once.
+for (const [before, after] of correctiveReplacements) {
+  const occurrences = body.split(before).length - 1;
+  if (occurrences !== 1) {
+    throw new Error(`Expected exactly one DA-001 corrective target ${JSON.stringify(before)}, found ${occurrences}.`);
+  }
+  body = body.replace(before, after);
+}
 
 for (const section of manifest.sections) {
   const sourceHeading = `# **${section.source}**`;
@@ -75,7 +97,7 @@ const frontmatter = [
   "status: active",
   `classification: ${scalar(metadata.classification)}`,
   `readingTime: ${scalar(metadata.readingTime)}`,
-  `revision: ${scalar(manifest.source.approvedRevision)}`,
+  `revision: ${scalar(correctedRevision)}`,
   `publicationDate: ${manifest.releaseState.publicationDate}`,
   `timelineOrder: ${manifest.chronology.timelineOrder}`,
   `timelineLabel: ${scalar(manifest.chronology.timelineLabel)}`,
@@ -103,5 +125,5 @@ const frontmatter = [
 await mkdir(path.dirname(outputPath), { recursive: true });
 await writeFile(outputPath, `${frontmatter}${body}`, "utf8");
 console.log(
-  `Materialized DA-001 Final Approved Story v17 for publication (${sha256(`${frontmatter}${body}`)}); approved source preserved (${actualSourceSha256}); standard source note supplied by the shared story template; public divisions rendered as numbered section headings; narrative chronology fixed at archive position 1 before DA-002.`,
+  `Materialized DA-001 ${correctedRevision} for publication (${sha256(`${frontmatter}${body}`)}); frozen v17 repository source preserved (${actualSourceSha256}); bounded corrective layer applied; standard source note supplied by the shared story template; public divisions rendered as numbered section headings; narrative chronology fixed at archive position 1 before DA-002.`,
 );
