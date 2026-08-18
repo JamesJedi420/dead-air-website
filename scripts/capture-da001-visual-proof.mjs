@@ -6,6 +6,7 @@ import { chromium, devices } from "playwright";
 
 const baseUrl = process.env.VISUAL_BASE_URL ?? "http://127.0.0.1:4173";
 const storyPath = "/stories/da-001-the-building-keeps-the-hour/";
+const storyTitle = "After the Main Fan Stops";
 const outputDirectory = path.join(process.cwd(), "artifacts", "da001-visual-proof");
 const sections = [
   "1. Three-Thirty",
@@ -50,8 +51,8 @@ const assertNoHorizontalOverflow = async (page, label) => {
 };
 
 const verifyStoryContent = async (page) => {
-  assert.equal(await page.title(), "The Building Keeps the Hour | The Dead Air Archive");
-  await page.getByRole("heading", { name: "The Building Keeps the Hour", exact: true }).waitFor();
+  assert.equal(await page.title(), `${storyTitle} | The Dead Air Archive`);
+  await page.getByRole("heading", { name: storyTitle, exact: true }).waitFor();
   await page.getByText("Final Approved Story v17", { exact: false }).waitFor();
   await page
     .getByText(
@@ -137,7 +138,7 @@ try {
   assert.equal(new URL(timelineHref, desktopPage.url()).pathname, "/timeline/");
 
   await openWithRetry(desktopPage, `${baseUrl}/stories/`);
-  const storyIndexLink = desktopPage.getByRole("link", { name: "The Building Keeps the Hour", exact: true });
+  const storyIndexLink = desktopPage.getByRole("link", { name: storyTitle, exact: true });
   assert.equal(await storyIndexLink.count(), 1, "Stories index must link to DA-001 exactly once.");
   const storyHref = await requireHref(storyIndexLink, "DA-001 story link href not found in the Stories index.");
   assert.equal(new URL(storyHref, desktopPage.url()).pathname, storyPath);
@@ -150,7 +151,7 @@ try {
   let da002Text = "";
   for (let index = 0; index < (await timelineItems.count()); index += 1) {
     const text = await timelineItems.nth(index).innerText();
-    if (text.includes("The Building Keeps the Hour")) {
+    if (text.includes(storyTitle)) {
       da001Index = index;
       da001Text = text;
     }
