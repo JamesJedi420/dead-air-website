@@ -1,7 +1,7 @@
 ---
 slug: da-002-the-name-in-the-room
 title: The Name in the Room
-summary: A documentary crew returns to Bellweather High for a final session with a medium. In the basement, equipment fails, a fire door moves, and a recorded sound leaves much to interpretation.
+summary: A documentary crew returns to Bellweather High for a final session with a medium. In the basement, equipment fails, a fire door moves, and a sound recording leaves much to interpretation.
 status: withheld
 classification: Literary paranormal horror
 readingTime: 88–111 minutes
