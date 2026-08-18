@@ -16,7 +16,7 @@ const netlifyConfigPath = path.join(root, "netlify.toml");
 const textExtensions = new Set([".html", ".xml", ".json", ".txt", ".js", ".css", ".map"]);
 
 const title = "The Name in the Room";
-const summary = "A final cleansing at Bellweather High becomes a struggle over names, consent, source custody, and the difference between relief and proof.";
+const summary = "Diane Madsen brings a separate recorder to a medium’s return at Bellweather High. In the basement, a fire door moves while the camera cannot see the whole threshold.";
 const sourceNote = "Based on reported paranormal-investigation accounts. Some events, characters, and identifying details have been fictionalized.";
 const slug = "da-002-the-name-in-the-room";
 const route = `/stories/${slug}/`;
