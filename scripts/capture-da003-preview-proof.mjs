@@ -7,6 +7,7 @@ import { chromium, devices } from "playwright";
 const baseUrl = process.env.VISUAL_BASE_URL ?? "http://127.0.0.1:4173";
 const storyPath = "/stories/da-003-the-recorder-kept-running/";
 const title = "The Recorder Kept Running";
+const siteTitle = `${title} | The Dead Air Archive`;
 const summary = "Maren finds Jonah bleeding in an unfinished house with three pages he does not remember writing. Hours later, he asks her to take him back to Harrow River.";
 const coverAlt = "Portable recorder resting on wet rocks beside dark water beneath the Dead Air mark; no person, grave marker, or apparition is visible.";
 const sourceNote = "Based on reported paranormal-investigation accounts. Some events, characters, and identifying details have been fictionalized.";
@@ -46,10 +47,10 @@ const assertNoHorizontalOverflow = async (page, label) => {
 };
 
 const verifyHeadMetadata = async (page) => {
-  assert.equal(await page.title(), `${title} | The Dead Air Archive`);
+  assert.equal(await page.title(), siteTitle);
   assert.equal(await page.locator('meta[name="description"]').getAttribute("content"), summary);
   assert.equal(await page.locator('meta[name="robots"]').getAttribute("content"), "noindex,nofollow,noarchive");
-  assert.equal(await page.locator('meta[property="og:title"]').getAttribute("content"), title);
+  assert.equal(await page.locator('meta[property="og:title"]').getAttribute("content"), siteTitle);
   assert.equal(await page.locator('meta[property="og:description"]').getAttribute("content"), summary);
   assert.match(
     (await page.locator('meta[property="og:image"]').getAttribute("content")) ?? "",
