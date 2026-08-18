@@ -10,6 +10,9 @@ const coverPath = path.join(root, "public", "images", "da-003-cover-option-a-evi
 const approvedRawExportSha256 = "522786572da7ddd784045b07adb7ca79ab0e4165ed7d0418af9ef3ec0a2f401f";
 const approvedCanonicalSourceSha256 = "be4851565b63d561e7ee3f1c92a3d0b8087eb74c651ab518330bfa08a77fdb3f";
 const approvedCoverPreviewSha256 = "d5ebd224f85842f4d5e7a362e71eb6031c95e898dcf2801288c7cfcccc049019";
+const correctedRevision = "Final Approved Story v9";
+const correctiveBefore = "four hard wheel contacts followed by a softer drag";
+const correctiveAfter = "four hard contacts from the wheels followed by a softer drag";
 
 const sha256 = (value) => createHash("sha256").update(value).digest("hex");
 const canonicalizeSource = (value) => value.replace(/^\uFEFF/, "").replace(/\r\n?/g, "\n").replace(/\n{3,}/g, "\n\n").trimEnd() + "\n";
@@ -36,12 +39,19 @@ if (actualCoverSha256 !== approvedCoverPreviewSha256) {
 const headings = [...approvedSource.matchAll(/^Scene (\d+) — (.+)$/gm)];
 if (headings.length !== 9) throw new Error(`Expected 9 DA-003 scene headings in approved source, found ${headings.length}.`);
 
-const body = approvedSource.replace(/^Scene (\d+) — (.+)$/gm, "## $1. $2");
+let correctedSource = approvedSource;
+const correctiveOccurrences = correctedSource.split(correctiveBefore).length - 1;
+if (correctiveOccurrences !== 1) {
+  throw new Error(`Expected exactly one DA-003 corrective target ${JSON.stringify(correctiveBefore)}, found ${correctiveOccurrences}.`);
+}
+correctedSource = correctedSource.replace(correctiveBefore, correctiveAfter);
+
+const body = correctedSource.replace(/^Scene (\d+) — (.+)$/gm, "## $1. $2");
 if (/^Scene\s+\d+\s+—/m.test(body) || /^##\s+Scene\s+\d+/m.test(body)) throw new Error("A production Scene label remained in the DA-003 website output.");
 
-const frontmatter = `---\nslug: da-003-the-recorder-kept-running\ntitle: The Recorder Kept Running\nsummary: Maren finds Jonah bleeding in an unfinished house with three pages he does not remember writing. Hours later, he asks her to take him back to Harrow River.\nstatus: active\nclassification: Literary paranormal horror\nreadingTime: 86–108 minutes\nrevision: Final Approved Story v8\npublicationDate: 2026-08-18\ncanonicalStatus: established canon\ndraft: false\npreviewOnly: false\ntags:\n  - literary paranormal horror\n  - documentary horror\n  - psychological horror\n  - wilderness horror\nphenomenon:\n  - ambiguous recorded sound\n  - unexplained impact\n  - disputed physical disturbance\n  - speech-like modulation\n  - unresolved unattended recording\nevidenceType:\n  - direct perception\n  - camera recordings\n  - audio recordings\n  - phone voice memo\n  - radio contact\n  - maps and site records\n  - environmental comparisons\n  - negative observations\n  - evidence custody\nlocations:\n  - Harrow River State Preserve\ncontentWarnings:\n  - Psychological distress and panic\n  - Minor hand injury\n  - Memory loss and uncertainty\n  - References to murder and violence in contested site lore\n  - Ambiguous audio and impacts\n  - Nighttime wilderness and off-trail risk\ncontentNotes:\n  - Fictionalized literary horror; disputed folklore and unresolved recordings are not presented as verified paranormal fact.\ncoverImage: /images/da-003-cover-option-a-evidence-crop-preview.jpg\ncoverAlt: Portable recorder resting on wet rocks beside dark water beneath the Dead Air mark; no person, grave marker, or apparition is visible.\n---\n\n`;
+const frontmatter = `---\nslug: da-003-the-recorder-kept-running\ntitle: The Recorder Kept Running\nsummary: Maren finds Jonah bleeding in an unfinished house with three pages he does not remember writing. Hours later, he asks her to take him back to Harrow River.\nstatus: active\nclassification: Literary paranormal horror\nreadingTime: 86–108 minutes\nrevision: ${correctedRevision}\npublicationDate: 2026-08-18\ncanonicalStatus: established canon\ndraft: false\npreviewOnly: false\ntags:\n  - literary paranormal horror\n  - documentary horror\n  - psychological horror\n  - wilderness horror\nphenomenon:\n  - ambiguous recorded sound\n  - unexplained impact\n  - disputed physical disturbance\n  - speech-like modulation\n  - unresolved unattended recording\nevidenceType:\n  - direct perception\n  - camera recordings\n  - audio recordings\n  - phone voice memo\n  - radio contact\n  - maps and site records\n  - environmental comparisons\n  - negative observations\n  - evidence custody\nlocations:\n  - Harrow River State Preserve\ncontentWarnings:\n  - Psychological distress and panic\n  - Minor hand injury\n  - Memory loss and uncertainty\n  - References to murder and violence in contested site lore\n  - Ambiguous audio and impacts\n  - Nighttime wilderness and off-trail risk\ncontentNotes:\n  - Fictionalized literary horror; disputed folklore and unresolved recordings are not presented as verified paranormal fact.\ncoverImage: /images/da-003-cover-option-a-evidence-crop-preview.jpg\ncoverAlt: Portable recorder resting on wet rocks beside dark water beneath the Dead Air mark; no person, grave marker, or apparition is visible.\n---\n\n`;
 
 await mkdir(path.dirname(outputPath), { recursive: true });
 await writeFile(outputPath, `${frontmatter}${body}`, "utf8");
 
-console.log(`Materialized DA-003 Final Approved Story v8 for publication (${sha256(Buffer.from(`${frontmatter}${body}`, "utf8"))}); canonical approved source preserved (${actualCanonicalSourceSha256}; raw approved export ${approvedRawExportSha256}); approved Option A evidence-focused derivative preserved (${actualCoverSha256}); public divisions rendered as nine numbered headings; cross-case chronology remains unspecified; publication authorized 2026-08-18.`);
+console.log(`Materialized DA-003 ${correctedRevision} for Website v1.1 correction (${sha256(Buffer.from(`${frontmatter}${body}`, "utf8"))}); frozen Website v1.0 canonical source preserved (${actualCanonicalSourceSha256}; raw approved export ${approvedRawExportSha256}); bounded correction layer applied; approved Option A evidence-focused derivative preserved (${actualCoverSha256}); public divisions rendered as nine numbered headings; cross-case chronology remains unspecified; original publication date remains 2026-08-18.`);
