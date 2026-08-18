@@ -6,10 +6,11 @@ import process from "node:process";
 const root = process.cwd();
 const routePath = path.join(root, "dist", "stories", "da-003-the-recorder-kept-running", "index.html");
 const storySource = path.join(root, "src", "content", "stories", "da-003-the-recorder-kept-running.md");
-const coverPath = path.join(root, "public", "images", "da-003-cover-option-a-preview.jpg");
+const coverPath = path.join(root, "public", "images", "da-003-cover-option-a-evidence-crop-preview.jpg");
 const manuscriptDirectory = path.join(root, "src", "manuscripts", "da-003");
 const expectedCanonicalSourceSha256 = "be4851565b63d561e7ee3f1c92a3d0b8087eb74c651ab518330bfa08a77fdb3f";
-const expectedCoverSha256 = "69405a56c51d39d41f7a82636840667440e8cbf114e591c7fd95f156ae4a4512";
+const expectedRawExportSha256 = "522786572da7ddd784045b07adb7ca79ab0e4165ed7d0418af9ef3ec0a2f401f";
+const expectedCoverSha256 = "d5ebd224f85842f4d5e7a362e71eb6031c95e898dcf2801288c7cfcccc049019";
 const exists = async (file) => access(file).then(() => true).catch(() => false);
 const sha256 = (value) => createHash("sha256").update(value).digest("hex");
 const canonicalizeSource = (value) => value.replace(/^\uFEFF/, "").replace(/\r\n?/g, "\n").replace(/\n{3,}/g, "\n\n").trimEnd() + "\n";
@@ -29,7 +30,7 @@ if (sourceHash !== expectedCanonicalSourceSha256) {
 
 if (!(await exists(routePath))) throw new Error("DA-003 private-preview route was not generated.");
 if (!(await exists(storySource))) throw new Error("DA-003 materialized website source is missing.");
-if (!(await exists(coverPath))) throw new Error("DA-003 approved Option A preview derivative was not materialized.");
+if (!(await exists(coverPath))) throw new Error("DA-003 approved Option A evidence-focused derivative is missing.");
 const coverHash = sha256(await readFile(coverPath));
 if (coverHash !== expectedCoverSha256) {
   throw new Error(`DA-003 cover integrity failure: expected ${expectedCoverSha256}, got ${coverHash}.`);
@@ -57,7 +58,7 @@ const required = [
   'name="twitter:card" content="summary_large_image"',
   'type="application/ld+json"',
   '"@type":"ShortStory"',
-  "da-003-cover-option-a-preview.jpg",
+  "da-003-cover-option-a-evidence-crop-preview.jpg",
 ];
 for (const needle of required) {
   if (!html.includes(needle)) throw new Error(`DA-003 preview output missing ${JSON.stringify(needle)}.`);
@@ -76,11 +77,11 @@ if (/Source Transcript|Transcript Notes|PPC-DA-003|Contradiction Farming|Hidden 
   throw new Error("Internal Dead Air development or continuity material leaked into the DA-003 reader-facing preview.");
 }
 
-const imgMatch = html.match(/<img[^>]+da-003-cover-option-a-preview\.jpg[^>]+alt="([^"]*)"/);
+const imgMatch = html.match(/<img[^>]+da-003-cover-option-a-evidence-crop-preview\.jpg[^>]+alt="([^"]*)"/);
 if (!imgMatch || !imgMatch[1].trim()) throw new Error("DA-003 preview cover is missing descriptive alt text.");
 const alt = imgMatch[1].toLowerCase();
 if (/grave|protector|haunted|apparition|ghost visible/.test(alt)) {
   throw new Error("DA-003 cover alt text implies unsupported paranormal certainty.");
 }
 
-console.log(`DA-003 repository-native private-preview validation PASS: canonical approved source ${sourceHash}; cover ${coverHash}; nine numbered sections; standard source note; noindex; social metadata; ShortStory structured data; accurate cover alt text; chronology neutrality; claim ceiling; no publication date; no internal-material leakage.`);
+console.log(`DA-003 repository-native private-preview validation PASS: canonical approved source ${sourceHash} (raw approved export ${expectedRawExportSha256}); cover ${coverHash}; nine numbered sections; standard source note; noindex; social metadata; ShortStory structured data; accurate cover alt text; chronology neutrality; claim ceiling; no publication date; no internal-material leakage.`);
