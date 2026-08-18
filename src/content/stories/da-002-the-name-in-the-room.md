@@ -1,7 +1,7 @@
 ---
 slug: da-002-the-name-in-the-room
 title: The Name in the Room
-summary: Diane Madsen brings a separate recorder to a medium’s return at Bellweather High. In the basement, a fire door moves while the camera cannot see the whole threshold.
+summary: A documentary crew returns to Bellweather High for a final session with a medium. In the basement, equipment fails, a fire door moves, and a recorded sound leaves much to interpretation.
 status: withheld
 classification: Literary paranormal horror
 readingTime: 88–111 minutes

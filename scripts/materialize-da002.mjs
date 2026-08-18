@@ -15,7 +15,7 @@ const approvedSourceSha256 = "104c25b43c709d30b0aa8c20bd7cb13410073fd67a763e7e92
 const sourceCardSummary =
   "A final cleansing at Bellweather High becomes a struggle over names, consent, source custody, and the difference between relief and proof.";
 const approvedCardSummary =
-  "Diane Madsen brings a separate recorder to a medium’s return at Bellweather High. In the basement, a fire door moves while the camera cannot see the whole threshold.";
+  "A documentary crew returns to Bellweather High for a final session with a medium. In the basement, equipment fails, a fire door moves, and a recorded sound leaves much to interpretation.";
 const legacySourceNote = [
   "## Fictionalization and Source Note",
   "",
