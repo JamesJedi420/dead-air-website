@@ -16,6 +16,11 @@ const sourceCardSummary =
   "A final cleansing at Bellweather High becomes a struggle over names, consent, source custody, and the difference between relief and proof.";
 const approvedCardSummary =
   "A documentary crew returns to Bellweather High for a final session with a medium. In the basement, equipment fails, a fire door moves, and a sound recording leaves much to interpretation.";
+const correctedRevision = "Final Approved Story v13";
+const correctiveReplacements = [
+  ["Three different records and one blank.", "Four different records and one blank."],
+  ["one possible four-word pattern: not my name.", "one possible three-word pattern: not my name."],
+];
 const legacySourceNote = [
   "## Fictionalization and Source Note",
   "",
@@ -35,7 +40,7 @@ const publishedSectionHeadings = [
   ["## Scene 9 — The Final Source", "## 9. The Final Source"],
 ];
 const chronologyMetadata = [
-  "revision: Final Approved Story v12",
+  `revision: ${correctedRevision}`,
   "publicationDate: 2026-07-27",
   "timelineOrder: 2",
   "timelineLabel: Return investigation and attempted cleansing",
@@ -90,6 +95,16 @@ let manuscript = approvedSource
   .replace(/^revision: Final Approved Story v12$/m, chronologyMetadata)
   .replace(/^draft: true$/m, "draft: false");
 
+// Preserve the frozen v12 repository import and apply only the two mandatory
+// objective corrections authorized for Final Approved Story v13.
+for (const [before, after] of correctiveReplacements) {
+  const occurrences = manuscript.split(before).length - 1;
+  if (occurrences !== 1) {
+    throw new Error(`Expected exactly one DA-002 corrective target ${JSON.stringify(before)}, found ${occurrences}.`);
+  }
+  manuscript = manuscript.replace(before, after);
+}
+
 for (const [sourceHeading, publishedHeading] of publishedSectionHeadings) {
   const headingOccurrences = manuscript.split(sourceHeading).length - 1;
   if (headingOccurrences !== 1) {
@@ -113,5 +128,5 @@ const actualPublicationSha256 = sha256(manuscript);
 
 await writeFile(outputPath, manuscript, "utf8");
 console.log(
-  `Materialized DA-002 Final Approved Story v12 for publication (${actualPublicationSha256}); approved source preserved (${actualSourceSha256}); approved website/card subtitle applied as publishing metadata; standard source note supplied by the shared story template; public divisions rendered as numbered section headings; narrative chronology fixed at archive position 2 after DA-001.`,
+  `Materialized DA-002 ${correctedRevision} for publication (${actualPublicationSha256}); frozen v12 repository source preserved (${actualSourceSha256}); bounded objective-error correction layer applied; approved website/card subtitle applied as publishing metadata; standard source note supplied by the shared story template; public divisions rendered as numbered section headings; narrative chronology fixed at archive position 2 after DA-001.`,
 );
