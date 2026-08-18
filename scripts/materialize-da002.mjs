@@ -12,6 +12,10 @@ const outputPath = path.join(
   "da-002-the-name-in-the-room.md",
 );
 const approvedSourceSha256 = "104c25b43c709d30b0aa8c20bd7cb13410073fd67a763e7e9229640973b20964";
+const sourceCardSummary =
+  "A final cleansing at Bellweather High becomes a struggle over names, consent, source custody, and the difference between relief and proof.";
+const approvedCardSummary =
+  "Diane Madsen brings a separate recorder to a medium’s return at Bellweather High. In the basement, a fire door moves while the camera cannot see the whole threshold.";
 const legacySourceNote = [
   "## Fictionalization and Source Note",
   "",
@@ -74,8 +78,14 @@ if (sourceNoteOccurrences !== 1) {
   );
 }
 
+const sourceSummaryLine = `summary: ${sourceCardSummary}`;
+if (approvedSource.split(sourceSummaryLine).length - 1 !== 1) {
+  throw new Error("The frozen DA-002 source no longer contains the expected legacy card-summary line.");
+}
+
 let manuscript = approvedSource
   .replace(legacySourceNote, "")
+  .replace(sourceSummaryLine, `summary: ${approvedCardSummary}`)
   .replace(/^status: withheld$/m, "status: active")
   .replace(/^revision: Final Approved Story v12$/m, chronologyMetadata)
   .replace(/^draft: true$/m, "draft: false");
@@ -103,5 +113,5 @@ const actualPublicationSha256 = sha256(manuscript);
 
 await writeFile(outputPath, manuscript, "utf8");
 console.log(
-  `Materialized DA-002 Final Approved Story v12 for publication (${actualPublicationSha256}); approved source preserved (${actualSourceSha256}); standard source note supplied by the shared story template; public divisions rendered as numbered section headings; narrative chronology fixed at archive position 2 after DA-001.`,
+  `Materialized DA-002 Final Approved Story v12 for publication (${actualPublicationSha256}); approved source preserved (${actualSourceSha256}); approved website/card subtitle applied as publishing metadata; standard source note supplied by the shared story template; public divisions rendered as numbered section headings; narrative chronology fixed at archive position 2 after DA-001.`,
 );
