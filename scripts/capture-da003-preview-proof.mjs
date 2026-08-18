@@ -62,7 +62,7 @@ const verifyHeadMetadata = async (page) => {
 
 const verifyStoryPage = async (page, label) => {
   await page.getByRole("heading", { name: title, exact: true }).waitFor();
-  await page.getByText("Final Approved Story v8", { exact: false }).waitFor();
+  await page.getByText("Final Approved Story v9", { exact: false }).waitFor();
   await page.getByText(sourceNote, { exact: true }).waitFor();
   await verifyHeadMetadata(page);
 
