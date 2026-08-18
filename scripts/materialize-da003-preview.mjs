@@ -18,44 +18,30 @@ const sourceFiles = (await readdir(sourceDirectory))
   .filter((fileName) => /^part-\d{2}\.mdfrag$/.test(fileName))
   .sort((left, right) => left.localeCompare(right));
 
-if (sourceFiles.length !== 18) {
-  throw new Error(`Expected 18 DA-003 manuscript fragments, found ${sourceFiles.length}.`);
-}
+if (sourceFiles.length !== 18) throw new Error(`Expected 18 DA-003 manuscript fragments, found ${sourceFiles.length}.`);
 
-const importedSource = (
-  await Promise.all(sourceFiles.map((fileName) => readFile(path.join(sourceDirectory, fileName), "utf8")))
-).join("");
+const importedSource = (await Promise.all(sourceFiles.map((fileName) => readFile(path.join(sourceDirectory, fileName), "utf8")))).join("");
 const approvedSource = canonicalizeSource(importedSource);
 const actualCanonicalSourceSha256 = sha256(Buffer.from(approvedSource, "utf8"));
 if (actualCanonicalSourceSha256 !== approvedCanonicalSourceSha256) {
-  throw new Error(
-    `DA-003 canonical approved-source integrity check failed. Expected ${approvedCanonicalSourceSha256}, received ${actualCanonicalSourceSha256}. Raw authoritative Google export remains separately frozen as ${approvedRawExportSha256}.`,
-  );
+  throw new Error(`DA-003 canonical approved-source integrity check failed. Expected ${approvedCanonicalSourceSha256}, received ${actualCanonicalSourceSha256}. Raw authoritative Google export remains separately frozen as ${approvedRawExportSha256}.`);
 }
 
 const coverBytes = await readFile(coverPath);
 const actualCoverSha256 = sha256(coverBytes);
 if (actualCoverSha256 !== approvedCoverPreviewSha256) {
-  throw new Error(
-    `DA-003 approved-cover derivative integrity check failed. Expected ${approvedCoverPreviewSha256}, received ${actualCoverSha256}.`,
-  );
+  throw new Error(`DA-003 approved-cover derivative integrity check failed. Expected ${approvedCoverPreviewSha256}, received ${actualCoverSha256}.`);
 }
 
 const headings = [...approvedSource.matchAll(/^Scene (\d+) — (.+)$/gm)];
-if (headings.length !== 9) {
-  throw new Error(`Expected 9 DA-003 scene headings in approved source, found ${headings.length}.`);
-}
+if (headings.length !== 9) throw new Error(`Expected 9 DA-003 scene headings in approved source, found ${headings.length}.`);
 
-let body = approvedSource.replace(/^Scene (\d+) — (.+)$/gm, "## $1. $2");
-if (/^Scene\s+\d+\s+—/m.test(body) || /^##\s+Scene\s+\d+/m.test(body)) {
-  throw new Error("A production Scene label remained in the DA-003 website output.");
-}
+const body = approvedSource.replace(/^Scene (\d+) — (.+)$/gm, "## $1. $2");
+if (/^Scene\s+\d+\s+—/m.test(body) || /^##\s+Scene\s+\d+/m.test(body)) throw new Error("A production Scene label remained in the DA-003 website output.");
 
-const frontmatter = `---\nslug: da-003-the-recorder-kept-running\ntitle: The Recorder Kept Running\nsummary: Maren finds Jonah bleeding in an unfinished house with three pages he does not remember writing. Hours later, he asks her to take him back to Harrow River.\nstatus: active\nclassification: Literary paranormal horror\nreadingTime: 86–108 minutes\nrevision: Final Approved Story v8\ncanonicalStatus: established canon\ndraft: false\npreviewOnly: true\ntags:\n  - literary paranormal horror\n  - documentary horror\n  - psychological horror\n  - wilderness horror\nphenomenon:\n  - ambiguous recorded sound\n  - unexplained impact\n  - disputed physical disturbance\n  - speech-like modulation\n  - unresolved unattended recording\nevidenceType:\n  - direct perception\n  - camera recordings\n  - audio recordings\n  - phone voice memo\n  - radio contact\n  - maps and site records\n  - environmental comparisons\n  - negative observations\n  - evidence custody\nlocations:\n  - Harrow River State Preserve\ncontentWarnings:\n  - Psychological distress and panic\n  - Minor hand injury\n  - Memory loss and uncertainty\n  - References to murder and violence in contested site lore\n  - Ambiguous audio and impacts\n  - Nighttime wilderness and off-trail risk\ncontentNotes:\n  - Fictionalized literary horror; disputed folklore and unresolved recordings are not presented as verified paranormal fact.\ncoverImage: /images/da-003-cover-option-a-evidence-crop-preview.jpg\ncoverAlt: Portable recorder resting on wet rocks beside dark water beneath the Dead Air mark; no person, grave marker, or apparition is visible.\n---\n\n`;
+const frontmatter = `---\nslug: da-003-the-recorder-kept-running\ntitle: The Recorder Kept Running\nsummary: Maren finds Jonah bleeding in an unfinished house with three pages he does not remember writing. Hours later, he asks her to take him back to Harrow River.\nstatus: active\nclassification: Literary paranormal horror\nreadingTime: 86–108 minutes\nrevision: Final Approved Story v8\npublicationDate: 2026-08-18\ncanonicalStatus: established canon\ndraft: false\npreviewOnly: false\ntags:\n  - literary paranormal horror\n  - documentary horror\n  - psychological horror\n  - wilderness horror\nphenomenon:\n  - ambiguous recorded sound\n  - unexplained impact\n  - disputed physical disturbance\n  - speech-like modulation\n  - unresolved unattended recording\nevidenceType:\n  - direct perception\n  - camera recordings\n  - audio recordings\n  - phone voice memo\n  - radio contact\n  - maps and site records\n  - environmental comparisons\n  - negative observations\n  - evidence custody\nlocations:\n  - Harrow River State Preserve\ncontentWarnings:\n  - Psychological distress and panic\n  - Minor hand injury\n  - Memory loss and uncertainty\n  - References to murder and violence in contested site lore\n  - Ambiguous audio and impacts\n  - Nighttime wilderness and off-trail risk\ncontentNotes:\n  - Fictionalized literary horror; disputed folklore and unresolved recordings are not presented as verified paranormal fact.\ncoverImage: /images/da-003-cover-option-a-evidence-crop-preview.jpg\ncoverAlt: Portable recorder resting on wet rocks beside dark water beneath the Dead Air mark; no person, grave marker, or apparition is visible.\n---\n\n`;
 
 await mkdir(path.dirname(outputPath), { recursive: true });
 await writeFile(outputPath, `${frontmatter}${body}`, "utf8");
 
-console.log(
-  `Materialized DA-003 Final Approved Story v8 for private website proof (${sha256(Buffer.from(`${frontmatter}${body}`, "utf8"))}); canonical approved source preserved (${actualCanonicalSourceSha256}; raw approved export ${approvedRawExportSha256}); approved Option A evidence-focused derivative preserved (${actualCoverSha256}); public divisions rendered as nine numbered headings; cross-case chronology remains unspecified; publication remains unauthorized.`,
-);
+console.log(`Materialized DA-003 Final Approved Story v8 for publication (${sha256(Buffer.from(`${frontmatter}${body}`, "utf8"))}); canonical approved source preserved (${actualCanonicalSourceSha256}; raw approved export ${approvedRawExportSha256}); approved Option A evidence-focused derivative preserved (${actualCoverSha256}); public divisions rendered as nine numbered headings; cross-case chronology remains unspecified; publication authorized 2026-08-18.`);
