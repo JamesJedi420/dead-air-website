@@ -6,7 +6,14 @@ const root = process.cwd();
 const storyDirectory = path.join(root, "src", "content", "stories");
 const feedPath = path.join(root, "dist", "feed.xml");
 
-const feed = await readFile(feedPath, "utf8");
+let feed;
+try {
+  feed = await readFile(feedPath, "utf8");
+} catch (error) {
+  throw new Error(
+    `RSS validation failed: dist/feed.xml is unavailable. Ensure the Astro build generated the feed before postbuild validation. (${error.message})`,
+  );
+}
 
 if (!/<rss\b/i.test(feed) || !/<channel>/i.test(feed)) {
   throw new Error("RSS validation failed: dist/feed.xml is not a valid RSS channel document.");
