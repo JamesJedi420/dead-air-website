@@ -10,7 +10,7 @@ const manifest = JSON.parse(
 );
 const outputPath = path.join(root, "src", "content", "stories", `${manifest.slug}.md`);
 const approvedSourceSha256 = "175680113c552fe71b8aea3cdc553755e06909202928cf6675c1a0ab41228aba";
-const correctedRevision = "Final Approved Story v19";
+const correctedRevision = "Final Approved Story v20";
 const v18CorrectiveReplacements = [
   ["Her shoes made two measured contacts with the concrete.", "Her shoes struck the concrete twice, evenly spaced."],
   ["Two contacts came from the other side, accompanied by the soft collision of keys.", "Two steps came from the other side, accompanied by the soft collision of keys."],
@@ -65,6 +65,31 @@ const v19SpokenNaturalnessReplacements = [
   ["“This is responsibility.”", "“No. It means Ron gets to say no, and Wayne doesn’t get named because a file sounds close.”"],
   ["“It is the boundary you keep crossing.”", "“No. It’s the difference between what I heard and what you want to put in the narration.”"],
 ];
+const v20DialogueRealismReplacements = [
+  ["“Then its location changes again.”", "“Then we log where it turns up.”"],
+  ["“Then the device produces another file.”", "“Then we have another file to check.”"],
+  ["“This is a basement with uncontrolled routes, active radios, mechanical noise, and a group primed by a personal recording.”", "“We’re in a basement with open routes, active radios, mechanical noise, and four people who already heard a recording they think is personal.”"],
+  ["“You placed that interpretation before the second pass.”", "“You told everybody what it said before you played it again.”"],
+  ["“It means the software produced a clip from cached data,” Diane said. “We cannot establish when the sound entered the buffer, which input carried it, or whether your playback bled into the recording path.”", "“It means the software pulled a clip out of the cache,” Diane said. “We don’t know when that sound got there, which input caught it, or whether your own playback bled into it.”"],
+  ["“It proves no sequence.”", "“It doesn’t prove the order.”"],
+  ["“You already turned incomplete controls into certainty.”", "“You already took gaps in the first test and treated them like they settled something.”"],
+  ["“That is an audio path requiring inspection.”", "“That tells me there’s an audio path we haven’t checked.”"],
+  ["Diane pointed toward the main camera. “Your obstruction is documented. Move now.”", "Diane pointed toward the main camera. “The camera has you blocking me. Move.”"],
+  ["“The conditions remain unchanged.”", "“We’re not changing the test.”"],
+  ["“Silence continues until retrieval.”", "“Nobody talks until we get the camera back.”"],
+  ["“The audio path has compromised the conditions.”", "“We don’t know where that audio came through. The test isn’t clean anymore.”"],
+  ["“The maintenance panel remained bolted. The booth door seal remained intact. Exclusion always has defined limits.”", "“The maintenance panel was still bolted. The booth seal was still intact. We only ruled out the routes we checked.”"],
+  ["“The camera reduces my balance and occupies one hand.”", "“I need both hands, and I’m not climbing with a camera throwing off my balance.”"],
+  ["“You have compromised the access record and increased the load on this path.”", "“You just broke the access record, and you’re putting more weight on this path.”"],
+  ["“Reachability and undocumented entry are separate facts.”", "“Knowing the booth can be reached this way isn’t the same as somebody coming through here without us recording it.”"],
+  ["“I have no identification.”", "“I don’t know yet.”"],
+  ["“It becomes controlled evidence.”", "“If I keep it, we know who has it.”"],
+  ["Diane moved between him and the tripod. “Your entry is against instruction and enters the primary camera frame from an unrecorded edge.”", "Diane moved between him and the tripod. “I told you to stay outside. Now you’re coming into the main camera from a side it never recorded.”"],
+  ["“Your camera lacks the synchronized clock and began after the test.”", "“Your camera isn’t synced, and you didn’t start it until after the test.”"],
+  ["“The first explanation has a mechanism.”", "“The first one gives me something I can test.”"],
+  ["“The second has a chair.”", "“And the other one has a chair in a locked room.”"],
+  ["“You are making the story about uncertainty.”", "“You’re asking me to make the whole story about what we don’t know.”"],
+];
 
 const sha256 = (value) => createHash("sha256").update(value, "utf8").digest("hex");
 const sourceFiles = (await readdir(sourceDirectory))
@@ -110,6 +135,7 @@ const applyCorrectiveLayer = (label, replacements) => {
 // corrective layers during materialization. Every target must occur exactly once.
 applyCorrectiveLayer("v18", v18CorrectiveReplacements);
 applyCorrectiveLayer("v19 spoken-naturalness", v19SpokenNaturalnessReplacements);
+applyCorrectiveLayer("v20 dialogue-realism", v20DialogueRealismReplacements);
 
 for (const section of manifest.sections) {
   const sourceHeading = `# **${section.source}**`;
@@ -176,5 +202,5 @@ await mkdir(path.dirname(outputPath), { recursive: true });
 await writeFile(outputPath, `${frontmatter}${body}`, "utf8");
 const materializedSha256 = sha256(`${frontmatter}${body}`);
 console.log(
-  `Materialized DA-001 ${correctedRevision} for release preparation (${materializedSha256}); frozen v17 repository source preserved (${actualSourceSha256}); bounded v18 and v19 corrective layers applied; standard source note supplied by the shared story template; public divisions rendered as numbered section headings; narrative chronology fixed at archive position 1 before DA-002.`,
+  `Materialized DA-001 ${correctedRevision} for release preparation (${materializedSha256}); frozen v17 repository source preserved (${actualSourceSha256}); bounded v18, v19, and v20 corrective layers applied; standard source note supplied by the shared story template; public divisions rendered as numbered section headings; narrative chronology fixed at archive position 1 before DA-002.`,
 );
