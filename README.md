@@ -81,9 +81,9 @@ The approved policy and initial DA-001 → DA-002 sequence are recorded in `docs
 
 ## DA-001 Publication
 
-DA-001 — *After the Main Fan Stops* is published from the unchanged Final Approved Story v17 manuscript. The canonical public route remains `/stories/da-001-the-building-keeps-the-hour/` so the August 17, 2026 publishing-title revision does not break existing links.
+DA-001 — *After the Main Fan Stops* is published as Final Approved Story v20. The canonical public route remains `/stories/da-001-the-building-keeps-the-hour/` so the August 17, 2026 publishing-title revision does not break existing links.
 
-The approved manuscript is divided into twelve ordered repository fragments under `src/manuscripts/da-001/`. `scripts/materialize-da001.mjs` assembles them during development and production builds, verifies the approved source SHA-256, converts the private scene headings to the ten numbered public section headings, and writes the generated story entry.
+The repository preserves the frozen Final Approved Story v17 source as twelve ordered fragments under `src/manuscripts/da-001/`. `scripts/materialize-da001.mjs` verifies that frozen source SHA-256, applies only the approved bounded v18, v19, and v20 corrective layers, converts the private scene headings to the ten numbered public section headings, and writes the generated v20 story entry. This keeps the historical source lock intact while making the current approved public manuscript reproducible from explicit versioned corrections.
 
 `scripts/validate-da001-output.mjs` verifies the published route, source note, ten sections, search entry, RSS item, and sitemap entry. `scripts/validate-narrative-timeline.mjs` and `scripts/validate-narrative-timeline-output.mjs` verify archive position 1 before DA-002. The GitHub validation workflow also captures segmented desktop and iPhone 13 visual proof at the page top, Section 5, Section 10, and footer.
 
