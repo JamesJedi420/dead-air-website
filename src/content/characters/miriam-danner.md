@@ -1,6 +1,6 @@
 ---
-slug: miriam-vale
-title: Miriam Vale
+slug: miriam-danner
+title: Miriam Danner
 summary: Medium whose bounded practice distinguishes spiritual meaning, participant relief, and personal belief from what the recorded evidence can establish.
 status: withheld
 classification: Local DA-002 character
@@ -34,6 +34,6 @@ locations:
   - Cedar Plain High School
 ---
 
-Miriam Vale enters Cedar Plain High after disclosing prior exposure to the school's reputation. Her impressions and ritual remain attributed to her personal spiritual practice. She accepts source-sequence limits, identifies ordinary information paths, and rejects attempts to convert broad impressions into verified identities.
+Miriam Danner enters Cedar Plain High after disclosing prior exposure to the school's reputation. Her impressions and ritual remain attributed to her personal spiritual practice. She accepts source-sequence limits, identifies ordinary information paths, and rejects attempts to convert broad impressions into verified identities.
 
 Miriam completes a bounded ritual that changes participant conduct and is followed by reported relief. DA-002 establishes neither metaphysical efficacy nor a verified spirit identity, attachment, successful cleansing, or universal spiritual method.

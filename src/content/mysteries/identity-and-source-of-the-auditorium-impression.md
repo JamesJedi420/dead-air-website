@@ -31,7 +31,7 @@ characters:
   - diane-madsen
   - evan-kruse
   - abby-larson
-  - miriam-vale
+  - miriam-danner
 ---
 
 Miriam reports an older woman associated with performance. A visible fictional program, common-name approximation, added search terms, rejected results, and an unrelated historical page produce a persuasive identity sequence. Miriam ultimately rejects the verified-name claim.

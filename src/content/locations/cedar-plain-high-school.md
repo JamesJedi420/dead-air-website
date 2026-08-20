@@ -43,7 +43,7 @@ characters:
   - abby-larson
   - wayne-nissen
   - ron-meier
-  - miriam-vale
+  - miriam-danner
 ---
 
 Cedar Plain High School is the shared institutional location for DA-001 and DA-002. Internal rooms, corridors, booths, plenums, bays, crawlspace openings, mechanical rooms, media spaces, and auditorium areas remain nested case data rather than separate public location records.

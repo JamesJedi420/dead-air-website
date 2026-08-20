@@ -47,7 +47,7 @@ characters:
   - abby-larson
   - wayne-nissen
   - ron-meier
-  - miriam-vale
+  - miriam-danner
 objects:
   - unidentified-wet-brass-key
 ---

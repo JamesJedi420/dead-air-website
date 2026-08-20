@@ -32,7 +32,7 @@ characters:
   - diane-madsen
   - evan-kruse
   - abby-larson
-  - miriam-vale
+  - miriam-danner
 ---
 
 DA-002 preserves two disputed audio events. The fire-door sequence contains a low sound that listeners parse differently. The auditorium recorder contains a brief source-specific modulation that can be divided into several possible patterns, including ordinary ventilation, fabric, handling, breath, or speech-like interpretations.

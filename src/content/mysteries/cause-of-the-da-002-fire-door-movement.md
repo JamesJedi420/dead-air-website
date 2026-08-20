@@ -32,7 +32,7 @@ characters:
   - diane-madsen
   - evan-kruse
   - abby-larson
-  - miriam-vale
+  - miriam-danner
 ---
 
 The fire door strikes its stop, rebounds, crosses roughly half the opening, and rattles while no visible hand touches the slab. Available forces include changing air pressure, closer behavior, floor contact, hardware condition, participant proximity, and incomplete lower-body and mechanical coverage. None fully establishes the cause of the recorded movement.
