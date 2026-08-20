@@ -18,7 +18,7 @@ evidenceType:
   - source comparisons
   - interviews
 locations:
-  - Bellweather High School
+  - Cedar Plain High School
 relatedCases:
   - da-001
 stories:

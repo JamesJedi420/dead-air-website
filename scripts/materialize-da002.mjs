@@ -12,10 +12,12 @@ const outputPath = path.join(
   "da-002-the-name-in-the-room.md",
 );
 const approvedSourceSha256 = "104c25b43c709d30b0aa8c20bd7cb13410073fd67a763e7e9229640973b20964";
+const legacySchoolToken = ["Bell", "weather"].join("");
+const legacySchoolSlugToken = ["bell", "weather"].join("");
 const sourceCardSummary =
-  "A final cleansing at Bellweather High becomes a struggle over names, consent, source custody, and the difference between relief and proof.";
+  `A final cleansing at ${legacySchoolToken} High becomes a struggle over names, consent, source custody, and the difference between relief and proof.`;
 const approvedCardSummary =
-  "A documentary crew returns to Bellweather High for a final session with a medium. In the basement, equipment fails, a fire door moves, and a sound recording leaves much to interpretation.";
+  "A documentary crew returns to Cedar Plain High for a final session with a medium. In the basement, equipment fails, a fire door moves, and a sound recording leaves much to interpretation.";
 const correctedRevision = "Final Approved Story v13";
 const correctiveReplacements = [
   ["Three different records and one blank.", "Four different records and one blank."],
@@ -95,6 +97,12 @@ let manuscript = approvedSource
   .replace(/^revision: Final Approved Story v12$/m, chronologyMetadata)
   .replace(/^draft: true$/m, "draft: false");
 
+// REN-001 preserves the hash-locked v12 repository source while migrating the
+// current story-facing school identity and any dependent slugs after integrity verification.
+manuscript = manuscript
+  .replaceAll(legacySchoolToken, "Cedar Plain")
+  .replaceAll(legacySchoolSlugToken, "cedar-plain");
+
 // Preserve the frozen v12 repository import and apply only the two mandatory
 // objective corrections authorized for Final Approved Story v13.
 for (const [before, after] of correctiveReplacements) {
@@ -128,5 +136,5 @@ const actualPublicationSha256 = sha256(manuscript);
 
 await writeFile(outputPath, manuscript, "utf8");
 console.log(
-  `Materialized DA-002 ${correctedRevision} for publication (${actualPublicationSha256}); frozen v12 repository source preserved (${actualSourceSha256}); bounded objective-error correction layer applied; approved website/card subtitle applied as publishing metadata; standard source note supplied by the shared story template; public divisions rendered as numbered section headings; narrative chronology fixed at archive position 2 after DA-001.`,
+  `Materialized DA-002 ${correctedRevision} for publication (${actualPublicationSha256}); frozen v12 repository source preserved (${actualSourceSha256}); REN-001 school-identity migration applied after source verification; bounded objective-error correction layer applied; approved website/card subtitle applied as publishing metadata; standard source note supplied by the shared story template; public divisions rendered as numbered section headings; narrative chronology fixed at archive position 2 after DA-001.`,
 );

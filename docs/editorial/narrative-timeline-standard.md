@@ -53,7 +53,7 @@ A source upload date, video release date, transcript timestamp, or publication d
 
 | Narrative order | Entry | Timeline label | Source sequence |
 | --- | --- | --- | --- |
-| 1 | DA-001 — *The Building Keeps the Hour* | Initial Bellweather investigation | Original investigation |
+| 1 | DA-001 — *The Building Keeps the Hour* | Initial Cedar Plain investigation | Original investigation |
 | 2 | DA-002 — *The Name in the Room* | Return investigation and attempted cleansing | Follow-up investigation |
 
 DA-001 may remain absent from the public site until its story is publication-ready. Its public-safe chronology reservation makes it a resolvable position-1 target without publishing a placeholder. DA-002 retains `timelineOrder: 2` and an explicit `follows` relationship so later publication of DA-001 cannot reverse the established sequence.

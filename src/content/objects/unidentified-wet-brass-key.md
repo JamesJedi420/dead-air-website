@@ -9,7 +9,7 @@ draft: true
 tags:
   - key
   - physical evidence
-  - Bellweather High School
+  - Cedar Plain High School
 phenomenon:
   - object displacement
   - access anomaly
@@ -24,9 +24,9 @@ stories:
 cases:
   - da-001
 locations:
-  - Bellweather High School
+  - Cedar Plain High School
 ---
 
-The unidentified wet brass key is the only standalone DA-001 object record. Its origin, prior ownership, condition, and relationship to other Bellweather High incidents remain unresolved.
+The unidentified wet brass key is the only standalone DA-001 object record. Its origin, prior ownership, condition, and relationship to other Cedar Plain High incidents remain unresolved.
 
 The gray repair chair remains case evidence only and does not receive an independent object page.

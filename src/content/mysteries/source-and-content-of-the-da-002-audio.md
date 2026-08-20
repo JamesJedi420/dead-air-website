@@ -10,7 +10,7 @@ tags:
   - open mystery
   - ambiguous audio
   - source custody
-  - Bellweather High School
+  - Cedar Plain High School
 phenomenon:
   - contested audio
   - source-specific modulation
@@ -23,7 +23,7 @@ evidenceType:
   - blind transcription slips
   - chain of custody
 locations:
-  - Bellweather High School
+  - Cedar Plain High School
 relatedCases:
   - da-002
 stories:

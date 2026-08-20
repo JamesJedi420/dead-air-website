@@ -10,7 +10,7 @@ tags:
   - mediumship
   - ritual
   - consent
-  - Bellweather High School
+  - Cedar Plain High School
 phenomenon:
   - disputed mediumship
   - ritual relief
@@ -31,9 +31,9 @@ stories:
 cases:
   - da-002
 locations:
-  - Bellweather High School
+  - Cedar Plain High School
 ---
 
-Miriam Vale enters Bellweather High after disclosing prior exposure to the school's reputation. Her impressions and ritual remain attributed to her personal spiritual practice. She accepts source-sequence limits, identifies ordinary information paths, and rejects attempts to convert broad impressions into verified identities.
+Miriam Vale enters Cedar Plain High after disclosing prior exposure to the school's reputation. Her impressions and ritual remain attributed to her personal spiritual practice. She accepts source-sequence limits, identifies ordinary information paths, and rejects attempts to convert broad impressions into verified identities.
 
 Miriam completes a bounded ritual that changes participant conduct and is followed by reported relief. DA-002 establishes neither metaphysical efficacy nor a verified spirit identity, attachment, successful cleansing, or universal spiritual method.
