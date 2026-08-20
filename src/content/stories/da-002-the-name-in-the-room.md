@@ -51,7 +51,7 @@ characters:
   - evan-kruse
   - abby-larson
   - ron-meier
-  - miriam-vale
+  - miriam-danner
 objects:
   - unidentified-wet-brass-key
 mysteries:
