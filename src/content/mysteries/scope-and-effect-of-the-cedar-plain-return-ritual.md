@@ -31,7 +31,7 @@ characters:
   - diane-madsen
   - evan-kruse
   - abby-larson
-  - miriam-vale
+  - miriam-danner
 ---
 
 The ritual occurs under explicit conditions removing names, ownership, invitations, promised destinations, and claims of proof. Participants stop provoking, leave together, and report reduced pressure. The meter later functions after a failed press and battery reseating.
