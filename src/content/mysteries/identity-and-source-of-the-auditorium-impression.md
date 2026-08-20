@@ -10,7 +10,7 @@ tags:
   - open mystery
   - auditorium
   - identity construction
-  - Bellweather High School
+  - Cedar Plain High School
 phenomenon:
   - disputed mediumship
   - collaborative identity formation
@@ -22,7 +22,7 @@ evidenceType:
   - visible source material
   - source comparisons
 locations:
-  - Bellweather High School
+  - Cedar Plain High School
 relatedCases:
   - da-002
 stories:

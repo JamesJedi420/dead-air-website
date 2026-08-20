@@ -1,15 +1,15 @@
 ---
 slug: abby-larson
 title: Abby Larson
-summary: Camera operator whose independent source custody preserves contradictions, handling paths, and information sequence across the Bellweather cases.
+summary: Camera operator whose independent source custody preserves contradictions, handling paths, and information sequence across the Cedar Plain cases.
 status: withheld
-classification: Recurring Bellweather character
+classification: Recurring Cedar Plain character
 canonicalStatus: established canon
 draft: true
 tags:
   - student documentary
   - source custody
-  - Bellweather High School
+  - Cedar Plain High School
   - evidence ethics
 phenomenon:
   - contested audio
@@ -32,9 +32,9 @@ cases:
   - da-001
   - da-002
 locations:
-  - Bellweather High School
+  - Cedar Plain High School
 ---
 
-Abby Larson is a recurring Bellweather character involved in camera operation, synchronization, source preservation, and independent custody. Her records preserve the portions of each case that persuasive edits, group interpretation, and later recall can weaken.
+Abby Larson is a recurring Cedar Plain character involved in camera operation, synchronization, source preservation, and independent custody. Her records preserve the portions of each case that persuasive edits, group interpretation, and later recall can weaken.
 
 In DA-002, Abby records information exposures, participant positions, handling gaps, rejected searches, conflicting transcriptions, and the full sequence behind each apparent convergence. She removes the final auditorium modulation from the documentary edit and preserves the master without subtitle or official transcription.

@@ -1,7 +1,7 @@
 ---
 slug: da-002-the-name-in-the-room
 title: The Name in the Room
-summary: A documentary crew returns to Bellweather High for a final session with a medium. In the basement, equipment fails, a fire door moves, and a sound recording leaves much to interpretation.
+summary: A documentary crew returns to Cedar Plain High for a final session with a medium. In the basement, equipment fails, a fire door moves, and a sound recording leaves much to interpretation.
 status: withheld
 classification: Literary paranormal horror
 readingTime: 88–111 minutes
@@ -34,7 +34,7 @@ evidenceType:
   - source comparisons
   - chain of custody
 locations:
-  - Bellweather High School
+  - Cedar Plain High School
 contentWarnings:
   - Group psychological pressure
   - Grief and private memory
@@ -57,9 +57,9 @@ objects:
 mysteries:
   - cause-of-the-da-002-fire-door-movement
   - source-and-content-of-the-da-002-audio
-  - scope-and-effect-of-the-bellweather-return-ritual
+  - scope-and-effect-of-the-cedar-plain-return-ritual
   - identity-and-source-of-the-auditorium-impression
-  - relationship-among-the-recorded-phenomena-at-bellweather-high
+  - relationship-among-the-recorded-phenomena-at-cedar-plain-high
 ---
 
 <!--

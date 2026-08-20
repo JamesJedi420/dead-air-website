@@ -39,18 +39,18 @@
       "tags": ["literary paranormal horror", "documentary horror", "institutional horror", "psychological horror"],
       "phenomenon": ["contested audio", "disputed visual evidence", "object displacement", "institutional haunting"],
       "evidenceType": ["video", "audio", "recorder files", "metadata", "software cache", "access records", "interviews", "physical object custody", "maintenance logs", "building plans", "source comparisons"],
-      "locations": ["Bellweather High School"],
+      "locations": ["Cedar Plain High School"],
       "contentWarnings": ["Death and grief involving a former coworker", "Claustrophobic maintenance spaces", "Disputed voices and images", "Unsafe crawlspace access", "Institutional conflict"],
       "contentNotes": ["No graphic violence."],
       "cases": ["da-001"],
       "characters": ["diane-madsen", "evan-kruse", "abby-larson", "wayne-nissen"],
       "objects": ["unidentified-wet-brass-key"],
-      "mysteries": ["origin-and-ownership-of-the-wet-brass-key", "identity-and-meaning-of-the-answering-key-cadence", "relationship-among-the-recorded-phenomena-at-bellweather-high"]
+      "mysteries": ["origin-and-ownership-of-the-wet-brass-key", "identity-and-meaning-of-the-answering-key-cadence", "relationship-among-the-recorded-phenomena-at-cedar-plain-high"]
     }
   },
   "chronology": {
     "timelineOrder": 1,
-    "timelineLabel": "Initial Bellweather investigation",
+    "timelineLabel": "Initial Cedar Plain investigation",
     "sourceOrder": "Original investigation",
     "datePrecision": "relative",
     "chronologyNote": "Placed before DA-002 according to the approximate order of the source investigations and transcripts; the exact interval is fictionalized or withheld.",
@@ -72,8 +72,8 @@
   "continuity": {
     "successorPath": "src/content/stories/da-002-the-name-in-the-room.md",
     "sharedCharacters": ["diane-madsen", "evan-kruse", "abby-larson"],
-    "sharedLocations": ["Bellweather High School"],
+    "sharedLocations": ["Cedar Plain High School"],
     "sharedObjects": ["unidentified-wet-brass-key"],
-    "sharedMysteries": ["relationship-among-the-recorded-phenomena-at-bellweather-high"]
+    "sharedMysteries": ["relationship-among-the-recorded-phenomena-at-cedar-plain-high"]
   }
 }

@@ -3,13 +3,13 @@ slug: evan-kruse
 title: Evan Kruse
 summary: Student editor whose documentary framing tests how uncertain evidence changes when it is organized into a persuasive supernatural account.
 status: withheld
-classification: Recurring Bellweather character
+classification: Recurring Cedar Plain character
 canonicalStatus: established canon
 draft: true
 tags:
   - student documentary
   - editing ethics
-  - Bellweather High School
+  - Cedar Plain High School
   - interpretation
 phenomenon:
   - contested audio
@@ -23,7 +23,7 @@ evidenceType:
   - metadata
   - search chronology
   - source comparisons
-role: Student editor and Bellweather case participant
+role: Student editor and Cedar Plain case participant
 firstAppearance: da-001-the-building-keeps-the-hour
 stories:
   - da-001-the-building-keeps-the-hour
@@ -32,9 +32,9 @@ cases:
   - da-001
   - da-002
 locations:
-  - Bellweather High School
+  - Cedar Plain High School
 ---
 
-Evan Kruse is a recurring Bellweather character involved in the student documentary investigations at Bellweather High School. His record concerns interpretation, compression, source fidelity, and the difference between a persuasive edit and a faithful record.
+Evan Kruse is a recurring Cedar Plain character involved in the student documentary investigations at Cedar Plain High School. His record concerns interpretation, compression, source fidelity, and the difference between a persuasive edit and a faithful record.
 
 In DA-002, Evan arranges the return session and repeatedly converts timing, relief, broad impressions, and incomplete recordings into stronger claims. The morning review forces him to preserve the complete information path, remove unsupported identities and cleansing claims, and replace his proposed ending with: SESSION COMPLETED. CAUSES UNRESOLVED.

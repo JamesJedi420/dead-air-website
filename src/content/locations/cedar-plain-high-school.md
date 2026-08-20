@@ -1,6 +1,6 @@
 ---
-slug: bellweather-high-school
-title: Bellweather High School
+slug: cedar-plain-high-school
+title: Cedar Plain High School
 summary: Fictional Upper Midwestern school and institutional setting for the approved DA-001 and DA-002 cases.
 status: withheld
 classification: Fictional educational institution
@@ -29,7 +29,7 @@ evidenceType:
   - device logs
   - source comparisons
 locations:
-  - Bellweather High School
+  - Cedar Plain High School
 region: Unnamed Upper Midwestern city
 stories:
   - da-001-the-building-keeps-the-hour
@@ -46,8 +46,8 @@ characters:
   - miriam-vale
 ---
 
-Bellweather High School is the shared institutional location for DA-001 and DA-002. Internal rooms, corridors, booths, plenums, bays, crawlspace openings, mechanical rooms, media spaces, and auditorium areas remain nested case data rather than separate public location records.
+Cedar Plain High School is the shared institutional location for DA-001 and DA-002. Internal rooms, corridors, booths, plenums, bays, crawlspace openings, mechanical rooms, media spaces, and auditorium areas remain nested case data rather than separate public location records.
 
-The location's repeated use, returning participants, prior briefing, and inherited expectations create direct information paths between the two cases. Recurrence at Bellweather alone cannot establish an entity, paranormal law, ritual mechanism, or common cause.
+The location's repeated use, returning participants, prior briefing, and inherited expectations create direct information paths between the two cases. Recurrence at Cedar Plain alone cannot establish an entity, paranormal law, ritual mechanism, or common cause.
 
-Bellweather High is fictional. The record must not imply that either case occurred at an identifiable real school.
+Cedar Plain High is fictional. The record must not imply that either case occurred at an identifiable real school.

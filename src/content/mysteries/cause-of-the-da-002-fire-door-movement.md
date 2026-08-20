@@ -1,7 +1,7 @@
 ---
 slug: cause-of-the-da-002-fire-door-movement
 title: Cause of the DA-002 fire-door movement
-summary: Open DA-002 mystery concerning what released a Bellweather fire door from its stop and carried it roughly halfway across the opening under incomplete coverage.
+summary: Open DA-002 mystery concerning what released a Cedar Plain fire door from its stop and carried it roughly halfway across the opening under incomplete coverage.
 status: withheld
 classification: Local open mystery
 canonicalStatus: provisional canon
@@ -10,7 +10,7 @@ tags:
   - open mystery
   - fire door
   - incomplete coverage
-  - Bellweather High School
+  - Cedar Plain High School
 phenomenon:
   - fire-door movement
   - mechanical threshold
@@ -23,7 +23,7 @@ evidenceType:
   - hardware inspection
   - environmental readings
 locations:
-  - Bellweather High School
+  - Cedar Plain High School
 relatedCases:
   - da-002
 stories:

@@ -1,14 +1,14 @@
 ---
 slug: wayne-nissen
 title: Wayne Nissen
-summary: Former Bellweather High facilities worker whose memory and possible relation to disputed recordings remain unresolved within DA-001.
+summary: Former Cedar Plain High facilities worker whose memory and possible relation to disputed recordings remain unresolved within DA-001.
 status: withheld
 classification: Local DA-001 character
 canonicalStatus: established canon
 draft: true
 tags:
   - facilities
-  - Bellweather High School
+  - Cedar Plain High School
   - unresolved identity
 phenomenon:
   - contested audio
@@ -25,9 +25,9 @@ stories:
 cases:
   - da-001
 locations:
-  - Bellweather High School
+  - Cedar Plain High School
 ---
 
-Wayne Nissen is a local DA-001 character and former Bellweather High facilities worker. The record preserves his importance to Diane Madsen and the case without confirming the source, identity, or meaning of disputed recorded material.
+Wayne Nissen is a local DA-001 character and former Cedar Plain High facilities worker. The record preserves his importance to Diane Madsen and the case without confirming the source, identity, or meaning of disputed recorded material.
 
 No recurring-character status is assigned.

@@ -18,7 +18,7 @@ evidenceType:
   - access records
   - building plans
 locations:
-  - Bellweather High School
+  - Cedar Plain High School
 relatedCases:
   - da-001
 stories:
@@ -27,4 +27,4 @@ objects:
   - unidentified-wet-brass-key
 ---
 
-This mystery tracks unresolved questions about the unidentified wet brass key in DA-001. It remains local to Bellweather High and cannot establish a recurring artifact class or broader paranormal rule.
+This mystery tracks unresolved questions about the unidentified wet brass key in DA-001. It remains local to Cedar Plain High and cannot establish a recurring artifact class or broader paranormal rule.

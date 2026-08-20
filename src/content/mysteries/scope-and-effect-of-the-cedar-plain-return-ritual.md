@@ -1,6 +1,6 @@
 ---
-slug: scope-and-effect-of-the-bellweather-return-ritual
-title: Scope and effect of the Bellweather return ritual
+slug: scope-and-effect-of-the-cedar-plain-return-ritual
+title: Scope and effect of the Cedar Plain return ritual
 summary: Open DA-002 mystery concerning what, if anything, the bounded ritual changed beyond participant conduct and reported relief.
 status: withheld
 classification: Local open mystery
@@ -10,7 +10,7 @@ tags:
   - open mystery
   - ritual
   - reported relief
-  - Bellweather High School
+  - Cedar Plain High School
 phenomenon:
   - ritual relief
   - disputed mediumship
@@ -22,7 +22,7 @@ evidenceType:
   - environmental readings
   - source comparisons
 locations:
-  - Bellweather High School
+  - Cedar Plain High School
 relatedCases:
   - da-002
 stories:

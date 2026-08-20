@@ -1,6 +1,6 @@
 ---
-slug: relationship-among-the-recorded-phenomena-at-bellweather-high
-title: Relationship among the recorded phenomena at Bellweather High
+slug: relationship-among-the-recorded-phenomena-at-cedar-plain-high
+title: Relationship among the recorded phenomena at Cedar Plain High
 summary: Open cross-case mystery concerning whether the disputed sounds, images, objects, mechanical events, impressions, and access problems recorded in DA-001 and DA-002 share any cause.
 status: withheld
 classification: Local open mystery
@@ -9,7 +9,7 @@ draft: true
 tags:
   - open mystery
   - disputed evidence
-  - Bellweather High School
+  - Cedar Plain High School
   - cross-case comparison
 phenomenon:
   - contested audio
@@ -34,7 +34,7 @@ evidenceType:
   - source comparisons
   - chain of custody
 locations:
-  - Bellweather High School
+  - Cedar Plain High School
 relatedCases:
   - da-001
   - da-002
@@ -52,6 +52,6 @@ objects:
   - unidentified-wet-brass-key
 ---
 
-This mystery preserves the unresolved relationship among the two approved Bellweather cases. Shared location, returning participants, prior briefing, sequel status, and repeated documentary practices create direct information and expectation paths between the records.
+This mystery preserves the unresolved relationship among the two approved Cedar Plain cases. Shared location, returning participants, prior briefing, sequel status, and repeated documentary practices create direct information and expectation paths between the records.
 
-The wet brass key and the DA-002 auditorium recorder retain separate labels and custody chains. No entity, mechanism, paranormal law, recurring artifact class, ritual effect, or common cross-case cause is established. Independent recurrence outside the Bellweather information network remains necessary before a shared pattern can exceed comparison status.
+The wet brass key and the DA-002 auditorium recorder retain separate labels and custody chains. No entity, mechanism, paranormal law, recurring artifact class, ritual effect, or common cross-case cause is established. Independent recurrence outside the Cedar Plain information network remains necessary before a shared pattern can exceed comparison status.
