@@ -17,6 +17,7 @@ const legacySchoolSlugToken = ["bell", "weather"].join("");
 const legacyMiriamToken = ["Miriam", " Vale"].join("");
 const legacyMarianToken = ["Marian", " Bell"].join("");
 const legacyVenueToken = ["Grand", " Vaudeville", " Theatre"].join("");
+const legacyWorkTitleToken = ["The", " Winter", " Guest"].join("");
 const sourceCardSummary =
   `A final cleansing at ${legacySchoolToken} High becomes a struggle over names, consent, source custody, and the difference between relief and proof.`;
 const approvedCardSummary =
@@ -100,14 +101,15 @@ let manuscript = approvedSource
   .replace(/^revision: Final Approved Story v12$/m, chronologyMetadata)
   .replace(/^draft: true$/m, "draft: false");
 
-// REN-001 through REN-004 preserve the hash-locked v12 repository source while
+// REN-001 through REN-005 preserve the hash-locked v12 repository source while
 // migrating approved story-facing identities after integrity verification.
 manuscript = manuscript
   .replaceAll(legacySchoolToken, "Cedar Plain")
   .replaceAll(legacySchoolSlugToken, "cedar-plain")
   .replaceAll(legacyMiriamToken, "Miriam Danner")
   .replaceAll(legacyMarianToken, "Marian Ketter")
-  .replaceAll(legacyVenueToken, "Renshaw Theatre");
+  .replaceAll(legacyVenueToken, "Renshaw Theatre")
+  .replaceAll(legacyWorkTitleToken, "The Spare Chaperon");
 
 // Preserve the frozen v12 repository import and apply only the two mandatory
 // objective corrections authorized for Final Approved Story v13.
@@ -142,5 +144,5 @@ const actualPublicationSha256 = sha256(manuscript);
 
 await writeFile(outputPath, manuscript, "utf8");
 console.log(
-  `Materialized DA-002 ${correctedRevision} for publication (${actualPublicationSha256}); frozen v12 repository source preserved (${actualSourceSha256}); REN-001 school-identity, REN-002 Miriam Danner, REN-003 Marian Ketter, and REN-004 Renshaw Theatre migrations applied after source verification; bounded objective-error correction layer applied; approved website/card subtitle applied as publishing metadata; standard source note supplied by the shared story template; public divisions rendered as numbered section headings; narrative chronology fixed at archive position 2 after DA-001.`,
+  `Materialized DA-002 ${correctedRevision} for publication (${actualPublicationSha256}); frozen v12 repository source preserved (${actualSourceSha256}); REN-001 school-identity, REN-002 Miriam Danner, REN-003 Marian Ketter, REN-004 Renshaw Theatre, and REN-005 The Spare Chaperon migrations applied after source verification; bounded objective-error correction layer applied; approved website/card subtitle applied as publishing metadata; standard source note supplied by the shared story template; public divisions rendered as numbered section headings; narrative chronology fixed at archive position 2 after DA-001.`,
 );
