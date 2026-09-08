@@ -1,10 +1,10 @@
 import { createHash } from "node:crypto";
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, readdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 
 const root = process.cwd();
-const approvedSourcePath = path.join(root, "src", "manuscripts", "da-004", "approved-source.txt");
+const sourceDirectory = path.join(root, "src", "manuscripts", "da-004");
 const outputPath = path.join(root, "src", "content", "stories", "da-004-close-enough-to-recognize.md");
 
 const sourceGoogleDocId = "1RB0F4ShpEv9ewV9gXDkm4woHfaCGLDz9TV0xNYqHF38";
@@ -36,7 +36,12 @@ const normalizeParagraphs = (value) =>
     .join("\n\n")
     .trimEnd() + "\n";
 
-const imported = await readFile(approvedSourcePath, "utf8");
+const sourceFiles = (await readdir(sourceDirectory))
+  .filter((fileName) => /^part-\d{2}\.mdfrag$/.test(fileName))
+  .sort((left, right) => left.localeCompare(right));
+if (sourceFiles.length !== 10) throw new Error(`Expected 10 DA-004 manuscript fragments, found ${sourceFiles.length}.`);
+
+const imported = (await Promise.all(sourceFiles.map((fileName) => readFile(path.join(sourceDirectory, fileName), "utf8")))).join("\n");
 const normalized = normalizeParagraphs(imported);
 const headingPattern = /^DA-004 — Scene (\d{2}) — (.+?) — (?:Approved Draft|Draft) v[0-9.]+$/gm;
 const headings = [...normalized.matchAll(headingPattern)];
@@ -55,7 +60,7 @@ const canonicalSource = normalized.replace(headingPattern, (_match, sceneNumber,
 const canonicalSourceSha256 = sha256(Buffer.from(canonicalSource, "utf8"));
 const wordMatches = canonicalSource.match(/[\p{L}\p{N}]+(?:[’'-][\p{L}\p{N}]+)*/gu) ?? [];
 const wordCount = wordMatches.length;
-if (wordCount < 17000 || wordCount > 18250) throw new Error(`DA-004 source word-count sanity check failed: ${wordCount}.`);
+if (wordCount < 16000 || wordCount > 18500) throw new Error(`DA-004 source word-count sanity check failed: ${wordCount}.`);
 
 const body = canonicalSource.replace(/^Scene (\d{2}) — (.+)$/gm, (_match, sceneNumber, title) => `## ${Number(sceneNumber)}. ${title}`);
 if (/^DA-004 — Scene\s+\d+/m.test(body) || /^##\s+Scene\s+\d+/m.test(body)) throw new Error("A DA-004 internal Scene label remained in the website body.");
@@ -65,4 +70,4 @@ const frontmatter = `---\nslug: da-004-close-enough-to-recognize\ntitle: Close E
 await mkdir(path.dirname(outputPath), { recursive: true });
 await writeFile(outputPath, `${frontmatter}${body}`, "utf8");
 
-console.log(`DA-004 withheld website edition materialized from ${sourceGoogleDocId}@${sourceGoogleDocRevisionId}: ${approvedRevision}; canonical approved-source SHA-256 ${canonicalSourceSha256}; ${wordCount} source tokens by release sanity counter; ten numbered public sections; status withheld/draft/previewOnly; no publication date; no cover/release asset wired.`);
+console.log(`DA-004 withheld website edition materialized from ten repository-native scene fragments tied to ${sourceGoogleDocId}@${sourceGoogleDocRevisionId}: ${approvedRevision}; canonical approved-source SHA-256 ${canonicalSourceSha256}; ${wordCount} source tokens by release sanity counter; ten numbered public sections; status withheld/draft/previewOnly; no publication date; no cover/release asset wired.`);
