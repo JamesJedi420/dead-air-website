@@ -16,7 +16,7 @@ const publicationDate = storyEntry.data.publicationDate ?? storyEntry.data.date;
 const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).toString();
 const socialImage = storyEntry.data.ogImage ?? storyEntry.data.coverImage;
 const socialImageAlt = storyEntry.data.ogImage
-  ? storyEntry.data.ogImageAlt ?? `${storyEntry.data.title} — Dead Air social preview artwork.`
+  ? storyEntry.data.ogImageAlt
   : storyEntry.data.coverAlt;
 const structuredImage = socialImage
   ? new URL(socialImage, Astro.site ?? Astro.url).toString()
@@ -76,12 +76,5 @@ const structuredData = {
     margin: 0 auto 2rem;
     max-width: 36rem;
     overflow: hidden;
-  }
-
-  .story-cover img {
-    border: 1px solid var(--border, rgba(255, 255, 255, 0.18));
-    display: block;
-    height: auto;
-    width: 100%;
   }
 </style>
