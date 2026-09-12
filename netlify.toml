@@ -30,6 +30,18 @@
     path = "stories/da-002-the-name-in-the-room/index.html"
 
 [[redirects]]
+  from = "https://dead-air-website.netlify.app/*"
+  to = "https://readdeadair.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://dead-air-website.netlify.app/*"
+  to = "https://readdeadair.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
   from = "/dead-air-da-002-the-name-in-the-room"
   to = "/stories/da-002-the-name-in-the-room/"
   status = 301
