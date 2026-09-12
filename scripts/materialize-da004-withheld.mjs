@@ -66,6 +66,11 @@ const body = canonicalSource.replace(/^Scene (\d{2}) — (.+)$/gm,(_m,n,t)=>`## 
 const urlFor = (filename) => `/images/da-004/${filename}`;
 const artFrontmatter = Object.entries(assets).map(([role,[filename]])=>`${role}: ${urlFor(filename)}`).join("\n");
 const frontmatter = `---\nslug: da-004-close-enough-to-recognize\ntitle: Close Enough to Recognize\nsummary: ${approvedWebsiteCardSubtitle}\nstatus: withheld\nclassification: Literary paranormal horror\nrevision: ${approvedRevision}\ncanonicalStatus: established canon\ndraft: true\npreviewOnly: true\n${artFrontmatter}\ncoverAlt: \"${approvedAlt}\"\ntags:\n  - literary paranormal horror\n  - documentary horror\n  - psychological horror\n  - haunted hotel\nphenomenon:\n  - ambiguous recorded sound\n  - unexplained impacts\n  - voice-like audio\n  - disputed sound direction\nevidenceType:\n  - direct perception\n  - camera recordings\n  - audio recordings\n  - environmental comparisons\n  - negative observations\nlocations:\n  - Kestrel Hotel\ncontentWarnings:\n  - Psychological distress and panic\n  - Nausea and bodily unease\n  - Unexplained knocking and voice-like audio\n  - Contested hotel ghost lore\n  - Nighttime wandering in restricted-adjacent hotel corridors\ncontentNotes:\n  - Based on reported paranormal-investigation accounts. Some events, characters, and identifying details have been fictionalized.\n---\n\n`;
-await mkdir(path.dirname(outputPath), { recursive:true });
-await writeFile(outputPath, `${frontmatter}${body}`, "utf8");
+try {
+  await mkdir(path.dirname(outputPath), { recursive:true });
+  await writeFile(outputPath, `${frontmatter}${body}`, "utf8");
+} catch (error) {
+  const detail = error instanceof Error ? error.message : String(error);
+  throw new Error(`Failed to write DA-004 withheld website source to ${outputPath}: ${detail}`);
+}
 console.log(`DA-004 withheld website edition materialized; source ${canonicalSourceSha256}; six art roles hash-verified; deploy-preview assets ${isDeployPreview ? "staged" : "withheld"}; publicReleaseAuthorized=false.`);
