@@ -46,7 +46,7 @@ netlify deploy --build
 - Astro with TypeScript and static output
 - Reusable site layout, metadata, navigation, footer, and archive-card components
 - Content collections for stories, cases, characters, locations, objects, and mysteries
-- RSS feed at `/rss.xml`
+- RSS feed at `/feed.xml`
 - Sitemap generated during build
 - Robots policy at `/robots.txt`
 - Canonical and Open Graph metadata in the shared layout
