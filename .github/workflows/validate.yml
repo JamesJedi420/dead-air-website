@@ -56,6 +56,32 @@ jobs:
           path: artifacts/da001-visual-proof/*.png
           if-no-files-found: error
           retention-days: 30
+      - name: Build DA-004 deploy-preview mode
+        if: github.event_name == 'pull_request' && github.event.pull_request.number == 51
+        env:
+          CONTEXT: deploy-preview
+        run: npm run build
+      - name: Capture DA-004 private-preview desktop/mobile proof
+        if: github.event_name == 'pull_request' && github.event.pull_request.number == 51
+        run: |
+          python3 -m http.server 4175 --directory dist > /tmp/dead-air-da004-http.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          preview='http://127.0.0.1:4175/preview/da-004-close-enough-to-recognize/'
+          for attempt in {1..60}; do
+            if curl -fsS "$preview" | grep -q 'Close Enough to Recognize'; then break; fi
+            if [ "$attempt" -eq 60 ]; then cat /tmp/dead-air-da004-http.log; exit 1; fi
+            sleep 0.5
+          done
+          VISUAL_BASE_URL='http://127.0.0.1:4175' node scripts/capture-da004-preview-proof.mjs
+      - name: Upload DA-004 private-preview proof
+        if: github.event_name == 'pull_request' && github.event.pull_request.number == 51
+        uses: actions/upload-artifact@v4
+        with:
+          name: da004-private-preview-proof
+          path: artifacts/da004-preview-proof/*.png
+          if-no-files-found: error
+          retention-days: 30
       - name: Capture DA-003 private-preview desktop and mobile proof
         if: github.event_name == 'pull_request' && github.event.pull_request.number == 35
         run: |

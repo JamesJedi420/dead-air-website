@@ -69,8 +69,12 @@ const stories = defineCollection({
     coverImageWebp: z.string().optional(),
     coverImageWidth: z.number().int().positive().optional(),
     coverImageHeight: z.number().int().positive().optional(),
-    coverAlt: z.string().optional(),
+    keyArtImage: z.string().optional(),
+    cardImage: z.string().optional(),
+    squareImage: z.string().optional(),
     ogImage: z.string().optional(),
+    socialImage: z.string().optional(),
+    coverAlt: z.string().optional(),
     ogImageAlt: z.string().optional(),
   }),
 });

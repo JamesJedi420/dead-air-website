@@ -1,0 +1,32 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { getCollection, render } from "astro:content";
+import ArchiveEntryPage from "../../components/ArchiveEntryPage.astro";
+import StoryHero from "../../components/StoryHero.astro";
+import StorySourceNote from "../../components/StorySourceNote.astro";
+import SiteLayout from "../../layouts/SiteLayout.astro";
+export async function getStaticPaths() {
+  if (process.env.CONTEXT !== "deploy-preview") return [];
+  const slug = "da-004-close-enough-to-recognize";
+  const entries = await getCollection("stories");
+  const entry = entries.find((item) => (item.data.slug ?? item.id.replace(/\.md$/, "")) === slug);
+  if (!entry) throw new Error("DA-004 preview source was not materialized.");
+  return [{ params:{ slug }, props:{ entry } }];
+}
+const { entry } = Astro.props as { entry: CollectionEntry<"stories"> };
+const { Content } = await render(entry);
+const absolute = (value?: string) => value ? new URL(value, Astro.site ?? Astro.url).toString() : undefined;
+const hero = entry.data.coverImage; const mobile = entry.data.keyArtImage; const og = entry.data.ogImage ?? hero;
+const structuredImages = [entry.data.coverImage, entry.data.squareImage, entry.data.socialImage].map(absolute).filter(Boolean);
+const structuredData = { "@context":"https://schema.org", "@type":"ShortStory", name:entry.data.title, description:entry.data.summary, url:new URL(Astro.url.pathname, Astro.site ?? Astro.url).toString(),
+  ...(structuredImages.length ? { image:structuredImages } : {}), ...(entry.data.cardImage ? { thumbnailUrl:absolute(entry.data.cardImage) } : {}), isPartOf:{"@type":"CreativeWorkSeries",name:"Dead Air"} };
+---
+<SiteLayout title={entry.data.title} description={entry.data.summary} ogType="article" image={og} noindex={true}>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+  {mobile && <link slot="head" rel="preload" as="image" href={mobile} media="(max-width: 640px)" fetchpriority="high" />}
+  {hero && <link slot="head" rel="preload" as="image" href={hero} media="(min-width: 641px)" fetchpriority="high" />}
+  <ArchiveEntryPage collection="stories" entry={entry} relatedEntries={[]}>
+    {hero && <StoryHero desktopSrc={hero} mobileSrc={mobile} alt={entry.data.coverAlt ?? ""} />}
+    <StorySourceNote /><Content />
+  </ArchiveEntryPage>
+</SiteLayout>

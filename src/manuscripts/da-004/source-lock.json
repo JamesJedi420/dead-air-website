@@ -1,0 +1,12 @@
+{
+  "case": "DA-004",
+  "title": "Close Enough to Recognize",
+  "approvedRevision": "Final Approved Story v1.7",
+  "authoritativeGoogleDocId": "1RB0F4ShpEv9ewV9gXDkm4woHfaCGLDz9TV0xNYqHF38",
+  "authoritativeGoogleDocRevisionId": "ANLCKQmfEqSBabL5tpiv0nQaM2sOUc4pCvWufpRpil4o45XUd59NmY1AD0ygCNIJbGMBy7uY4D2DkJq312R2RMV5Nc3vWVs3n1ve8LOF3m4",
+  "canonicalFragmentSha256": "3ccd31348217394e176baa690b653a5c608ee8e5c2df72b0ad4a35df83c9be71",
+  "fragmentCount": 10,
+  "lockStatus": "IMMUTABLE_APPROVED_SOURCE",
+  "publicReleaseAuthorized": false,
+  "notes": "Hash is computed by deterministic normalization of part-01.mdfrag through part-10.mdfrag and replacement of internal DA-004 scene headings with canonical Scene NN headings. Any fragment drift must fail materialization until a separately authorized source-lock revision is recorded."
+}
