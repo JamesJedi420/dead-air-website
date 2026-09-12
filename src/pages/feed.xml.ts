@@ -15,7 +15,7 @@ export async function GET(context: APIContext) {
   return rss({
     title: "Dead Air",
     description: "Literary paranormal horror told through case files, recorded evidence, haunted places, and unresolved investigations.",
-    site: context.site ?? "https://dead-air-website.netlify.app",
+    site: context.site ?? "https://readdeadair.com",
     items: stories.map((entry) => ({
       title: entry.data.title,
       description: entry.data.summary,

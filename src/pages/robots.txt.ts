@@ -1,7 +1,7 @@
 import type { APIContext } from "astro";
 
 export function GET(context: APIContext) {
-  const site = context.site ?? new URL("https://dead-air-website.netlify.app");
+  const site = context.site ?? new URL("https://readdeadair.com");
   const sitemapUrl = new URL("sitemap-index.xml", site);
 
   return new Response(`User-agent: *

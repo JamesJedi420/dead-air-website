@@ -14,7 +14,8 @@ const expectedCoverSha256 = "d5ebd224f85842f4d5e7a362e71eb6031c95e898dcf2801288c
 const expectedCoverAlt = "Portable recorder resting on wet rocks beside dark water beneath the Dead Air mark; no person, grave marker, or apparition is visible.";
 const slug = "da-003-the-recorder-kept-running";
 const route = `/stories/${slug}/`;
-const canonicalUrl = `https://dead-air-website.netlify.app${route}`;
+const canonicalOrigin = process.env.PUBLIC_SITE_URL ?? "https://readdeadair.com";
+const canonicalUrl = new URL(route, canonicalOrigin).toString();
 const exists = async (file) => access(file).then(() => true).catch(() => false);
 const sha256 = (value) => createHash("sha256").update(value).digest("hex");
 const canonicalizeSource = (value) => value.replace(/^\uFEFF/, "").replace(/\r\n?/g, "\n").replace(/\n{3,}/g, "\n\n").trimEnd() + "\n";
