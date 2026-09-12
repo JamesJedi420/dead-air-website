@@ -35,6 +35,9 @@ export interface NormalizedEntry {
   follows: ArchiveLink[];
   precedes: ArchiveLink[];
   publicationDate?: string;
+  readingTime?: string;
+  coverImage?: string;
+  coverAlt?: string;
   tags: string[];
   phenomenon: string[];
   entity: string[];
@@ -114,6 +117,10 @@ export const explicitRelations = (collection: ArchiveCollection, entry: ArchiveE
 
 export const normalizeEntry = (collection: ArchiveCollection, entry: ArchiveEntry): NormalizedEntry => {
   const publicationDate = entry.data.publicationDate ?? entry.data.date;
+  const storyMedia = entry.data as typeof entry.data & {
+    coverImage?: string;
+    coverAlt?: string;
+  };
   return {
     collection,
     slug: entrySlug(entry),
@@ -132,6 +139,9 @@ export const normalizeEntry = (collection: ArchiveCollection, entry: ArchiveEntr
     follows: entry.data.follows,
     precedes: entry.data.precedes,
     publicationDate: publicationDate?.toISOString(),
+    readingTime: entry.data.readingTime,
+    coverImage: storyMedia.coverImage,
+    coverAlt: storyMedia.coverAlt,
     tags: entry.data.tags,
     phenomenon: entry.data.phenomenon,
     entity: entry.data.entity,

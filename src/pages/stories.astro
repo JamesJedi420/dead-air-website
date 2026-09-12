@@ -8,13 +8,20 @@ const stories = sortEntries((await getCollection("stories")).filter(isPublished)
 const entries = stories.map((entry) => normalizeEntry("stories", entry));
 ---
 
-<SiteLayout title="Stories" description="Published narrative entries in The Dead Air Archive.">
+<SiteLayout title="Stories" description="Published literary paranormal-horror stories from Dead Air.">
   <section class="section">
     <div class="section-header">
       <p class="eyebrow">Stories</p>
-      <h1>Stories</h1>
-      <p>Finished narrative entries will appear here after editorial review.</p>
+      <h1>Read Dead Air</h1>
+      <p>
+        Complete literary paranormal-horror stories from the public archive. Read the fiction first;
+        case files and related records are available afterward for readers who want to follow the
+        evidence, people, places, and unresolved questions further.
+      </p>
     </div>
-    <ArchiveBrowser entries={entries} emptyMessage="No public story files have been imported yet. Withheld records stay outside this index." />
+    <ArchiveBrowser
+      entries={entries}
+      emptyMessage="No public stories are currently available. Withheld records remain outside this index."
+    />
   </section>
 </SiteLayout>

@@ -3,6 +3,7 @@ import BaseHead from "../components/BaseHead.astro";
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
 import "../styles/global.css";
+import "../styles/enhancements.css";
 
 interface Props {
   title: string;
@@ -10,10 +11,19 @@ interface Props {
   ogType?: "website" | "article";
   publishedTime?: Date | string;
   image?: string;
+  imageAlt?: string;
   noindex?: boolean;
 }
 
-const { title, description, ogType = "website", publishedTime, image, noindex = false } = Astro.props;
+const {
+  title,
+  description,
+  ogType = "website",
+  publishedTime,
+  image,
+  imageAlt,
+  noindex = false,
+} = Astro.props;
 ---
 
 <!doctype html>
@@ -29,6 +39,7 @@ const { title, description, ogType = "website", publishedTime, image, noindex = 
       ogType={ogType}
       publishedTime={publishedTime}
       image={image}
+      imageAlt={imageAlt}
       noindex={noindex}
     />
     <slot name="head" />

@@ -38,13 +38,28 @@ export const getEntryStaticPaths = async (collection: ArchiveCollection) => {
   const normalized = archiveCollections.flatMap((item) =>
     raw[item].map((entry) => normalizeEntry(item, entry)),
   );
+  const orderedStories = collection === "stories"
+    ? entries.filter((entry) => typeof entry.data.timelineOrder === "number")
+    : [];
 
-  return entries.map((entry) => ({
-    params: { slug: entrySlug(entry) },
-    props: {
-      collection,
-      entry,
-      relatedEntries: buildRelatedEntries(collection, entry, normalized, raw),
-    },
-  }));
+  return entries.map((entry) => {
+    const chronologyIndex = collection === "stories" && typeof entry.data.timelineOrder === "number"
+      ? orderedStories.findIndex((orderedEntry) => entrySlug(orderedEntry) === entrySlug(entry))
+      : -1;
+
+    return {
+      params: { slug: entrySlug(entry) },
+      props: {
+        collection,
+        entry,
+        relatedEntries: buildRelatedEntries(collection, entry, normalized, raw),
+        previousEntry: chronologyIndex > 0
+          ? normalizeEntry(collection, orderedStories[chronologyIndex - 1])
+          : undefined,
+        nextEntry: chronologyIndex >= 0 && chronologyIndex < orderedStories.length - 1
+          ? normalizeEntry(collection, orderedStories[chronologyIndex + 1])
+          : undefined,
+      },
+    };
+  });
 };
