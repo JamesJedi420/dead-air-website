@@ -15,7 +15,9 @@ const { Content } = await render(storyEntry);
 const publicationDate = storyEntry.data.publicationDate ?? storyEntry.data.date;
 const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).toString();
 const socialImage = storyEntry.data.ogImage ?? storyEntry.data.coverImage;
-const socialImageAlt = storyEntry.data.ogImageAlt ?? storyEntry.data.coverAlt;
+const socialImageAlt = storyEntry.data.ogImage
+  ? storyEntry.data.ogImageAlt ?? `${storyEntry.data.title} — Dead Air social preview artwork.`
+  : storyEntry.data.coverAlt;
 const structuredImage = socialImage
   ? new URL(socialImage, Astro.site ?? Astro.url).toString()
   : undefined;
