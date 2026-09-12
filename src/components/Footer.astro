@@ -1,17 +1,29 @@
 ---
 import { primaryNav, utilityNav } from "../data/navigation";
 const year = new Date().getFullYear();
+const allNav = [...primaryNav, ...utilityNav];
+const link = (label: string) => allNav.find((item) => item.label === label);
+const groups = [
+  { title: "Read", items: [link("Stories"), link("Cases"), link("Timeline"), link("Search")] },
+  { title: "Archive", items: [link("Characters"), link("Locations"), link("Objects"), link("Mysteries")] },
+  { title: "Project", items: [link("Research"), link("Content Notes"), link("About"), link("Contact"), link("Privacy"), link("RSS")] },
+];
 ---
 
 <footer class="site-footer">
   <div>
-    <p class="footer-title">The Dead Air Archive</p>
-    <p class="footer-note">Literary paranormal horror presented through stories and records.</p>
+    <p class="footer-title">Dead Air</p>
+    <p class="footer-note">The Dead Air Archive presents literary paranormal horror through stories and reader-facing records.</p>
   </div>
-  <nav aria-label="Footer navigation" class="footer-nav">
-    {[...primaryNav, ...utilityNav].map((item) => (
-      <a href={item.href}>{item.label}</a>
+  <div class="footer-groups">
+    {groups.map((group) => (
+      <nav aria-label={`${group.title} links`}>
+        <p class="footer-group-title">{group.title}</p>
+        <div class="footer-group-links">
+          {group.items.filter(Boolean).map((item) => item && <a href={item.href}>{item.label}</a>)}
+        </div>
+      </nav>
     ))}
-  </nav>
-  <p class="copyright">&copy; {year} The Dead Air Archive. All rights reserved.</p>
+  </div>
+  <p class="copyright">&copy; {year} Dead Air. All rights reserved.</p>
 </footer>

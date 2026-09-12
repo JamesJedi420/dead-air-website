@@ -14,6 +14,10 @@ export async function GET() {
     evidenceType: entry.evidenceType,
     status: formatLabel(entry.status),
     canonicalStatus: formatLabel(entry.canonicalStatus),
+    coverImage: entry.coverImage,
+    coverAlt: entry.coverAlt,
+    readingTime: entry.readingTime,
+    publicationYear: entry.publicationYear,
   }));
 
   return new Response(JSON.stringify(entries), {

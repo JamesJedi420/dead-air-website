@@ -2,31 +2,79 @@
 import type { CollectionEntry } from "astro:content";
 import { render } from "astro:content";
 import ArchiveEntryPage from "../../components/ArchiveEntryPage.astro";
-import StoryHero from "../../components/StoryHero.astro";
+import ResponsiveStoryImage from "../../components/ResponsiveStoryImage.astro";
 import StorySourceNote from "../../components/StorySourceNote.astro";
 import SiteLayout from "../../layouts/SiteLayout.astro";
 import { getEntryStaticPaths } from "../../lib/loadArchive";
+
 export const getStaticPaths = () => getEntryStaticPaths("stories");
-const { collection, entry, relatedEntries } = Astro.props;
+
+const { collection, entry, relatedEntries, previousEntry, nextEntry } = Astro.props;
 const storyEntry = entry as CollectionEntry<"stories">;
 const { Content } = await render(storyEntry);
 const publicationDate = storyEntry.data.publicationDate ?? storyEntry.data.date;
 const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).toString();
-const absolute = (value?: string) => value ? new URL(value, Astro.site ?? Astro.url).toString() : undefined;
-const hero = storyEntry.data.coverImage;
-const mobile = storyEntry.data.keyArtImage;
-const og = storyEntry.data.ogImage ?? hero;
-const structuredImages = [storyEntry.data.coverImage, storyEntry.data.squareImage, storyEntry.data.socialImage].map(absolute).filter(Boolean);
-const structuredData = { "@context":"https://schema.org", "@type":"ShortStory", name:storyEntry.data.title, description:storyEntry.data.summary, url:canonical,
-  ...(structuredImages.length ? { image: structuredImages } : {}), ...(storyEntry.data.cardImage ? { thumbnailUrl:absolute(storyEntry.data.cardImage) } : {}),
-  isPartOf:{ "@type":"CreativeWorkSeries", name:"Dead Air" } };
+const socialImage = storyEntry.data.ogImage ?? storyEntry.data.coverImage;
+const socialImageAlt = storyEntry.data.ogImage
+  ? storyEntry.data.ogImageAlt
+  : storyEntry.data.coverAlt;
+const structuredImage = socialImage
+  ? new URL(socialImage, Astro.site ?? Astro.url).toString()
+  : undefined;
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "ShortStory",
+  name: storyEntry.data.title,
+  description: storyEntry.data.summary,
+  url: canonical,
+  ...(structuredImage ? { image: structuredImage } : {}),
+  isPartOf: {
+    "@type": "CreativeWorkSeries",
+    name: "Dead Air",
+  },
+};
 ---
-<SiteLayout title={storyEntry.data.title} description={storyEntry.data.summary} ogType="article" publishedTime={publicationDate} image={og} noindex={storyEntry.data.previewOnly}>
+
+<SiteLayout
+  title={storyEntry.data.title}
+  description={storyEntry.data.summary}
+  ogType="article"
+  publishedTime={publicationDate}
+  image={socialImage}
+  imageAlt={socialImageAlt}
+  noindex={storyEntry.data.previewOnly}
+>
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(structuredData)} />
-  {mobile && <link slot="head" rel="preload" as="image" href={mobile} media="(max-width: 640px)" fetchpriority="high" />}
-  {hero && <link slot="head" rel="preload" as="image" href={hero} media="(min-width: 641px)" fetchpriority="high" />}
-  <ArchiveEntryPage collection={collection} entry={storyEntry} relatedEntries={relatedEntries}>
-    {hero && <StoryHero desktopSrc={hero} mobileSrc={mobile} alt={storyEntry.data.coverAlt ?? ""} />}
-    <StorySourceNote /><Content />
+  <ArchiveEntryPage
+    collection={collection}
+    entry={storyEntry}
+    relatedEntries={relatedEntries}
+    previousEntry={previousEntry}
+    nextEntry={nextEntry}
+  >
+    {storyEntry.data.coverImage && (
+      <figure class="story-cover">
+        <ResponsiveStoryImage
+          src={storyEntry.data.coverImage}
+          avif={storyEntry.data.coverImageAvif}
+          webp={storyEntry.data.coverImageWebp}
+          width={storyEntry.data.coverImageWidth}
+          height={storyEntry.data.coverImageHeight}
+          alt={storyEntry.data.coverAlt ?? ""}
+          loading="eager"
+          fetchpriority="high"
+        />
+      </figure>
+    )}
+    <StorySourceNote />
+    <Content />
   </ArchiveEntryPage>
 </SiteLayout>
+
+<style>
+  .story-cover {
+    margin: 0 auto 2rem;
+    max-width: 36rem;
+    overflow: hidden;
+  }
+</style>

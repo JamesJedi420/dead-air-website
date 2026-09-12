@@ -1,11 +1,16 @@
 name: Validate
+
 on:
   pull_request:
-    branches: [main]
+    branches:
+      - main
   push:
-    branches: [main]
+    branches:
+      - main
+
 permissions:
   contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -23,6 +28,7 @@ jobs:
         run: npm run build
       - name: Install Playwright Chromium
         run: |
+          # Pin the proof runner exactly without changing the production dependency lockfile.
           npm install --no-save --package-lock=false playwright@1.55.0
           npx playwright install --with-deps chromium
       - name: Capture DA-001 desktop and mobile visual proof
@@ -30,11 +36,18 @@ jobs:
           python3 -m http.server 4173 --directory dist > /tmp/dead-air-http.log 2>&1 &
           server_pid=$!
           trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+
           for attempt in {1..60}; do
-            if curl -fsS http://127.0.0.1:4173/stories/da-001-the-building-keeps-the-hour/ > /dev/null; then break; fi
-            if [ "$attempt" -eq 60 ]; then cat /tmp/dead-air-http.log; exit 1; fi
+            if curl -fsS http://127.0.0.1:4173/stories/da-001-the-building-keeps-the-hour/ > /dev/null; then
+              break
+            fi
+            if [ "$attempt" -eq 60 ]; then
+              cat /tmp/dead-air-http.log
+              exit 1
+            fi
             sleep 0.5
           done
+
           node scripts/capture-da001-visual-proof.mjs
       - name: Upload DA-001 visual proof
         uses: actions/upload-artifact@v4
@@ -75,11 +88,18 @@ jobs:
           python3 -m http.server 4174 --directory dist > /tmp/dead-air-da003-http.log 2>&1 &
           server_pid=$!
           trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+
           for attempt in {1..60}; do
-            if curl -fsS http://127.0.0.1:4174/stories/da-003-the-recorder-kept-running/ > /dev/null; then break; fi
-            if [ "$attempt" -eq 60 ]; then cat /tmp/dead-air-da003-http.log; exit 1; fi
+            if curl -fsS http://127.0.0.1:4174/stories/da-003-the-recorder-kept-running/ > /dev/null; then
+              break
+            fi
+            if [ "$attempt" -eq 60 ]; then
+              cat /tmp/dead-air-da003-http.log
+              exit 1
+            fi
             sleep 0.5
           done
+
           VISUAL_BASE_URL=http://127.0.0.1:4174 node scripts/capture-da003-preview-proof.mjs
       - name: Upload DA-003 private-preview proof
         if: github.event_name == 'pull_request' && github.event.pull_request.number == 35
