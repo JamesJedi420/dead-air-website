@@ -1,0 +1,15 @@
+---
+interface Props { desktopSrc: string; mobileSrc?: string; alt: string; }
+const { desktopSrc, mobileSrc, alt } = Astro.props;
+---
+<figure class="story-cover" data-story-art>
+  <picture>
+    {mobileSrc && <source media="(max-width: 640px)" srcset={mobileSrc} type="image/webp" />}
+    <img id="story-hero-image" src={desktopSrc} alt={alt} width="480" height="270" loading="eager" decoding="async" fetchpriority="high" />
+  </picture>
+</figure>
+<style>
+  .story-cover { margin: 0 auto 2rem; max-width: 50rem; overflow: hidden; }
+  .story-cover picture, .story-cover img { display: block; width: 100%; }
+  .story-cover img { height: auto; border: 1px solid var(--border, rgba(255,255,255,.18)); }
+</style>
