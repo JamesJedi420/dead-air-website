@@ -2,19 +2,22 @@
 import type { CollectionEntry } from "astro:content";
 import { render } from "astro:content";
 import ArchiveEntryPage from "../../components/ArchiveEntryPage.astro";
+import ResponsiveStoryImage from "../../components/ResponsiveStoryImage.astro";
 import StorySourceNote from "../../components/StorySourceNote.astro";
 import SiteLayout from "../../layouts/SiteLayout.astro";
 import { getEntryStaticPaths } from "../../lib/loadArchive";
 
 export const getStaticPaths = () => getEntryStaticPaths("stories");
 
-const { collection, entry, relatedEntries } = Astro.props;
+const { collection, entry, relatedEntries, previousEntry, nextEntry } = Astro.props;
 const storyEntry = entry as CollectionEntry<"stories">;
 const { Content } = await render(storyEntry);
 const publicationDate = storyEntry.data.publicationDate ?? storyEntry.data.date;
 const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).toString();
-const image = storyEntry.data.coverImage
-  ? new URL(storyEntry.data.coverImage, Astro.site ?? Astro.url).toString()
+const socialImage = storyEntry.data.ogImage ?? storyEntry.data.coverImage;
+const socialImageAlt = storyEntry.data.ogImageAlt ?? storyEntry.data.coverAlt;
+const structuredImage = socialImage
+  ? new URL(socialImage, Astro.site ?? Astro.url).toString()
   : undefined;
 const structuredData = {
   "@context": "https://schema.org",
@@ -22,7 +25,7 @@ const structuredData = {
   name: storyEntry.data.title,
   description: storyEntry.data.summary,
   url: canonical,
-  ...(image ? { image } : {}),
+  ...(structuredImage ? { image: structuredImage } : {}),
   isPartOf: {
     "@type": "CreativeWorkSeries",
     name: "Dead Air",
@@ -35,14 +38,30 @@ const structuredData = {
   description={storyEntry.data.summary}
   ogType="article"
   publishedTime={publicationDate}
-  image={storyEntry.data.coverImage}
+  image={socialImage}
+  imageAlt={socialImageAlt}
   noindex={storyEntry.data.previewOnly}
 >
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(structuredData)} />
-  <ArchiveEntryPage collection={collection} entry={storyEntry} relatedEntries={relatedEntries}>
+  <ArchiveEntryPage
+    collection={collection}
+    entry={storyEntry}
+    relatedEntries={relatedEntries}
+    previousEntry={previousEntry}
+    nextEntry={nextEntry}
+  >
     {storyEntry.data.coverImage && (
       <figure class="story-cover">
-        <img src={storyEntry.data.coverImage} alt={storyEntry.data.coverAlt ?? ""} loading="eager" decoding="async" />
+        <ResponsiveStoryImage
+          src={storyEntry.data.coverImage}
+          avif={storyEntry.data.coverImageAvif}
+          webp={storyEntry.data.coverImageWebp}
+          width={storyEntry.data.coverImageWidth}
+          height={storyEntry.data.coverImageHeight}
+          alt={storyEntry.data.coverAlt ?? ""}
+          loading="eager"
+          fetchpriority="high"
+        />
       </figure>
     )}
     <StorySourceNote />
@@ -58,9 +77,9 @@ const structuredData = {
   }
 
   .story-cover img {
-    display: block;
-    width: 100%;
-    height: auto;
     border: 1px solid var(--border, rgba(255, 255, 255, 0.18));
+    display: block;
+    height: auto;
+    width: 100%;
   }
 </style>

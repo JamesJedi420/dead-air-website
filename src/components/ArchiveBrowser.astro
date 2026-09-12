@@ -11,6 +11,7 @@ interface Props {
 
 const { entries, emptyMessage, showCollection = false } = Astro.props;
 const options = taxonomyOptions(entries);
+const showAdvancedFilters = entries.length >= 8;
 const filterGroups = [
   ["phenomenon", "Phenomenon", options.phenomenon],
   ["entity", "Entity", options.entity],
@@ -29,19 +30,21 @@ const filterGroups = [
         Search this list
         <input type="search" name="q" data-filter-search autocomplete="off" />
       </label>
-      <div class="filter-grid">
-        {filterGroups.map(([key, label, values]) => (
-          values.length > 0 && (
-            <label>
-              {label}
-              <select data-filter={key}>
-                <option value="">All</option>
-                {values.map((value) => <option value={value}>{formatLabel(value)}</option>)}
-              </select>
-            </label>
-          )
-        ))}
-      </div>
+      {showAdvancedFilters && (
+        <div class="filter-grid">
+          {filterGroups.map(([key, label, values]) => (
+            values.length > 0 && (
+              <label>
+                {label}
+                <select data-filter={key}>
+                  <option value="">All</option>
+                  {values.map((value) => <option value={value}>{formatLabel(value)}</option>)}
+                </select>
+              </label>
+            )
+          ))}
+        </div>
+      )}
     </form>
     <p class="result-count" data-result-count>{entries.length} entries</p>
     <div class="grid" data-results>
@@ -63,7 +66,10 @@ const filterGroups = [
             eyebrow={showCollection ? collectionLabels[entry.collection] : formatLabel(entry.status)}
             title={entry.title}
             summary={entry.summary}
-            meta={[entry.classification, entry.publicationYear, formatLabel(entry.canonicalStatus)].filter(Boolean).join(" / ")}
+            meta={[entry.readingTime, entry.publicationYear, entry.classification].filter(Boolean).join(" / ")}
+            image={entry.coverImage}
+            imageAlt={entry.coverAlt}
+            cta={entry.collection === "stories" ? "Read story" : "Open record"}
           />
         </div>
       ))}

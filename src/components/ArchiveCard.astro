@@ -5,14 +5,30 @@ interface Props {
   title: string;
   summary: string;
   meta?: string;
+  image?: string;
+  imageAlt?: string;
+  cta?: string;
 }
 
-const { href, eyebrow, title, summary, meta } = Astro.props;
+const { href, eyebrow, title, summary, meta, image, imageAlt = "", cta } = Astro.props;
 ---
 
-<article class="archive-card">
-  <p class="eyebrow">{eyebrow}</p>
-  <h2><a href={href}>{title}</a></h2>
-  <p>{summary}</p>
-  {meta && <p class="card-meta">{meta}</p>}
+<article class:list={["archive-card", image && "archive-card--media"]}>
+  {image && (
+    <a
+      class="archive-card-image"
+      href={href}
+      aria-hidden={imageAlt ? undefined : "true"}
+      tabindex={imageAlt ? undefined : "-1"}
+    >
+      <img src={image} alt={imageAlt} loading="lazy" decoding="async" />
+    </a>
+  )}
+  <div class="archive-card-body">
+    <p class="eyebrow">{eyebrow}</p>
+    <h2><a href={href}>{title}</a></h2>
+    <p>{summary}</p>
+    {meta && <p class="card-meta">{meta}</p>}
+    {cta && <a class="card-cta" href={href}>{cta}</a>}
+  </div>
 </article>

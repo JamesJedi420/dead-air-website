@@ -39,12 +39,18 @@ export const getEntryStaticPaths = async (collection: ArchiveCollection) => {
     raw[item].map((entry) => normalizeEntry(item, entry)),
   );
 
-  return entries.map((entry) => ({
+  return entries.map((entry, index) => ({
     params: { slug: entrySlug(entry) },
     props: {
       collection,
       entry,
       relatedEntries: buildRelatedEntries(collection, entry, normalized, raw),
+      previousEntry: collection === "stories" && index > 0
+        ? normalizeEntry(collection, entries[index - 1])
+        : undefined,
+      nextEntry: collection === "stories" && index < entries.length - 1
+        ? normalizeEntry(collection, entries[index + 1])
+        : undefined,
     },
   }));
 };

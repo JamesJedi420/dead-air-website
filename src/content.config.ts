@@ -65,7 +65,13 @@ const stories = defineCollection({
     objects: z.array(z.string()).default([]),
     mysteries: z.array(z.string()).default([]),
     coverImage: z.string().optional(),
+    coverImageAvif: z.string().optional(),
+    coverImageWebp: z.string().optional(),
+    coverImageWidth: z.number().int().positive().optional(),
+    coverImageHeight: z.number().int().positive().optional(),
     coverAlt: z.string().optional(),
+    ogImage: z.string().optional(),
+    ogImageAlt: z.string().optional(),
   }),
 });
 

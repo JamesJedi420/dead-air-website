@@ -5,14 +5,17 @@
   <div class="section-header">
     <p class="eyebrow">Search</p>
     <h1>Search the Archive</h1>
-    <p>Search public stories, cases, characters, locations, objects, and mysteries. Results are generated from static archive metadata.</p>
+    <p>
+      Search public stories and records by title, person, location, phenomenon, evidence type, or
+      other approved public metadata.
+    </p>
   </div>
   <div class="archive-browser search-panel" data-search-app>
     <label>
       Archive search
-      <input type="search" data-search-input autocomplete="off" />
+      <input type="search" data-search-input autocomplete="off" placeholder="Try a title, location, object, or evidence term" />
     </label>
-    <p class="result-count" data-search-count>Enter a term to search the public archive.</p>
+    <p class="result-count" data-search-count aria-live="polite">Enter a term to search the public archive.</p>
     <div class="grid" data-search-results></div>
   </div>
 </section>
@@ -30,6 +33,15 @@
     evidenceType: string[];
     status: string;
     canonicalStatus: string;
+    coverImage?: string;
+    coverAlt?: string;
+    readingTime?: string;
+    publicationYear?: string;
+  }
+
+  interface ScoredEntry {
+    entry: SearchEntry;
+    score: number;
   }
 
   const app = document.querySelector<HTMLElement>("[data-search-app]");
@@ -40,17 +52,40 @@
 
   const render = (entries: SearchEntry[]) => {
     if (!results || !count) return;
+
+    if (entries.length === 0) {
+      count.textContent = "No results. Try a title, character, location, object, or evidence term.";
+      results.replaceChildren();
+      return;
+    }
+
     count.textContent = `${entries.length} ${entries.length === 1 ? "result" : "results"}`;
     results.replaceChildren(
       ...entries.map((entry) => {
         const article = document.createElement("article");
+        const body = document.createElement("div");
         const eyebrow = document.createElement("p");
         const heading = document.createElement("h2");
         const link = document.createElement("a");
         const summary = document.createElement("p");
         const meta = document.createElement("p");
 
-        article.className = "archive-card";
+        article.className = entry.coverImage ? "archive-card archive-card--media" : "archive-card";
+        body.className = "archive-card-body";
+
+        if (entry.coverImage) {
+          const imageLink = document.createElement("a");
+          const image = document.createElement("img");
+          imageLink.className = "archive-card-image";
+          imageLink.href = entry.url;
+          image.src = entry.coverImage;
+          image.alt = entry.coverAlt ?? "";
+          image.loading = "lazy";
+          image.decoding = "async";
+          imageLink.append(image);
+          article.append(imageLink);
+        }
+
         eyebrow.className = "eyebrow";
         eyebrow.textContent = entry.collection;
         link.href = entry.url;
@@ -58,25 +93,21 @@
         heading.append(link);
         summary.textContent = entry.summary;
         meta.className = "card-meta";
-        meta.textContent = `${entry.status} / ${entry.canonicalStatus}`;
-        article.append(eyebrow, heading, summary, meta);
+        meta.textContent = [entry.readingTime, entry.publicationYear, entry.status]
+          .filter(Boolean)
+          .join(" / ");
+        body.append(eyebrow, heading, summary, meta);
+        article.append(body);
         return article;
       }),
     );
   };
 
-  const search = () => {
-    const query = input?.value.trim().toLowerCase() ?? "";
-    if (!query) {
-      if (results) results.replaceChildren();
-      if (count) count.textContent = "Enter a term to search the public archive.";
-      return;
-    }
-
-    render(index.filter((entry) => [
+  const searchableFields = (entry: SearchEntry) => ({
+    title: entry.title.toLowerCase(),
+    summary: entry.summary.toLowerCase(),
+    taxonomy: [
       entry.collection,
-      entry.title,
-      entry.summary,
       entry.status,
       entry.canonicalStatus,
       ...entry.tags,
@@ -84,10 +115,56 @@
       ...entry.entity,
       ...entry.locations,
       ...entry.evidenceType,
-    ].join(" ").toLowerCase().includes(query)));
+    ].join(" ").toLowerCase(),
+  });
+
+  const scoreEntry = (entry: SearchEntry, query: string, tokens: string[]): ScoredEntry | null => {
+    const fields = searchableFields(entry);
+    const allText = `${fields.title} ${fields.summary} ${fields.taxonomy}`;
+    if (!tokens.every((token) => allText.includes(token))) return null;
+
+    let score = 0;
+    if (fields.title === query) score += 120;
+    else if (fields.title.startsWith(query)) score += 80;
+    else if (fields.title.includes(query)) score += 55;
+
+    for (const token of tokens) {
+      if (fields.title.includes(token)) score += 24;
+      if (fields.summary.includes(token)) score += 10;
+      if (fields.taxonomy.includes(token)) score += 4;
+    }
+
+    return { entry, score };
+  };
+
+  const updateUrl = (query: string) => {
+    const url = new URL(window.location.href);
+    if (query) url.searchParams.set("q", query);
+    else url.searchParams.delete("q");
+    window.history.replaceState({}, "", url);
+  };
+
+  const search = () => {
+    const query = input?.value.trim().toLowerCase() ?? "";
+    updateUrl(query);
+
+    if (!query) {
+      if (results) results.replaceChildren();
+      if (count) count.textContent = "Enter a term to search the public archive.";
+      return;
+    }
+
+    const tokens = query.split(/\s+/).filter(Boolean);
+    const ranked = index
+      .map((entry) => scoreEntry(entry, query, tokens))
+      .filter((item): item is ScoredEntry => item !== null)
+      .sort((a, b) => b.score - a.score || a.entry.title.localeCompare(b.entry.title));
+
+    render(ranked.map(({ entry }) => entry));
   };
 
   if (input) {
+    input.value = new URLSearchParams(window.location.search).get("q") ?? "";
     fetch("/search.json")
       .then((response) => response.json())
       .then((entries: SearchEntry[]) => {
