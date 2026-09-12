@@ -82,6 +82,10 @@
           image.alt = entry.coverAlt ?? "";
           image.loading = "lazy";
           image.decoding = "async";
+          if (!entry.coverAlt) {
+            imageLink.setAttribute("aria-hidden", "true");
+            imageLink.tabIndex = -1;
+          }
           imageLink.append(image);
           article.append(imageLink);
         }
