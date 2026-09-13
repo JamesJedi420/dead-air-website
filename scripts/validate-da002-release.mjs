@@ -140,7 +140,7 @@ if (!(await exists(storyHtmlPath))) {
     [html.includes('property="og:type" content="article"'), "Open Graph type is not article"],
     [html.includes(`property="og:url" content="${canonicalUrl}"`), "Open Graph URL incorrect"],
     [html.includes(`property="article:published_time" content="${publishedTime}"`), "article publication time incorrect"],
-    [html.includes('name="twitter:card" content="summary"'), "Twitter card metadata missing"],
+    [html.includes('name="twitter:card" content="summary_large_image"'), "Twitter card metadata missing"],
     [html.includes('id="main-content" tabindex="-1"'), "keyboard-focusable main landmark missing"],
     [html.includes('href="#main-content"'), "skip link missing"],
     [html.includes('role="note"'), "story source-note landmark missing"],
