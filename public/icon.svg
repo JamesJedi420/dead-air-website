@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">Dead Air DA mark</title>
+  <rect width="512" height="512" fill="#0b0b0a"/>
+  <rect x="36" y="36" width="440" height="440" fill="none" stroke="#b08d4a" stroke-width="10"/>
+  <rect x="58" y="58" width="396" height="396" fill="none" stroke="#332f27" stroke-width="4"/>
+  <path d="M132 160v192h74c54 0 88-37 88-96s-34-96-88-96h-74zm22 22h49c43 0 67 27 67 74s-24 74-67 74h-49V182z" fill="#b08d4a"/>
+  <path d="M310 352l43-192h31l43 192h-24l-10-48h-49l-10 48h-24zm39-70h39l-19-92-20 92z" fill="#b08d4a"/>
+  <rect x="438" y="144" width="10" height="224" fill="#b63b32"/>
+</svg>
