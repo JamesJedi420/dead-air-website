@@ -134,7 +134,7 @@ if (!(await exists(storyHtmlPath))) {
   const assertions = [
     [html.includes('<html lang="en">'), "html language is not en"],
     [html.includes('name="viewport" content="width=device-width, initial-scale=1"'), "viewport metadata missing"],
-    [html.includes(`<title>${title} | The Dead Air Archive</title>`), "document title incorrect"],
+    [html.includes(`<title>${title} | Dead Air</title>`), "document title incorrect"],
     [html.includes(`name="description" content="${summary}"`), "meta description incorrect"],
     [html.includes(`rel="canonical" href="${canonicalUrl}"`), "canonical URL incorrect"],
     [html.includes('property="og:type" content="article"'), "Open Graph type is not article"],
