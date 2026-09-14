@@ -3,6 +3,7 @@ import type { CollectionEntry } from "astro:content";
 import { render } from "astro:content";
 import ArchiveEntryPage from "../../components/ArchiveEntryPage.astro";
 import ResponsiveStoryImage from "../../components/ResponsiveStoryImage.astro";
+import StoryHero from "../../components/StoryHero.astro";
 import StorySourceNote from "../../components/StorySourceNote.astro";
 import SiteLayout from "../../layouts/SiteLayout.astro";
 import { getEntryStaticPaths } from "../../lib/loadArchive";
@@ -18,21 +19,24 @@ const socialImage = storyEntry.data.ogImage ?? storyEntry.data.coverImage;
 const socialImageAlt = storyEntry.data.ogImage
   ? storyEntry.data.ogImageAlt
   : storyEntry.data.coverAlt;
-const structuredImage = socialImage
-  ? new URL(socialImage, Astro.site ?? Astro.url).toString()
-  : undefined;
+const absolute = (value?: string) => value ? new URL(value, Astro.site ?? Astro.url).toString() : undefined;
+const structuredImages = [storyEntry.data.coverImage, storyEntry.data.squareImage, storyEntry.data.socialImage]
+  .map(absolute)
+  .filter((value): value is string => Boolean(value));
 const structuredData = {
   "@context": "https://schema.org",
   "@type": "ShortStory",
   name: storyEntry.data.title,
   description: storyEntry.data.summary,
   url: canonical,
-  ...(structuredImage ? { image: structuredImage } : {}),
+  ...(structuredImages.length ? { image: structuredImages } : {}),
+  ...(storyEntry.data.cardImage ? { thumbnailUrl: absolute(storyEntry.data.cardImage) } : {}),
   isPartOf: {
     "@type": "CreativeWorkSeries",
     name: "Dead Air",
   },
 };
+const responsiveHero = Boolean(storyEntry.data.coverImage && storyEntry.data.keyArtImage);
 ---
 
 <SiteLayout
@@ -45,6 +49,12 @@ const structuredData = {
   noindex={storyEntry.data.previewOnly}
 >
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+  {responsiveHero && storyEntry.data.keyArtImage && (
+    <link slot="head" rel="preload" as="image" href={storyEntry.data.keyArtImage} media="(max-width: 640px)" fetchpriority="high" />
+  )}
+  {responsiveHero && storyEntry.data.coverImage && (
+    <link slot="head" rel="preload" as="image" href={storyEntry.data.coverImage} media="(min-width: 641px)" fetchpriority="high" />
+  )}
   <ArchiveEntryPage
     collection={collection}
     entry={storyEntry}
@@ -52,7 +62,9 @@ const structuredData = {
     previousEntry={previousEntry}
     nextEntry={nextEntry}
   >
-    {storyEntry.data.coverImage && (
+    {responsiveHero && storyEntry.data.coverImage ? (
+      <StoryHero desktopSrc={storyEntry.data.coverImage} mobileSrc={storyEntry.data.keyArtImage} alt={storyEntry.data.coverAlt ?? ""} />
+    ) : storyEntry.data.coverImage ? (
       <figure class="story-cover">
         <ResponsiveStoryImage
           src={storyEntry.data.coverImage}
@@ -65,7 +77,7 @@ const structuredData = {
           fetchpriority="high"
         />
       </figure>
-    )}
+    ) : null}
     <StorySourceNote />
     <Content />
   </ArchiveEntryPage>
