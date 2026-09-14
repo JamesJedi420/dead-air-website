@@ -42,6 +42,18 @@
   force = true
 
 [[redirects]]
+  from = "/stories/da-001-the-building-keeps-the-hour"
+  to = "/stories/da-001-after-the-main-fan-stops/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/stories/da-001-the-building-keeps-the-hour/"
+  to = "/stories/da-001-after-the-main-fan-stops/"
+  status = 301
+  force = true
+
+[[redirects]]
   from = "/dead-air-da-002-the-name-in-the-room"
   to = "/stories/da-002-the-name-in-the-room/"
   status = 301
