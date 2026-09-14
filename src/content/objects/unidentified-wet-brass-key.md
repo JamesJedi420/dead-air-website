@@ -20,7 +20,7 @@ evidenceType:
 objectType: Key
 custody: Facilities custody within DA-001
 stories:
-  - da-001-the-building-keeps-the-hour
+  - da-001-after-the-main-fan-stops
 cases:
   - da-001
 locations:
