@@ -46,10 +46,13 @@ netlify deploy --build
 - Astro with TypeScript and static output
 - Reusable site layout, metadata, navigation, footer, and archive-card components
 - Content collections for stories, cases, characters, locations, objects, and mysteries
-- RSS feed at `/rss.xml`
+- RSS feed at `/feed.xml`
 - Sitemap generated during build
 - Robots policy at `/robots.txt`
 - Canonical and Open Graph metadata in the shared layout
+- Project-wide browser/app identity through favicon, Apple touch, scalable, pinned-tab, and web-manifest assets
+- Project-wide 1200×630 Open Graph fallback artwork for pages without an approved page-specific social image
+- `scripts/validate-site-identity.mjs` verifies the generated identity assets and representative homepage metadata after every production build
 
 ## Standard Story Source Note
 

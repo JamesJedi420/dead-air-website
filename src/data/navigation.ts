@@ -16,5 +16,5 @@ export const utilityNav = [
   { href: "/content-notes/", label: "Content Notes" },
   { href: "/contact/", label: "Contact" },
   { href: "/privacy/", label: "Privacy" },
-  { href: "/rss.xml", label: "RSS" },
+  { href: "/feed.xml", label: "RSS" },
 ];
