@@ -7,6 +7,7 @@
   "canonicalFragmentSha256": "3ccd31348217394e176baa690b653a5c608ee8e5c2df72b0ad4a35df83c9be71",
   "fragmentCount": 10,
   "lockStatus": "IMMUTABLE_APPROVED_SOURCE",
-  "publicReleaseAuthorized": false,
-  "notes": "Hash is computed by deterministic normalization of part-01.mdfrag through part-10.mdfrag and replacement of internal DA-004 scene headings with canonical Scene NN headings. Any fragment drift must fail materialization until a separately authorized source-lock revision is recorded."
+  "publicReleaseAuthorized": true,
+  "publicationDate": "2026-09-14",
+  "notes": "Hash is computed by deterministic normalization of part-01.mdfrag through part-10.mdfrag and replacement of internal DA-004 scene headings with canonical Scene NN headings. Public publication was explicitly authorized on 2026-09-14 after the pre-publication freeze passed; any fragment drift must still fail materialization until a separately authorized source-lock revision is recorded."
 }
