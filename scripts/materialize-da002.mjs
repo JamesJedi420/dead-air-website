@@ -55,7 +55,7 @@ const chronologyMetadata = [
   "chronologyNote: Placed after DA-001 according to the approximate order of the source investigations and transcripts; the exact interval is fictionalized or withheld.",
   "follows:",
   "  - collection: stories",
-  "    slug: da-001-the-building-keeps-the-hour",
+  "    slug: da-001-after-the-main-fan-stops",
   "precedes: []",
 ].join("\n");
 
