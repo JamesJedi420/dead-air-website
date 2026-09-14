@@ -50,7 +50,7 @@ const responsiveHero = Boolean(storyEntry.data.coverImage && storyEntry.data.key
   imageAlt={socialImageAlt}
   noindex={storyEntry.data.previewOnly}
 >
-  <script slot="head" type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+  <script slot="head" is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
   {responsiveHero && storyEntry.data.keyArtImage && (
     <link slot="head" rel="preload" as="image" href={storyEntry.data.keyArtImage} media="(max-width: 640px)" fetchpriority="high" />
   )}
