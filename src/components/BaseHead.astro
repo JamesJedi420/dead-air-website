@@ -1,4 +1,12 @@
 ---
+import {
+  SITE_ALTERNATE_NAME,
+  SITE_DESCRIPTION,
+  SITE_LANGUAGE,
+  SITE_NAME,
+  getSiteIdentity,
+} from "../lib/siteIdentity";
+
 interface Props {
   title: string;
   description: string;
@@ -21,11 +29,11 @@ const {
   noindex = false,
 } = Astro.props;
 
-const siteTitle = "The Dead Air Archive";
 const defaultSocialImage = "/images/dead-air-site__open-graph__archive-threshold__1200x630__brand__v1.1__20260913.png";
 const defaultSocialImageAlt = "A brass DA monogram in a square frame beside two offset brass threshold frames on a dark field.";
-const pageTitle = title === siteTitle ? title : `${title} | ${siteTitle}`;
+const pageTitle = title === SITE_NAME ? SITE_NAME : `${title} | ${SITE_NAME}`;
 const canonicalUrl = new URL(canonical, Astro.site ?? Astro.url).toString();
+const canonicalPath = new URL(canonicalUrl).pathname;
 const resolvedImage = image ?? defaultSocialImage;
 const resolvedImageAlt = image ? imageAlt : defaultSocialImageAlt;
 const imageUrl = new URL(resolvedImage, Astro.site ?? Astro.url).toString();
@@ -35,6 +43,45 @@ const publishedTimeValue = publishedTime
     ? publishedTime.toISOString()
     : new Date(publishedTime).toISOString()
   : undefined;
+const { homeUrl, websiteId, seriesId } = getSiteIdentity(Astro.site ?? Astro.url);
+const webPageId = new URL("#webpage", canonicalUrl).toString();
+const webPageStructuredData = {
+  "@type": "WebPage",
+  "@id": webPageId,
+  url: canonicalUrl,
+  name: title,
+  description,
+  isPartOf: { "@id": websiteId },
+  inLanguage: SITE_LANGUAGE,
+};
+const identityGraph = canonicalPath === "/"
+  ? [
+      {
+        "@type": "WebSite",
+        "@id": websiteId,
+        url: homeUrl,
+        name: SITE_NAME,
+        alternateName: SITE_ALTERNATE_NAME,
+        description: SITE_DESCRIPTION,
+        inLanguage: SITE_LANGUAGE,
+        about: { "@id": seriesId },
+      },
+      {
+        "@type": "CreativeWorkSeries",
+        "@id": seriesId,
+        url: homeUrl,
+        name: SITE_NAME,
+        alternateName: SITE_ALTERNATE_NAME,
+        description: SITE_DESCRIPTION,
+        inLanguage: SITE_LANGUAGE,
+      },
+      webPageStructuredData,
+    ]
+  : [webPageStructuredData];
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": identityGraph,
+};
 ---
 
 <title>{pageTitle}</title>
@@ -42,7 +89,7 @@ const publishedTimeValue = publishedTime
 {noindex && <meta name="robots" content="noindex,nofollow,noarchive" />}
 <link rel="canonical" href={canonicalUrl} />
 <meta property="og:type" content={ogType} />
-<meta property="og:site_name" content={siteTitle} />
+<meta property="og:site_name" content={SITE_NAME} />
 <meta property="og:locale" content="en_US" />
 <meta property="og:title" content={pageTitle} />
 <meta property="og:description" content={description} />
@@ -60,4 +107,5 @@ const publishedTimeValue = publishedTime
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={imageUrl} />
 {resolvedImageAlt && <meta name="twitter:image:alt" content={resolvedImageAlt} />}
-<link rel="alternate" type="application/rss+xml" title={`${siteTitle} RSS`} href={new URL("/feed.xml", Astro.site ?? Astro.url)} />
+<link rel="alternate" type="application/rss+xml" title={`${SITE_NAME} RSS`} href={new URL("/feed.xml", Astro.site ?? Astro.url)} />
+<script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />

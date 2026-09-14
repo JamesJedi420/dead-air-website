@@ -7,7 +7,7 @@ import { chromium, devices } from "playwright";
 const baseUrl = process.env.VISUAL_BASE_URL ?? "http://127.0.0.1:4173";
 const storyPath = "/stories/da-003-the-recorder-kept-running/";
 const title = "The Recorder Kept Running";
-const siteTitle = `${title} | The Dead Air Archive`;
+const siteTitle = `${title} | Dead Air`;
 const summary = "Maren finds Jonah bleeding in an unfinished house with three pages he does not remember writing. Hours later, he asks her to take him back to Harrow River.";
 const coverAlt = "Portable recorder resting on wet rocks beside dark water beneath the Dead Air mark; no person, grave marker, or apparition is visible.";
 const sourceNote = "Based on reported paranormal-investigation accounts. Some events, characters, and identifying details have been fictionalized.";

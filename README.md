@@ -50,9 +50,14 @@ netlify deploy --build
 - Sitemap generated during build
 - Robots policy at `/robots.txt`
 - Canonical and Open Graph metadata in the shared layout
+- `Dead Air` is the primary site-name signal; `The Dead Air Archive` is retained as the archive/interface alternate name
+- Homepage `WebSite` and `CreativeWorkSeries` JSON-LD establish the canonical branded identity at `https://readdeadair.com/`
+- Every indexable page emits canonical `WebPage` JSON-LD linked to the shared `WebSite` identity
+- Visible archive breadcrumbs emit matching `BreadcrumbList` JSON-LD on the branded origin
+- Published `ShortStory` JSON-LD links each story to its canonical `WebPage` and the shared Dead Air series entity
 - Project-wide browser/app identity through favicon, Apple touch, scalable, pinned-tab, and web-manifest assets
 - Project-wide 1200×630 Open Graph fallback artwork for pages without an approved page-specific social image
-- `scripts/validate-site-identity.mjs` verifies the generated identity assets and representative homepage metadata after every production build
+- `scripts/validate-site-identity.mjs` verifies identity assets, canonical branded metadata, structured-data relationships, breadcrumb markup, and story identity across every indexable generated HTML surface after each production build
 
 ## Standard Story Source Note
 

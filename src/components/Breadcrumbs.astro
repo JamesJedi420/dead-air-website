@@ -9,6 +9,17 @@ interface Props {
 }
 
 const { items } = Astro.props;
+const base = Astro.site ?? Astro.url;
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: items.map((item, index) => ({
+    "@type": "ListItem",
+    position: index + 1,
+    name: item.label,
+    item: new URL(item.href, base).toString(),
+  })),
+};
 ---
 
 <nav class="breadcrumbs" aria-label="Breadcrumb">
@@ -20,3 +31,4 @@ const { items } = Astro.props;
     ))}
   </ol>
 </nav>
+<script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />

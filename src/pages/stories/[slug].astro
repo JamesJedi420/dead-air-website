@@ -7,6 +7,7 @@ import StoryHero from "../../components/StoryHero.astro";
 import StorySourceNote from "../../components/StorySourceNote.astro";
 import SiteLayout from "../../layouts/SiteLayout.astro";
 import { getEntryStaticPaths } from "../../lib/loadArchive";
+import { SITE_LANGUAGE, getSiteIdentity } from "../../lib/siteIdentity";
 
 export const getStaticPaths = () => getEntryStaticPaths("stories");
 
@@ -15,6 +16,8 @@ const storyEntry = entry as CollectionEntry<"stories">;
 const { Content } = await render(storyEntry);
 const publicationDate = storyEntry.data.publicationDate ?? storyEntry.data.date;
 const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).toString();
+const webPageId = new URL("#webpage", canonical).toString();
+const { seriesId } = getSiteIdentity(Astro.site ?? Astro.url);
 const socialImage = storyEntry.data.ogImage ?? storyEntry.data.coverImage;
 const socialImageAlt = storyEntry.data.ogImage
   ? storyEntry.data.ogImageAlt
@@ -29,12 +32,11 @@ const structuredData = {
   name: storyEntry.data.title,
   description: storyEntry.data.summary,
   url: canonical,
+  inLanguage: SITE_LANGUAGE,
+  mainEntityOfPage: { "@id": webPageId },
   ...(structuredImages.length ? { image: structuredImages } : {}),
   ...(storyEntry.data.cardImage ? { thumbnailUrl: absolute(storyEntry.data.cardImage) } : {}),
-  isPartOf: {
-    "@type": "CreativeWorkSeries",
-    name: "Dead Air",
-  },
+  isPartOf: { "@id": seriesId },
 };
 const responsiveHero = Boolean(storyEntry.data.coverImage && storyEntry.data.keyArtImage);
 ---
@@ -48,7 +50,7 @@ const responsiveHero = Boolean(storyEntry.data.coverImage && storyEntry.data.key
   imageAlt={socialImageAlt}
   noindex={storyEntry.data.previewOnly}
 >
-  <script slot="head" type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+  <script slot="head" is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
   {responsiveHero && storyEntry.data.keyArtImage && (
     <link slot="head" rel="preload" as="image" href={storyEntry.data.keyArtImage} media="(max-width: 640px)" fetchpriority="high" />
   )}

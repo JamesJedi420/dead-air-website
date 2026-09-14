@@ -25,7 +25,7 @@ const noOverflow = async (page,label) => { const d=await page.evaluate(()=>({w:i
 
 const verify = async (page,label,isMobile) => {
   await open(page,`${baseUrl}${storyPath}`);
-  assert.equal(await page.title(),`${title} | The Dead Air Archive`);
+  assert.equal(await page.title(),`${title} | Dead Air`);
   assert.equal(await page.locator('meta[name="description"]').getAttribute("content"),summary);
   assert.equal(await page.locator('meta[name="robots"]').count(),0,"Published page must not emit noindex robots metadata");
   const published = await page.locator('meta[property="article:published_time"]').getAttribute("content");
