@@ -1,0 +1,50 @@
+name: Submit IndexNow
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "src/**"
+      - "public/**"
+      - "scripts/**"
+      - "astro.config.mjs"
+      - "package.json"
+      - "package-lock.json"
+      - "netlify.toml"
+      - ".github/workflows/indexnow.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: indexnow-production
+  cancel-in-progress: true
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Allow production deploy to settle
+        run: sleep 300
+
+      - name: Verify IndexNow key file is public
+        env:
+          SITE_URL: https://readdeadair.com
+          INDEXNOW_KEY: 7990d5da80fe7cb34d5385c90ea38256
+        run: |
+          set -euo pipefail
+          key_url="$SITE_URL/$INDEXNOW_KEY.txt"
+          actual="$(curl --fail --silent --show-error --location "$key_url")"
+          test "$actual" = "$INDEXNOW_KEY"
+
+      - name: Submit current public sitemap URLs to IndexNow
+        env:
+          SITE_URL: https://readdeadair.com
+          INDEXNOW_KEY: 7990d5da80fe7cb34d5385c90ea38256
+        run: node scripts/submit-indexnow.mjs
