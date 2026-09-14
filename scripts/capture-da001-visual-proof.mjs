@@ -51,7 +51,7 @@ const assertNoHorizontalOverflow = async (page, label) => {
 };
 
 const verifyStoryContent = async (page) => {
-  assert.equal(await page.title(), `${storyTitle} | The Dead Air Archive`);
+  assert.equal(await page.title(), `${storyTitle} | Dead Air`);
   await page.getByRole("heading", { name: storyTitle, exact: true }).waitFor();
   await page.getByText("Final Approved Story v20", { exact: false }).waitFor();
   await page
