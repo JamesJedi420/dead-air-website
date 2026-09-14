@@ -28,9 +28,9 @@ contentWarnings:
   - Death and grief involving a former coworker
   - Group psychological pressure
 role: Facilities worker and Cedar Plain viewpoint character
-firstAppearance: da-001-the-building-keeps-the-hour
+firstAppearance: da-001-after-the-main-fan-stops
 stories:
-  - da-001-the-building-keeps-the-hour
+  - da-001-after-the-main-fan-stops
   - da-002-the-name-in-the-room
 cases:
   - da-001

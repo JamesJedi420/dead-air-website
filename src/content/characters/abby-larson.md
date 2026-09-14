@@ -24,9 +24,9 @@ evidenceType:
   - handling records
   - chain of custody
 role: Camera operator and independent-source custodian
-firstAppearance: da-001-the-building-keeps-the-hour
+firstAppearance: da-001-after-the-main-fan-stops
 stories:
-  - da-001-the-building-keeps-the-hour
+  - da-001-after-the-main-fan-stops
   - da-002-the-name-in-the-room
 cases:
   - da-001

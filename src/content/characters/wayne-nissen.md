@@ -19,9 +19,9 @@ evidenceType:
 contentWarnings:
   - Death and grief involving a former coworker
 role: Former facilities worker associated with DA-001 memory and testimony
-firstAppearance: da-001-the-building-keeps-the-hour
+firstAppearance: da-001-after-the-main-fan-stops
 stories:
-  - da-001-the-building-keeps-the-hour
+  - da-001-after-the-main-fan-stops
 cases:
   - da-001
 locations:

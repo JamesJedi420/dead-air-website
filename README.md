@@ -89,7 +89,7 @@ The approved policy and initial DA-001 → DA-002 sequence are recorded in `docs
 
 ## DA-001 Publication
 
-DA-001 — *After the Main Fan Stops* is published as Final Approved Story v20. The canonical public route remains `/stories/da-001-the-building-keeps-the-hour/` so the August 17, 2026 publishing-title revision does not break existing links.
+DA-001 — *After the Main Fan Stops* is published as Final Approved Story v20. The canonical public route is `/stories/da-001-after-the-main-fan-stops/`. The former `/stories/da-001-the-building-keeps-the-hour/` route is retained only as a permanent redirect so existing links continue to work.
 
 The repository preserves the frozen Final Approved Story v17 source as twelve ordered fragments under `src/manuscripts/da-001/`. `scripts/materialize-da001.mjs` verifies that frozen source SHA-256, applies only the approved bounded v18, v19, and v20 corrective layers, converts the private scene headings to the ten numbered public section headings, and writes the generated v20 story entry. This keeps the historical source lock intact while making the current approved public manuscript reproducible from explicit versioned corrections.
 

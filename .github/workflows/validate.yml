@@ -36,7 +36,7 @@ jobs:
           server_pid=$!
           trap 'kill "$server_pid" 2>/dev/null || true' EXIT
           for attempt in {1..60}; do
-            if curl -fsS http://127.0.0.1:4173/stories/da-001-the-building-keeps-the-hour/ > /dev/null; then break; fi
+            if curl -fsS http://127.0.0.1:4173/stories/da-001-after-the-main-fan-stops/ > /dev/null; then break; fi
             if [ "$attempt" -eq 60 ]; then cat /tmp/dead-air-http.log; exit 1; fi
             sleep 0.5
           done

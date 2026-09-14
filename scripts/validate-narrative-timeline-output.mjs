@@ -49,7 +49,7 @@ if (!frontmatterMatch) {
     }
   }
 
-  if (!/^follows:\s*\n\s+- collection: stories\s*\n\s+slug: da-001-the-building-keeps-the-hour$/m.test(frontmatter)) {
+  if (!/^follows:\s*\n\s+- collection: stories\s*\n\s+slug: da-001-after-the-main-fan-stops$/m.test(frontmatter)) {
     fail("DA-002 is missing its explicit follows relationship to DA-001.");
   }
   if (!/^precedes:\s*\[\]\s*$/m.test(frontmatter)) {

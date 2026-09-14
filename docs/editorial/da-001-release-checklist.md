@@ -16,7 +16,8 @@
 - Approved source SHA-256: `175680113c552fe71b8aea3cdc553755e06909202928cf6675c1a0ab41228aba`.
 - Production merge commit: `0722ade15611db4d186ef2c6f05269e325dc45f9`.
 - Successful production deploy: Netlify deploy `6a6e66d83ecd5a000811fa16`, published 2026-08-01.
-- Live route: `/stories/da-001-the-building-keeps-the-hour/`.
+- Current live route: `/stories/da-001-after-the-main-fan-stops/`.
+- Legacy route: `/stories/da-001-the-building-keeps-the-hour/` permanently redirects to the current route.
 - GitHub visual-proof validation: workflow run `30731408776` on commit `e59b3b92b04eca6506027803dc95ad5280419335`.
 - Visual-proof artifact: `da001-visual-proof`, artifact ID `8828096115`, SHA-256 `3c041b66ec3e373ae74cacf6f0af41b3da5bb281ebde16651decd193c2d67aa7`.
 - Desktop viewport proof: 1440 × 1200 at the page top, Section 5, Section 10, and footer.

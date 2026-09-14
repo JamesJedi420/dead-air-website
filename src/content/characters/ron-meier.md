@@ -21,7 +21,7 @@ evidenceType:
 contentWarnings:
   - Psychological pressure surrounding a prior frightening event
 role: Facilities worker and DA-002 boundary-setting participant
-firstAppearance: da-001-the-building-keeps-the-hour
+firstAppearance: da-001-after-the-main-fan-stops
 stories:
   - da-002-the-name-in-the-room
 cases:

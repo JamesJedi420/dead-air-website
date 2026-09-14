@@ -39,7 +39,7 @@ relatedCases:
   - da-001
   - da-002
 stories:
-  - da-001-the-building-keeps-the-hour
+  - da-001-after-the-main-fan-stops
   - da-002-the-name-in-the-room
 characters:
   - diane-madsen

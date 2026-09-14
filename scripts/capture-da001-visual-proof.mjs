@@ -5,7 +5,7 @@ import process from "node:process";
 import { chromium, devices } from "playwright";
 
 const baseUrl = process.env.VISUAL_BASE_URL ?? "http://127.0.0.1:4173";
-const storyPath = "/stories/da-001-the-building-keeps-the-hour/";
+const storyPath = "/stories/da-001-after-the-main-fan-stops/";
 const storyTitle = "After the Main Fan Stops";
 const outputDirectory = path.join(process.cwd(), "artifacts", "da001-visual-proof");
 const sections = [
