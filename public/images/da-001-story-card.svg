@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1536" height="1024" viewBox="0 0 1536 1024" role="img">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#171713"/>
+      <stop offset="0.58" stop-color="#0d0d0b"/>
+      <stop offset="1" stop-color="#070706"/>
+    </linearGradient>
+    <radialGradient id="fanGlow" cx="50%" cy="42%" r="58%">
+      <stop offset="0" stop-color="#6d674f" stop-opacity="0.28"/>
+      <stop offset="1" stop-color="#0a0a08" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="brass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#d0ad64"/>
+      <stop offset="0.52" stop-color="#9a7738"/>
+      <stop offset="1" stop-color="#59451f"/>
+    </linearGradient>
+    <filter id="grain" x="-20%" y="-20%" width="140%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" seed="17"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer><feFuncA type="table" tableValues="0 0.07"/></feComponentTransfer>
+    </filter>
+  </defs>
+  <rect width="1536" height="1024" fill="url(#bg)"/>
+  <rect width="1536" height="1024" fill="url(#fanGlow)"/>
+  <path d="M0 0H1536L1215 655H322Z" fill="#12120f"/>
+  <path d="M0 1024V0L322 655 505 1024Z" fill="#0a0a08"/>
+  <path d="M1536 1024V0L1215 655 1031 1024Z" fill="#090908"/>
+  <path d="M322 655H1215L1536 1024H0Z" fill="#11110e"/>
+  <path d="M322 655H1215" stroke="#3a3528" stroke-width="4" opacity="0.55"/>
+  <path d="M506 1024L646 655M1030 1024L890 655" stroke="#27241c" stroke-width="3"/>
+  <path d="M536 78H1001L942 134H593Z" fill="#d3c79e" opacity="0.10"/>
+  <path d="M632 242H905L873 279H664Z" fill="#d3c79e" opacity="0.07"/>
+  <g transform="translate(768 492)">
+    <circle r="178" fill="#090908" stroke="#4a4536" stroke-width="16"/>
+    <circle r="143" fill="none" stroke="#2f2c23" stroke-width="7"/>
+    <circle r="111" fill="none" stroke="#24221b" stroke-width="3"/>
+    <g fill="#25231c" stroke="#4d4839" stroke-width="3">
+      <path d="M0-28C22-120 54-159 99-161 125-162 137-143 125-119L46-8Z"/>
+      <path d="M24 14C115 39 151 75 145 120 141 146 119 154 98 138L-2 48Z"/>
+      <path d="M-16 23C-82 90-128 108-165 82-187 67-184 43-158 32L-45-20Z"/>
+      <path d="M-20-21C-43-111-33-160 7-182 31-195 49-179 47-152L26-39Z" opacity="0.78"/>
+    </g>
+    <circle r="31" fill="#161510" stroke="#71613a" stroke-width="6"/>
+  </g>
+  <g opacity="0.88">
+    <path d="M1121 275L1366 170V783L1121 693Z" fill="#11110e" stroke="#363126" stroke-width="5"/>
+    <path d="M1172 500L1283 471" stroke="#6f623e" stroke-width="9" stroke-linecap="round"/>
+    <circle cx="1170" cy="501" r="8" fill="#b08d4a"/>
+  </g>
+  <g transform="translate(458 829) rotate(-18)">
+    <circle cx="0" cy="0" r="54" fill="none" stroke="url(#brass)" stroke-width="22"/>
+    <rect x="42" y="-12" width="274" height="24" rx="10" fill="url(#brass)"/>
+    <path d="M286-12V50H325V25H360V-12Z" fill="url(#brass)"/>
+    <path d="M62 0H287" stroke="#e1c786" stroke-width="3" opacity="0.45"/>
+  </g>
+  <rect width="1536" height="1024" filter="url(#grain)" opacity="0.72"/>
+  <rect x="18" y="18" width="1500" height="988" fill="none" stroke="#332f27" stroke-width="3" opacity="0.7"/>
+</svg>
