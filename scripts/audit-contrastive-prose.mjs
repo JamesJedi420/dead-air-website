@@ -22,14 +22,15 @@ for (const file of files) {
     ["BUT…NOT", /\bbut\b[^.!?\n]{0,180}\bnot\b[^.!?\n]{0,180}/gi],
     ["NEGATION…BUT", /\b(?:isn't|aren't|wasn't|weren't|don't|doesn't|didn't|can't|couldn't|won't|wouldn't|shouldn't|hasn't|haven't|hadn't)\b[^.!?\n]{0,180}\bbut\b[^.!?\n]{0,180}/gi],
     ["COMMA-NOT", /,[ \t]+not\b[^.!?\n]{0,140}/gi],
+    ["NOT-SENTENCE→PIVOT", /\bNot\b[^.!?\n]{0,140}[.!?](?:\s+|\n+)(?:Not\b[^.!?\n]{0,140}[.!?](?:\s+|\n+))?[^.!?\n]{1,160}[.!?]/g],
   ];
 
   for (const [kind, regex] of regexes) {
     for (const match of body.matchAll(regex)) add(file, kind, lineOf(match.index), match[0]);
   }
 
-  // Catch the clipped rhetorical reversal the user identified:
-  // a short paragraph beginning with "Not ..." followed by another short paragraph.
+  // Catch the clipped rhetorical reversal the user identified when paragraph breaks
+  // separate the negated formulation from the replacement formulation.
   for (let i = 0; i < lines.length; i++) {
     const current = lines[i].trim();
     if (!/^Not\b/.test(current) || current.length > 180) continue;
@@ -41,14 +42,22 @@ for (const file of files) {
     }
   }
 
-  // Catch common negative-then-positive correction pairs such as
+  // Catch negative-then-positive correction pairs such as
   // "It wasn't X. It was Y." or "He didn't X. He Y."
   const sentencePair = /([^.!?\n]{0,80}\b(?:isn't|aren't|wasn't|weren't|don't|doesn't|didn't|can't|couldn't|won't|wouldn't|shouldn't|hasn't|haven't|hadn't)\b[^.!?\n]{0,140}[.!?])\s+(?:\n\s*)?([^.!?\n]{1,180}[.!?])/gi;
   for (const match of body.matchAll(sentencePair)) {
     const second = match[2].trim();
-    if (/^(?:It|He|She|They|That|This|The|What|Where|When|From|Only|Just|Instead|Now|Then)\b/i.test(second)) {
+    if (/^(?:It|He|She|They|That|This|The|What|Where|When|From|Only|Just|Instead|Rather|Now|Then)\b/i.test(second)) {
       add(file, "NEGATIVE→CORRECTION", lineOf(match.index), `${match[1]} ${second}`);
     }
+  }
+
+  // Catch multiple short sentence fragments that repeatedly reset through negation,
+  // including same-paragraph forms such as "Not what X. Not where Y. Something."
+  const fragmentReset = /(?:^|[.!?]\s+)(Not\b[^.!?\n]{0,100}[.!?]\s+Not\b[^.!?\n]{0,100}[.!?](?:\s+[^.!?\n]{1,100}[.!?])?)/gm;
+  for (const match of body.matchAll(fragmentReset)) {
+    const offset = match.index + match[0].indexOf(match[1]);
+    add(file, "REPEATED-NOT-RESET", lineOf(offset), match[1]);
   }
 }
 
