@@ -8,12 +8,12 @@ const locations = sortEntries((await getCollection("locations")).filter(isPublis
 const entries = locations.map((entry) => normalizeEntry("locations", entry));
 ---
 
-<SiteLayout title="Locations" description="Public location records in The Dead Air Archive.">
+<SiteLayout title="Locations" description="Location records in The Dead Air Archive.">
   <section class="section">
     <div class="section-header">
       <p class="eyebrow">Locations</p>
       <h1>Locations</h1>
-      <p>Locations collect public case, story, and phenomenon references.</p>
+      <p>Location records bring together case, story, and phenomenon references.</p>
     </div>
     <ArchiveBrowser entries={entries} emptyMessage="No public location records have been opened yet." />
   </section>
