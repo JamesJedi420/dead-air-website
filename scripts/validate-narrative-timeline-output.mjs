@@ -12,7 +12,7 @@ const storySourcePath = path.join(
 );
 const timelineHtmlPath = path.join(root, "dist", "timeline", "index.html");
 const storyRoute = "/stories/da-002-the-name-in-the-room/";
-const chronologyNote = "Placed after DA-001 according to the approximate order of the source investigations and transcripts; the exact interval is fictionalized or withheld.";
+const chronologyNote = "Placed after DA-001 in the archive's relative chronology; the exact interval remains unresolved.";
 
 const exists = async (filePath) => {
   try {
@@ -95,5 +95,5 @@ if (failures.length > 0) {
 }
 
 console.log(
-  "Narrative timeline output validation passed: DA-002 remains archive position 2 after DA-001, relative source chronology is visible, and its publication date is not presented as an event date.",
+  "Narrative timeline output validation passed: DA-002 remains archive position 2 after DA-001, relative chronology is visible, and its publication date is not presented as an event date.",
 );
