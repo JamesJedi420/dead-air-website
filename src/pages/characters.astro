@@ -8,12 +8,12 @@ const characters = sortEntries((await getCollection("characters")).filter(isPubl
 const entries = characters.map((entry) => normalizeEntry("characters", entry));
 ---
 
-<SiteLayout title="Characters" description="Public character records in The Dead Air Archive.">
+<SiteLayout title="Characters" description="Character records in The Dead Air Archive.">
   <section class="section">
     <div class="section-header">
       <p class="eyebrow">Characters</p>
       <h1>Characters</h1>
-      <p>Public character records will connect appearances, cases, and locations.</p>
+      <p>Character records connect appearances, cases, and locations across the archive.</p>
     </div>
     <ArchiveBrowser entries={entries} emptyMessage="No public character records have been opened yet." />
   </section>
