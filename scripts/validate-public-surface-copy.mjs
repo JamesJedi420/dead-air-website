@@ -1,25 +1,8 @@
-import { readFile } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 
 const root = process.cwd();
-
-const publicSurfaceFiles = [
-  "dist/index.html",
-  "dist/404.html",
-  "dist/stories/index.html",
-  "dist/cases/index.html",
-  "dist/characters/index.html",
-  "dist/locations/index.html",
-  "dist/objects/index.html",
-  "dist/mysteries/index.html",
-  "dist/timeline/index.html",
-  "dist/search/index.html",
-  "dist/about/index.html",
-  "dist/content-notes/index.html",
-  "dist/research-and-provenance/index.html",
-  "dist/contact/index.html",
-  "dist/privacy/index.html",
-];
+const distRoot = path.join(root, "dist");
 
 const forbiddenMarkers = [
   ["publication boundary", /publication boundary/i],
@@ -49,18 +32,37 @@ const forbiddenMarkers = [
   ["release gate", /release gate/i],
 ];
 
-const failures = [];
+const collectHtml = async (directory) => {
+  const entries = await readdir(directory, { withFileTypes: true });
+  const files = [];
 
-for (const relativePath of publicSurfaceFiles) {
-  const absolutePath = path.join(root, relativePath);
-  let html;
-
-  try {
-    html = await readFile(absolutePath, "utf8");
-  } catch (error) {
-    failures.push(`${relativePath}: could not read rendered public surface (${error.message})`);
-    continue;
+  for (const entry of entries) {
+    const entryPath = path.join(directory, entry.name);
+    if (entry.isDirectory()) files.push(...await collectHtml(entryPath));
+    else if (entry.isFile() && entry.name.endsWith(".html")) files.push(entryPath);
   }
+
+  return files;
+};
+
+const failures = [];
+let publicSurfaceFiles = [];
+
+try {
+  publicSurfaceFiles = await collectHtml(distRoot);
+} catch (error) {
+  console.error(`Public-surface role-separation validation could not inspect dist: ${error.message}`);
+  process.exit(1);
+}
+
+if (publicSurfaceFiles.length === 0) {
+  console.error("Public-surface role-separation validation found no rendered HTML surfaces.");
+  process.exit(1);
+}
+
+for (const absolutePath of publicSurfaceFiles) {
+  const relativePath = path.relative(root, absolutePath).replaceAll(path.sep, "/");
+  const html = await readFile(absolutePath, "utf8");
 
   for (const [label, pattern] of forbiddenMarkers) {
     if (pattern.test(html)) {
@@ -75,4 +77,4 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
-console.log("Public-surface role-separation validation passed.");
+console.log(`Public-surface role-separation validation passed across ${publicSurfaceFiles.length} rendered HTML surfaces.`);
