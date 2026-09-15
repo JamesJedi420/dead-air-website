@@ -11,6 +11,7 @@ const title = "Close Enough to Recognize";
 const summary = "Eli brings his father to the Kestrel Hotel hoping for one paranormal event they can share. Then they hear a knock pattern from an old family story.";
 const alt = "A small field recorder rests on a bench beside an empty, warmly lit hotel corridor leading to a closed STAFF ONLY door.";
 const publicationDate = "2026-09-14";
+const expectedRevision = "Final Approved Story v1.8";
 const expectedSourceSha = "3ccd31348217394e176baa690b653a5c608ee8e5c2df72b0ad4a35df83c9be71";
 const canonicalUrl = `https://readdeadair.com/stories/${slug}/`;
 const assets = [
@@ -23,6 +24,15 @@ const assets = [
 ];
 const oldAlt = "A small field recorder rests on a table beside rain-streaked windows overlooking dark pines; warm hotel lights lead down an empty corridor to a closed STAFF ONLY door.";
 const oldAssetTokens = ["__v1.0__20260908.webp", "da004_art001_v2_2_16x9_1600x900.webp", "da004_art001_v2_2_2x3_1024x1536.webp"];
+const legacyContrastiveProse = [
+  "Not from any of the hotel stories.",
+  "Not his ear.",
+  "Not relief exactly.",
+  "Not because the event had become ordinary.",
+  "Not quiet or hidden. Dull.",
+  "He did not say answer.",
+  "The file preserved the impacts. It did not preserve an explanation.",
+];
 
 const exists = async (target) => { try { return (await stat(target)).isFile() || (await stat(target)).isDirectory(); } catch (e) { if (e?.code === "ENOENT") return false; throw e; } };
 const readText = async (relative) => readFile(path.join(dist, relative), "utf8");
@@ -33,20 +43,22 @@ if (lock.canonicalFragmentSha256 !== expectedSourceSha || lock.publicReleaseAuth
 
 const sourceText = await readFile(source, "utf8");
 for (const value of [
-  `slug: ${slug}`, `title: ${title}`, `summary: ${summary}`, "status: active", "draft: false", "previewOnly: false", `publicationDate: ${publicationDate}`, `coverAlt: \"${alt}\"`, `ogImageAlt: \"${alt}\"`, "## 1. Arrival", "## 10. Raw Audio",
+  `slug: ${slug}`, `title: ${title}`, `summary: ${summary}`, "status: active", "draft: false", "previewOnly: false", `publicationDate: ${publicationDate}`, `revision: ${expectedRevision}`, `coverAlt: \"${alt}\"`, `ogImageAlt: \"${alt}\"`, "## 1. Arrival", "## 10. Raw Audio",
 ]) if (!sourceText.includes(value)) throw new Error(`DA-004 publication source missing ${value}`);
 for (const asset of assets) if (!sourceText.includes(asset)) throw new Error(`DA-004 publication source missing approved release asset ${asset}`);
 if (sourceText.includes(oldAlt) || oldAssetTokens.some((token) => sourceText.includes(token))) throw new Error("Superseded DA-004 release-art lineage remains active in publication source.");
+for (const legacy of legacyContrastiveProse) if (sourceText.includes(legacy)) throw new Error(`DA-004 pre-v1.8 contrastive prose remains in publication source: ${legacy}`);
 
 const publicPage = path.join(dist, "stories", slug, "index.html");
 const previewPage = path.join(dist, "preview", slug, "index.html");
 if (!(await exists(publicPage))) throw new Error("DA-004 public story route missing.");
 if (await exists(previewPage)) throw new Error("DA-004 private preview route must not ship after publication authorization.");
 const html = await readFile(publicPage, "utf8");
-for (const value of [title, summary, alt, canonicalUrl, "fetchpriority=\"high\"", "loading=\"eager\"", "article:published_time"]) if (!html.includes(value)) throw new Error(`DA-004 public page missing ${value}`);
+for (const value of [title, summary, alt, expectedRevision, canonicalUrl, "fetchpriority=\"high\"", "loading=\"eager\"", "article:published_time"]) if (!html.includes(value)) throw new Error(`DA-004 public page missing ${value}`);
 if (/noindex|nofollow|noarchive/i.test(html)) throw new Error("DA-004 public story page remains noindexed.");
 for (const asset of assets) if (!html.includes(asset)) throw new Error(`DA-004 public page/structured data missing approved asset ${asset}`);
 if (html.includes(oldAlt) || oldAssetTokens.some((token) => html.includes(token))) throw new Error("Superseded DA-004 art/alt leaked into public page.");
+for (const legacy of legacyContrastiveProse) if (html.includes(legacy)) throw new Error(`DA-004 pre-v1.8 contrastive prose remains on public page: ${legacy}`);
 
 const storiesIndex = await readText("stories/index.html");
 if (!storiesIndex.includes(title) || !storiesIndex.includes(slug)) throw new Error("DA-004 missing from public stories archive.");
@@ -63,4 +75,4 @@ if (!sitemapText.includes(`/stories/${slug}/`)) throw new Error("DA-004 missing 
 const forbiddenFeedTokens = ["previewOnly: true", "status: withheld", "publicReleaseAuthorized", "PTW-", "CPO-"];
 for (const token of forbiddenFeedTokens) if (feed.includes(token)) throw new Error(`Internal/withheld token leaked into RSS: ${token}`);
 
-console.log("DA-004 release validation PASS: public route, indexability, publication metadata, physical-plaque responsive art, archive, RSS, sitemap, and leak controls confirmed.");
+console.log("DA-004 v1.8 release validation PASS: public route, contrastive-prose correction, indexability, publication metadata, physical-plaque responsive art, archive, RSS, sitemap, and leak controls confirmed.");
