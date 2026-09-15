@@ -11,6 +11,12 @@ const route = `/stories/${manifest.slug}/`;
 const storyHtmlPath = path.join(outputDirectory, "stories", manifest.slug, "index.html");
 const failures = [];
 const fail = (message) => failures.push(message);
+const legacyContrastiveProse = [
+  "Not the lobby. Not the stairs. Not this room.",
+  "My account was an interview, not an invitation.",
+  "Images, not audio.",
+  "Not for the sounds. For keeping the students below",
+];
 
 const exists = async (filePath) => {
   try {
@@ -31,11 +37,15 @@ if (!(await exists(storyHtmlPath))) {
 } else {
   const html = await readFile(storyHtmlPath, "utf8");
   if (!html.includes(manifest.title)) fail("DA-001 page is missing its approved title.");
+  if (!html.includes("Final Approved Story v21")) fail("DA-001 page is missing its v21 correction revision.");
   for (const section of manifest.sections) {
     if (!html.includes(section.published)) fail(`DA-001 page is missing section ${JSON.stringify(section.published)}.`);
   }
   if (/Scene\s+\d+\s+—/.test(html)) fail("DA-001 page exposes production scene labels.");
   if (!html.includes("Based on reported paranormal-investigation accounts.")) fail("DA-001 page is missing the standard source note.");
+  for (const legacy of legacyContrastiveProse) {
+    if (html.includes(legacy)) fail(`DA-001 pre-v21 contrastive prose remains: ${legacy}`);
+  }
 }
 
 const requiredOutputs = ["rss.xml", "search.json", "timeline/index.html"];
@@ -59,4 +69,4 @@ else {
 }
 
 if (failures.length > 0) throw new Error(`DA-001 release validation failed:\n${failures.join("\n")}`);
-console.log("DA-001 release validation passed: route, ten numbered sections, source note, RSS, search, sitemap, and chronology are published.");
+console.log("DA-001 v21 release validation passed: contrastive-prose correction, route, ten numbered sections, source note, RSS, search, sitemap, and chronology are published.");
