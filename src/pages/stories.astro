@@ -23,7 +23,8 @@ const defaultCardMedia = {
 const entries = stories.map((entry) => {
   const normalized = normalizeEntry("stories", entry);
   const fallback = fallbackCardMedia[normalized.slug] ?? defaultCardMedia;
-  const image = entry.data.cardImage ?? normalized.coverImage ?? fallback.image;
+  const cardImage = (entry.data as { cardImage?: string }).cardImage;
+  const image = cardImage ?? normalized.coverImage ?? fallback.image;
   return {
     ...normalized,
     coverImage: image,
