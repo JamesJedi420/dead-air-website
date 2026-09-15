@@ -12,7 +12,7 @@ const storySourcePath = path.join(
 );
 const timelineHtmlPath = path.join(root, "dist", "timeline", "index.html");
 const storyRoute = "/stories/da-002-the-name-in-the-room/";
-const chronologyNote = "Placed after DA-001 in the archive's relative chronology; the exact interval remains unresolved.";
+const chronologyNote = "Placed after DA-001 in the relative archive chronology; the exact interval remains unresolved.";
 
 const exists = async (filePath) => {
   try {
