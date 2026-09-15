@@ -28,6 +28,13 @@ const entries = stories.map((entry) => {
   const normalized = normalizeEntry("stories", entry);
   const fallback = fallbackCardMedia[normalized.slug];
   const cardImage = (entry.data as { cardImage?: string }).cardImage;
+
+  if (cardImage && !normalized.coverAlt) {
+    throw new Error(
+      `Published story ${normalized.slug} has explicit cardImage metadata but no coverAlt. Add approved alt text before release.`,
+    );
+  }
+
   const media = cardImage
     ? { image: cardImage, alt: normalized.coverAlt }
     : fallback;
