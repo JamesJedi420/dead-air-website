@@ -5,7 +5,32 @@ import SiteLayout from "../layouts/SiteLayout.astro";
 import { isPublished, normalizeEntry, sortEntries } from "../lib/archive";
 
 const stories = sortEntries((await getCollection("stories")).filter(isPublished));
-const entries = stories.map((entry) => normalizeEntry("stories", entry));
+const fallbackCardMedia: Record<string, { image: string; alt: string }> = {
+  "da-001-after-the-main-fan-stops": {
+    image: "/images/da-001-story-card.svg",
+    alt: "A stopped industrial ventilation fan at the end of a dark institutional corridor, with a brass key in the foreground.",
+  },
+  "da-002-the-name-in-the-room": {
+    image: "/images/da-002-story-card.svg",
+    alt: "A closed institutional fire door in a dim basement corridor with a portable audio recorder in the foreground.",
+  },
+};
+const defaultCardMedia = {
+  image: "/images/dead-air-site__open-graph__archive-threshold__1200x630__brand__v1.1__20260913.png",
+  alt: "Dead Air archive artwork.",
+};
+
+const entries = stories.map((entry) => {
+  const normalized = normalizeEntry("stories", entry);
+  const fallback = fallbackCardMedia[normalized.slug] ?? defaultCardMedia;
+  const cardImage = (entry.data as { cardImage?: string }).cardImage;
+  const image = cardImage ?? normalized.coverImage ?? fallback.image;
+  return {
+    ...normalized,
+    coverImage: image,
+    coverAlt: image === fallback.image ? fallback.alt : normalized.coverAlt,
+  };
+});
 ---
 
 <SiteLayout title="Stories" description="Published literary paranormal-horror stories from Dead Air.">
