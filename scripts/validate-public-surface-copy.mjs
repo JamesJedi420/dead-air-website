@@ -23,10 +23,12 @@ const publicSurfaceFiles = [
 
 const forbiddenMarkers = [
   ["publication boundary", /publication boundary/i],
+  ["reader-facing", /reader-facing/i],
   ["private production material", /private production material/i],
   ["publish edited public-facing entries", /publish edited public-facing entries/i],
   ["commit raw transcripts", /commit raw transcripts/i],
   ["private collaborators", /private collaborators/i],
+  ["private source material", /private source material/i],
   ["hidden canon", /hidden canon/i],
   ["unpublished continuity", /unpublished continuity/i],
   ["internal research notes", /internal research notes/i],
@@ -40,6 +42,7 @@ const forbiddenMarkers = [
   ["approved public metadata", /approved public metadata/i],
   ["inside Dead Air continuity", /inside Dead Air continuity/i],
   ["source investigations and transcripts", /source investigations and transcripts/i],
+  ["foundation build", /foundation build/i],
   ["deploy preview", /deploy preview/i],
   ["repository-native", /repository-native/i],
   ["approved-source hash", /approved-source hash/i],
