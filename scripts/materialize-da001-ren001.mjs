@@ -41,11 +41,13 @@ for (const [before, after] of v21ContrastiveProseReplacements) {
   manuscript = manuscript.replace(before, after);
 }
 
-const revisionOccurrences = manuscript.split("revision: Final Approved Story v20").length - 1;
+const oldRevisionLine = 'revision: "Final Approved Story v20"';
+const newRevisionLine = 'revision: "Final Approved Story v21"';
+const revisionOccurrences = manuscript.split(oldRevisionLine).length - 1;
 if (revisionOccurrences !== 1) {
   throw new Error(`Expected one DA-001 v20 revision marker before v21 correction, found ${revisionOccurrences}.`);
 }
-manuscript = manuscript.replace("revision: Final Approved Story v20", "revision: Final Approved Story v21");
+manuscript = manuscript.replace(oldRevisionLine, newRevisionLine);
 
 await writeFile(outputPath, manuscript, "utf8");
 console.log(
