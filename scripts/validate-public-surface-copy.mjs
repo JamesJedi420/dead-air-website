@@ -51,7 +51,8 @@ let publicSurfaceFiles = [];
 try {
   publicSurfaceFiles = await collectHtml(distRoot);
 } catch (error) {
-  console.error(`Public-surface role-separation validation could not inspect dist: ${error.message}`);
+  const message = error instanceof Error ? error.message : String(error);
+  console.error(`Public-surface role-separation validation could not inspect dist: ${message}`);
   process.exit(1);
 }
 
