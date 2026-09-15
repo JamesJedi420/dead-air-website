@@ -10,8 +10,8 @@ const storyPath = `/stories/${slug}/`;
 const title = "Close Enough to Recognize";
 const summary = "Eli brings his father to the Kestrel Hotel hoping for one paranormal event they can share. Then they hear a knock pattern from an old family story.";
 const alt = "A small field recorder rests on a bench beside an empty, warmly lit hotel corridor leading to a closed STAFF ONLY door.";
-const hero = "https://res.cloudinary.com/szvtq9d8/image/upload/v1789370641/dead-air/da-004/publication/da004_art001_v2_1_16x9_1600x900.webp";
-const mobile = "https://res.cloudinary.com/szvtq9d8/image/upload/v1789370654/dead-air/da-004/publication/da004_art001_v2_1_2x3_1024x1536.webp";
+const hero = "https://res.cloudinary.com/szvtq9d8/image/upload/v1789453458/dead-air/da-004/publication/da004_art001_v2_2_16x9_1600x900.webp";
+const mobile = "https://res.cloudinary.com/szvtq9d8/image/upload/v1789453465/dead-air/da-004/publication/da004_art001_v2_2_2x3_1024x1536.webp";
 const card = "https://res.cloudinary.com/szvtq9d8/image/upload/v1789370665/dead-air/da-004/publication/da004_art001_v2_1_3x2_1536x1024.webp";
 const square = "https://res.cloudinary.com/szvtq9d8/image/upload/v1789370677/dead-air/da-004/publication/da004_art001_v2_1_1x1_1254x1254.webp";
 const og = "https://res.cloudinary.com/szvtq9d8/image/upload/v1789370687/dead-air/da-004/publication/da004_art001_v2_1_og_1200x630.webp";
@@ -73,5 +73,5 @@ try {
   const dp=await desktop.newPage(); await verify(dp,"Desktop",false); await verifyPublicationSurfaces(dp);
   mobileContext=await browser.newContext({...devices["iPhone 13"]});
   const mp=await mobileContext.newPage(); await verify(mp,"iPhone 13",true);
-  console.log("DA-004 release proof PASS: public indexability, publication date, canonical/OG/Twitter metadata, v2.1 responsive WebP art, exact alt, desktop/mobile crop, semantics, eager/high-priority hero, resource timing, archive/feed surfaces, and ten story sections verified.");
+  console.log("DA-004 release proof PASS: public indexability, publication date, canonical/OG/Twitter metadata, corrected responsive WebP art, exact alt, desktop/mobile crop, semantics, eager/high-priority hero, resource timing, archive/feed surfaces, and ten story sections verified.");
 } finally { await mobileContext?.close(); await desktop?.close(); await browser.close(); }
