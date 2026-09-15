@@ -36,7 +36,7 @@ const html = await readFile(routePath, "utf8");
 const source = await readFile(storySource, "utf8");
 for (const needle of [
   "The Recorder Kept Running",
-  "Final Approved Story v9",
+  "Final Approved Story v10",
   "1. The Unfinished House",
   "9. The Cut We Keep",
   "The passenger door stood open when Maren looked up from the camera.",
@@ -58,7 +58,14 @@ for (const needle of [
 ]) {
   if (!html.includes(needle)) throw new Error(`DA-003 publication output missing ${JSON.stringify(needle)}.`);
 }
-if (html.includes("four hard wheel contacts followed by a softer drag")) throw new Error("DA-003 Website v1.0 wheel-contact phrasing remained after the v1.1 correction.");
+if (html.includes("four hard wheel contacts followed by a softer drag")) throw new Error("DA-003 Website v1.0 wheel-contact phrasing remained after the v1.2 correction.");
+for (const legacyContrast of [
+  "Not harmless. Not explained. Smaller.",
+  "Not the enhanced copy. Not a filtered export. Just the raw duplicate",
+  "not far, but enough that she saw how tightly he had been bracing them",
+]) {
+  if (html.includes(legacyContrast)) throw new Error(`DA-003 pre-v10 contrastive prose remained: ${legacyContrast}`);
+}
 
 if (/name="robots" content="noindex/i.test(html)) throw new Error("DA-003 publication output is still marked noindex.");
 if (!/publicationDate:\s*2026-08-18/i.test(source)) throw new Error("DA-003 publication date is missing or incorrect.");
@@ -88,4 +95,4 @@ for (const name of sitemapCandidates) {
 }
 if (!sitemapText.includes(canonicalUrl)) throw new Error("Sitemap does not include the canonical DA-003 route.");
 
-console.log(`DA-003 Website v1.1 correction validation PASS: corrected edition Final Approved Story v9; frozen Website v1.0 source ${sourceHash} (raw approved export ${expectedRawExportSha256}); cover ${coverHash}; nine numbered sections; standard source note; indexable metadata; publication date 2026-08-18; RSS/search/sitemap inclusion; chronology neutrality; claim ceiling; no internal-material leakage.`);
+console.log(`DA-003 Website v1.2 correction validation PASS: corrected edition Final Approved Story v10; frozen Website v1.0 source ${sourceHash} (raw approved export ${expectedRawExportSha256}); cover ${coverHash}; nine numbered sections; standard source note; indexable metadata; publication date 2026-08-18; RSS/search/sitemap inclusion; chronology neutrality; claim ceiling; no internal-material leakage.`);
