@@ -28,18 +28,20 @@ const entries = stories.map((entry) => {
   const normalized = normalizeEntry("stories", entry);
   const fallback = fallbackCardMedia[normalized.slug];
   const cardImage = (entry.data as { cardImage?: string }).cardImage;
+  const media = cardImage
+    ? { image: cardImage, alt: normalized.coverAlt }
+    : fallback;
 
-  if (!cardImage && !fallback) {
+  if (!media) {
     throw new Error(
       `Published story ${normalized.slug} has no role-specific card image. Add explicit cardImage metadata using a crop-safe 3:2 derivative; do not rely on cover/hero cropping.`,
     );
   }
 
-  const image = cardImage ?? fallback.image;
   return {
     ...normalized,
-    coverImage: image,
-    coverAlt: cardImage ? normalized.coverAlt : fallback.alt,
+    coverImage: media.image,
+    coverAlt: media.alt,
   };
 });
 ---
