@@ -38,7 +38,7 @@ for (const pagePath of storyPages) {
 
   const noindex = /<meta[^>]+name=["']robots["'][^>]+content=["'][^"']*noindex/i.test(html)
     || /<meta[^>]+content=["'][^"']*noindex[^"']*["'][^>]+name=["']robots["']/i.test(html);
-  const hasShareButton = html.includes("data-share-story");
+  const hasShareButton = /<button\b[^>]*\bdata-share-story(?:\s|=|>)[^>]*>/i.test(html);
 
   if (noindex && hasShareButton) {
     throw new Error(`Preview/noindex story must not expose the share control: ${pagePath}.`);
