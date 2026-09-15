@@ -52,10 +52,15 @@ const { title, sharingEnabled = true } = Astro.props;
       const minimumResume = 0.08;
       const completionThreshold = 0.96;
       const maxAgeMs = 1000 * 60 * 60 * 24 * 180;
+      const minimumPersistIntervalMs = 250;
+      const quietPersistIntervalMs = 1000;
+      const minimumPersistDelta = 0.01;
       const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       let hasEnteredStory = false;
       let saveFrame = 0;
       let storageAvailable = true;
+      let lastPersistAt = 0;
+      let lastPersistedProgress = null;
 
       try {
         const testKey = "dead-air:reading-progress:storage-test";
@@ -101,9 +106,16 @@ const { title, sharingEnabled = true } = Astro.props;
         if (!storageAvailable) return;
         try {
           localStorage.removeItem(storageKey);
+          lastPersistedProgress = null;
         } catch {
           storageAvailable = false;
         }
+      };
+
+      const getHeaderOffset = () => {
+        const header = document.querySelector(".site-header");
+        const headerHeight = header instanceof HTMLElement ? header.getBoundingClientRect().height : 0;
+        return headerHeight + 16;
       };
 
       const getStoryBounds = () => {
@@ -117,12 +129,13 @@ const { title, sharingEnabled = true } = Astro.props;
       const progressForScroll = () => {
         const { start, end } = getStoryBounds();
         if (end <= start) return 0;
-        return Math.min(1, Math.max(0, (window.scrollY - start) / (end - start)));
+        const readingPosition = window.scrollY + getHeaderOffset();
+        return Math.min(1, Math.max(0, (readingPosition - start) / (end - start)));
       };
 
       const scrollForProgress = (progress) => {
         const { start, end } = getStoryBounds();
-        return start + progress * Math.max(1, end - start);
+        return Math.max(0, start + progress * Math.max(1, end - start) - getHeaderOffset());
       };
 
       const hideResumeActions = () => {
@@ -141,6 +154,7 @@ const { title, sharingEnabled = true } = Astro.props;
       };
 
       const initialProgress = getStoredProgress();
+      if (initialProgress !== null) lastPersistedProgress = initialProgress;
       if (initialProgress !== null && initialProgress >= minimumResume && initialProgress < completionThreshold) {
         showSavedProgress(initialProgress);
       }
@@ -168,7 +182,10 @@ const { title, sharingEnabled = true } = Astro.props;
           hideResumeActions();
           hasEnteredStory = true;
           const { start } = getStoryBounds();
-          window.scrollTo({ top: start, behavior: reduceMotion ? "auto" : "smooth" });
+          window.scrollTo({
+            top: Math.max(0, start - getHeaderOffset()),
+            behavior: reduceMotion ? "auto" : "smooth",
+          });
           if (status instanceof HTMLElement) {
             status.textContent = storageAvailable
               ? "Reading position reset. Your place will be saved as you continue."
@@ -218,10 +235,10 @@ const { title, sharingEnabled = true } = Astro.props;
         });
       }
 
-      const saveProgress = () => {
+      const saveProgress = ({ force = false } = {}) => {
         if (!storageAvailable) return;
         const { start } = getStoryBounds();
-        if (!hasEnteredStory && window.scrollY >= start - 16) hasEnteredStory = true;
+        if (!hasEnteredStory && window.scrollY + getHeaderOffset() >= start - 16) hasEnteredStory = true;
         if (!hasEnteredStory) return;
 
         const progress = progressForScroll();
@@ -233,8 +250,16 @@ const { title, sharingEnabled = true } = Astro.props;
         }
         if (progress < minimumResume) return;
 
+        const now = Date.now();
+        const elapsed = now - lastPersistAt;
+        const delta = lastPersistedProgress === null ? Number.POSITIVE_INFINITY : Math.abs(progress - lastPersistedProgress);
+        if (!force && elapsed < minimumPersistIntervalMs) return;
+        if (!force && elapsed < quietPersistIntervalMs && delta < minimumPersistDelta) return;
+
         try {
-          localStorage.setItem(storageKey, JSON.stringify({ progress, updatedAt: Date.now() }));
+          localStorage.setItem(storageKey, JSON.stringify({ progress, updatedAt: now }));
+          lastPersistAt = now;
+          lastPersistedProgress = progress;
         } catch {
           storageAvailable = false;
           if (status instanceof HTMLElement) status.textContent = "Reading position is not stored in this browser.";
@@ -254,7 +279,7 @@ const { title, sharingEnabled = true } = Astro.props;
           window.cancelAnimationFrame(saveFrame);
           saveFrame = 0;
         }
-        saveProgress();
+        saveProgress({ force: true });
       });
     };
 
