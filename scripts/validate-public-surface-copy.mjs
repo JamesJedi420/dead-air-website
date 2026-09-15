@@ -5,6 +5,7 @@ const root = process.cwd();
 
 const publicSurfaceFiles = [
   "dist/index.html",
+  "dist/404.html",
   "dist/stories/index.html",
   "dist/cases/index.html",
   "dist/characters/index.html",
@@ -16,6 +17,8 @@ const publicSurfaceFiles = [
   "dist/about/index.html",
   "dist/content-notes/index.html",
   "dist/research-and-provenance/index.html",
+  "dist/contact/index.html",
+  "dist/privacy/index.html",
 ];
 
 const forbiddenMarkers = [
