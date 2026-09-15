@@ -8,12 +8,12 @@ const mysteries = sortEntries((await getCollection("mysteries")).filter(isPublis
 const entries = mysteries.map((entry) => normalizeEntry("mysteries", entry));
 ---
 
-<SiteLayout title="Mysteries" description="Public mystery records in The Dead Air Archive.">
+<SiteLayout title="Mysteries" description="Unresolved mystery records in The Dead Air Archive.">
   <section class="section">
     <div class="section-header">
       <p class="eyebrow">Mysteries</p>
       <h1>Mysteries</h1>
-      <p>Mysteries gather unresolved patterns, related cases, and provisional canon threads.</p>
+      <p>Mystery records gather unresolved patterns, related cases, and competing interpretations.</p>
     </div>
     <ArchiveBrowser entries={entries} emptyMessage="No public mystery records have been opened yet." />
   </section>

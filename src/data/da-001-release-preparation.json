@@ -53,7 +53,7 @@
     "timelineLabel": "Initial Cedar Plain investigation",
     "sourceOrder": "Original investigation",
     "datePrecision": "relative",
-    "chronologyNote": "Placed before DA-002 according to the approximate order of the source investigations and transcripts; the exact interval is fictionalized or withheld.",
+    "chronologyNote": "Placed before DA-002 in the relative archive chronology; the exact interval remains unresolved.",
     "follows": [],
     "precedes": [{"collection": "stories", "slug": "da-002-the-name-in-the-room"}]
   },

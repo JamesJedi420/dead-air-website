@@ -18,16 +18,15 @@ const timelineEntries = [
 
 <SiteLayout
   title="Narrative Timeline"
-  description="The narrative chronology of The Dead Air Archive, based approximately on the sequence of the source investigations and transcripts."
+  description="A relative chronology of events recorded across The Dead Air Archive."
 >
   <section class="section">
     <div class="section-header">
       <p class="eyebrow">Narrative Chronology</p>
       <h1>Timeline</h1>
       <p>
-        Entries are ordered by when their events occur inside Dead Air continuity. The sequence follows
-        the approximate order of the source investigations and transcripts; exact dates may be
-        fictionalized, withheld, or left unresolved. Publication order is separate.
+        Entries are ordered by when their events appear to occur within the archive. Some dates are
+        approximate, disputed, withheld, or unknown. Publication order is separate.
       </p>
     </div>
     {timelineEntries.length > 0 ? (
@@ -62,7 +61,7 @@ const timelineEntries = [
       </ol>
     ) : (
       <div class="callout">
-        <p>No published stories or cases have narrative chronology metadata yet.</p>
+        <p>No dated story or case records are available yet.</p>
       </div>
     )}
   </section>

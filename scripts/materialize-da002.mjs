@@ -52,7 +52,7 @@ const chronologyMetadata = [
   "timelineLabel: Return investigation and attempted cleansing",
   "sourceOrder: Follow-up investigation",
   "datePrecision: relative",
-  "chronologyNote: Placed after DA-001 according to the approximate order of the source investigations and transcripts; the exact interval is fictionalized or withheld.",
+  "chronologyNote: Placed after DA-001 in the relative archive chronology; the exact interval remains unresolved.",
   "follows:",
   "  - collection: stories",
   "    slug: da-001-after-the-main-fan-stops",

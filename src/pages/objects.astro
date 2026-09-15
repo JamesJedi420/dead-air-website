@@ -8,12 +8,12 @@ const objects = sortEntries((await getCollection("objects")).filter(isPublished)
 const entries = objects.map((entry) => normalizeEntry("objects", entry));
 ---
 
-<SiteLayout title="Objects" description="Public object records in The Dead Air Archive.">
+<SiteLayout title="Objects" description="Object records in The Dead Air Archive.">
   <section class="section">
     <div class="section-header">
       <p class="eyebrow">Objects</p>
       <h1>Objects</h1>
-      <p>Objects track artifacts, custody notes, evidence type, and narrative appearances.</p>
+      <p>Object records track artifacts, custody notes, evidence type, and appearances across the archive.</p>
     </div>
     <ArchiveBrowser entries={entries} emptyMessage="No public object records have been opened yet." />
   </section>
