@@ -4,6 +4,7 @@ import { render } from "astro:content";
 import ArchiveEntryPage from "../../components/ArchiveEntryPage.astro";
 import ResponsiveStoryImage from "../../components/ResponsiveStoryImage.astro";
 import StoryHero from "../../components/StoryHero.astro";
+import StoryReaderTools from "../../components/StoryReaderTools.astro";
 import StorySourceNote from "../../components/StorySourceNote.astro";
 import SiteLayout from "../../layouts/SiteLayout.astro";
 import { getEntryStaticPaths } from "../../lib/loadArchive";
@@ -80,8 +81,11 @@ const responsiveHero = Boolean(storyEntry.data.coverImage && storyEntry.data.key
         />
       </figure>
     ) : null}
+    <StoryReaderTools title={storyEntry.data.title} sharingEnabled={!storyEntry.data.previewOnly} />
     <StorySourceNote />
-    <Content />
+    <div data-story-body>
+      <Content />
+    </div>
   </ArchiveEntryPage>
 </SiteLayout>
 
