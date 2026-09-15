@@ -36,7 +36,7 @@ Before approval, perform both checks:
 
 No public page should function as a visible copy of the project handbook. Public archive voice and internal production voice remain separate even when they discuss the same subject.
 
-The rendered-output validator is a backstop for known internal-policy markers on non-story public surfaces. It does not replace the reader-value and role cold read. A failure blocks release verification until the wording is removed, relocated, or rewritten for readers.
+The rendered-output validator is a backstop for known internal-policy markers across every rendered public HTML surface. It does not replace the reader-value and role cold read. A failure blocks release verification until the wording is removed, relocated, or rewritten for readers.
 
 ## RSS implementation rule
 
