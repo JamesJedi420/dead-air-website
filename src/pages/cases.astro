@@ -8,12 +8,12 @@ const cases = sortEntries((await getCollection("cases")).filter(isPublished));
 const entries = cases.map((entry) => normalizeEntry("cases", entry));
 ---
 
-<SiteLayout title="Cases" description="Public paranormal case records in The Dead Air Archive.">
+<SiteLayout title="Cases" description="Case records in The Dead Air Archive.">
   <section class="section">
     <div class="section-header">
       <p class="eyebrow">Cases</p>
       <h1>Cases</h1>
-      <p>Public case records will be indexed by code, status, location, and provenance.</p>
+      <p>Browse case files by code, status, location, and provenance.</p>
     </div>
     <ArchiveBrowser entries={entries} emptyMessage="No public case files have been opened yet." />
   </section>
