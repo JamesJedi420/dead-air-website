@@ -1,0 +1,342 @@
+---
+interface Props {
+  title: string;
+  sharingEnabled?: boolean;
+}
+
+const { title, sharingEnabled = true } = Astro.props;
+---
+
+<div
+  class="story-reader-tools"
+  data-story-reader-tools
+  data-story-title={title}
+  data-share-enabled={sharingEnabled ? "true" : "false"}
+>
+  <div class="story-reader-tools__copy">
+    <p class="eyebrow">Reading</p>
+    <p class="story-reader-tools__status" data-reader-status>
+      Your place is saved on this device as you read.
+    </p>
+  </div>
+  <div class="story-reader-tools__actions" aria-label="Story reading tools">
+    <button class="reader-tool-button" type="button" data-resume-story hidden>
+      Continue reading
+    </button>
+    <button class="reader-tool-button reader-tool-button--quiet" type="button" data-start-over hidden>
+      Start over
+    </button>
+    {sharingEnabled && (
+      <button class="reader-tool-button" type="button" data-share-story>
+        Share story
+      </button>
+    )}
+  </div>
+  <p class="story-reader-tools__live" data-reader-live aria-live="polite" aria-atomic="true"></p>
+</div>
+
+<script is:inline>
+  (() => {
+    const initializeReaderTools = () => {
+      const root = document.querySelector("[data-story-reader-tools]");
+      const storyBody = document.querySelector("[data-story-body]");
+      if (!(root instanceof HTMLElement) || !(storyBody instanceof HTMLElement)) return;
+
+      const resumeButton = root.querySelector("[data-resume-story]");
+      const startOverButton = root.querySelector("[data-start-over]");
+      const shareButton = root.querySelector("[data-share-story]");
+      const status = root.querySelector("[data-reader-status]");
+      const live = root.querySelector("[data-reader-live]");
+      const storyTitle = root.dataset.storyTitle || document.title;
+      const storageKey = `dead-air:reading-progress:v1:${location.pathname}`;
+      const minimumResume = 0.08;
+      const completionThreshold = 0.96;
+      const maxAgeMs = 1000 * 60 * 60 * 24 * 180;
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      let hasEnteredStory = false;
+      let saveFrame = 0;
+      let storageAvailable = true;
+
+      try {
+        const testKey = "dead-air:reading-progress:storage-test";
+        localStorage.setItem(testKey, "1");
+        localStorage.removeItem(testKey);
+      } catch {
+        storageAvailable = false;
+        if (status instanceof HTMLElement) {
+          status.textContent = "Reading position is not stored in this browser.";
+        }
+      }
+
+      const announce = (message) => {
+        if (live instanceof HTMLElement) live.textContent = message;
+      };
+
+      const getStoredProgress = () => {
+        if (!storageAvailable) return null;
+        try {
+          const raw = localStorage.getItem(storageKey);
+          if (!raw) return null;
+          const saved = JSON.parse(raw);
+          if (
+            !saved ||
+            typeof saved !== "object" ||
+            Array.isArray(saved) ||
+            typeof saved.progress !== "number" ||
+            typeof saved.updatedAt !== "number" ||
+            !Number.isFinite(saved.progress) ||
+            !Number.isFinite(saved.updatedAt) ||
+            Date.now() - saved.updatedAt > maxAgeMs
+          ) {
+            localStorage.removeItem(storageKey);
+            return null;
+          }
+          return Math.min(1, Math.max(0, saved.progress));
+        } catch {
+          return null;
+        }
+      };
+
+      const clearStoredProgress = () => {
+        if (!storageAvailable) return;
+        try {
+          localStorage.removeItem(storageKey);
+        } catch {
+          storageAvailable = false;
+        }
+      };
+
+      const getStoryBounds = () => {
+        const rect = storyBody.getBoundingClientRect();
+        const start = window.scrollY + rect.top;
+        const viewportAllowance = Math.min(window.innerHeight * 0.58, 480);
+        const end = Math.max(start + 1, start + rect.height - viewportAllowance);
+        return { start, end };
+      };
+
+      const progressForScroll = () => {
+        const { start, end } = getStoryBounds();
+        if (end <= start) return 0;
+        return Math.min(1, Math.max(0, (window.scrollY - start) / (end - start)));
+      };
+
+      const scrollForProgress = (progress) => {
+        const { start, end } = getStoryBounds();
+        return start + progress * Math.max(1, end - start);
+      };
+
+      const hideResumeActions = () => {
+        if (resumeButton instanceof HTMLButtonElement) resumeButton.hidden = true;
+        if (startOverButton instanceof HTMLButtonElement) startOverButton.hidden = true;
+      };
+
+      const showSavedProgress = (progress) => {
+        const percent = Math.max(1, Math.min(95, Math.round(progress * 100)));
+        if (resumeButton instanceof HTMLButtonElement) {
+          resumeButton.hidden = false;
+          resumeButton.textContent = `Continue from ${percent}%`;
+        }
+        if (startOverButton instanceof HTMLButtonElement) startOverButton.hidden = false;
+        if (status instanceof HTMLElement) status.textContent = "A reading position is saved on this device.";
+      };
+
+      const initialProgress = getStoredProgress();
+      if (initialProgress !== null && initialProgress >= minimumResume && initialProgress < completionThreshold) {
+        showSavedProgress(initialProgress);
+      }
+
+      if (resumeButton instanceof HTMLButtonElement) {
+        resumeButton.addEventListener("click", () => {
+          const saved = getStoredProgress();
+          if (saved === null || saved < minimumResume || saved >= completionThreshold) {
+            hideResumeActions();
+            announce("No saved reading position is available.");
+            return;
+          }
+          hasEnteredStory = true;
+          window.scrollTo({
+            top: scrollForProgress(saved),
+            behavior: reduceMotion ? "auto" : "smooth",
+          });
+          announce(`Continuing from ${Math.round(saved * 100)} percent.`);
+        });
+      }
+
+      if (startOverButton instanceof HTMLButtonElement) {
+        startOverButton.addEventListener("click", () => {
+          clearStoredProgress();
+          hideResumeActions();
+          hasEnteredStory = true;
+          const { start } = getStoryBounds();
+          window.scrollTo({ top: start, behavior: reduceMotion ? "auto" : "smooth" });
+          if (status instanceof HTMLElement) {
+            status.textContent = storageAvailable
+              ? "Reading position reset. Your place will be saved as you continue."
+              : "Reading position is not stored in this browser.";
+          }
+          announce("Reading position reset.");
+        });
+      }
+
+      const canonicalUrl = () => {
+        const canonical = document.querySelector('link[rel="canonical"]');
+        return canonical instanceof HTMLLinkElement ? canonical.href : `${location.origin}${location.pathname}`;
+      };
+
+      const copyLink = async (url) => {
+        try {
+          await navigator.clipboard.writeText(url);
+          return true;
+        } catch {
+          const textarea = document.createElement("textarea");
+          textarea.value = url;
+          textarea.setAttribute("readonly", "");
+          textarea.style.position = "fixed";
+          textarea.style.opacity = "0";
+          document.body.append(textarea);
+          textarea.select();
+          const copied = document.execCommand("copy");
+          textarea.remove();
+          return copied;
+        }
+      };
+
+      if (shareButton instanceof HTMLButtonElement) {
+        shareButton.addEventListener("click", async () => {
+          const url = canonicalUrl();
+          if (typeof navigator.share === "function") {
+            try {
+              await navigator.share({ title: storyTitle, url });
+              announce("Share options opened.");
+              return;
+            } catch (error) {
+              if (error instanceof DOMException && error.name === "AbortError") return;
+            }
+          }
+          const copied = await copyLink(url);
+          announce(copied ? "Story link copied." : "Unable to copy the story link automatically.");
+        });
+      }
+
+      const saveProgress = () => {
+        if (!storageAvailable) return;
+        const { start } = getStoryBounds();
+        if (!hasEnteredStory && window.scrollY >= start - 16) hasEnteredStory = true;
+        if (!hasEnteredStory) return;
+
+        const progress = progressForScroll();
+        if (progress >= completionThreshold) {
+          clearStoredProgress();
+          hideResumeActions();
+          if (status instanceof HTMLElement) status.textContent = "You are near the end of this story.";
+          return;
+        }
+        if (progress < minimumResume) return;
+
+        try {
+          localStorage.setItem(storageKey, JSON.stringify({ progress, updatedAt: Date.now() }));
+        } catch {
+          storageAvailable = false;
+          if (status instanceof HTMLElement) status.textContent = "Reading position is not stored in this browser.";
+        }
+      };
+
+      window.addEventListener("scroll", () => {
+        if (saveFrame) return;
+        saveFrame = window.requestAnimationFrame(() => {
+          saveFrame = 0;
+          saveProgress();
+        });
+      }, { passive: true });
+
+      window.addEventListener("pagehide", () => {
+        if (saveFrame) {
+          window.cancelAnimationFrame(saveFrame);
+          saveFrame = 0;
+        }
+        saveProgress();
+      });
+    };
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initializeReaderTools, { once: true });
+    } else {
+      initializeReaderTools();
+    }
+  })();
+</script>
+
+<style>
+  .story-reader-tools {
+    align-items: center;
+    background: rgba(18, 17, 15, 0.72);
+    border: 1px solid var(--color-line);
+    border-left: 2px solid var(--color-brass-dark);
+    display: grid;
+    gap: 0.85rem 1rem;
+    grid-template-columns: minmax(0, 1fr) auto;
+    margin: 0 0 1.5rem;
+    padding: 0.9rem 1rem;
+  }
+
+  .story-reader-tools .eyebrow {
+    margin-bottom: 0.2rem;
+  }
+
+  .story-reader-tools__status,
+  .story-reader-tools__live {
+    color: var(--color-dim);
+    font-size: 0.82rem;
+    margin: 0;
+  }
+
+  .story-reader-tools__actions {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: flex-end;
+  }
+
+  .reader-tool-button {
+    background: transparent;
+    border: 1px solid var(--color-brass-dark);
+    border-radius: 4px;
+    color: var(--color-text);
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.82rem;
+    font-weight: 700;
+    min-height: 2.35rem;
+    padding: 0.45rem 0.7rem;
+  }
+
+  .reader-tool-button:hover {
+    background: rgba(176, 141, 74, 0.1);
+    border-color: var(--color-brass);
+  }
+
+  .reader-tool-button--quiet {
+    border-color: var(--color-line);
+    color: var(--color-muted);
+  }
+
+  .story-reader-tools__live:empty {
+    display: none;
+  }
+
+  [hidden] {
+    display: none !important;
+  }
+
+  @media (max-width: 620px) {
+    .story-reader-tools {
+      align-items: stretch;
+      grid-template-columns: 1fr;
+    }
+
+    .story-reader-tools__actions {
+      justify-content: flex-start;
+    }
+  }
+</style>
