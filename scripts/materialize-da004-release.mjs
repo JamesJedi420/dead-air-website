@@ -20,8 +20,8 @@ const closingFingerprint = "Neither of them named what had made the rhythm.";
 const expectedSceneTitles = ["Arrival","Public Ghosts","Employee Passage","One, Then Two","Source Hunt","The Chair / The Lie","Control Test","Martin Follows","The New Sequence","Raw Audio"];
 
 const assets = {
-  coverImage: "https://res.cloudinary.com/szvtq9d8/image/upload/v1789453458/dead-air/da-004/publication/da004_art001_v2_2_16x9_1600x900.webp",
-  keyArtImage: "https://res.cloudinary.com/szvtq9d8/image/upload/v1789453465/dead-air/da-004/publication/da004_art001_v2_2_2x3_1024x1536.webp",
+  coverImage: "https://res.cloudinary.com/szvtq9d8/image/upload/v1789455274/dead-air/da-004/publication/da004_art001_v2_3_16x9_1600x900.webp",
+  keyArtImage: "https://res.cloudinary.com/szvtq9d8/image/upload/v1789455282/dead-air/da-004/publication/da004_art001_v2_3_2x3_1024x1536.webp",
   cardImage: "https://res.cloudinary.com/szvtq9d8/image/upload/v1789370665/dead-air/da-004/publication/da004_art001_v2_1_3x2_1536x1024.webp",
   squareImage: "https://res.cloudinary.com/szvtq9d8/image/upload/v1789370677/dead-air/da-004/publication/da004_art001_v2_1_1x1_1254x1254.webp",
   ogImage: "https://res.cloudinary.com/szvtq9d8/image/upload/v1789370687/dead-air/da-004/publication/da004_art001_v2_1_og_1200x630.webp",
