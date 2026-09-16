@@ -128,6 +128,7 @@ const synchronizations = {
 };
 
 let synchronizationCount = 0;
+const synchronizationMismatches = [];
 
 for (const [relativePath, fileSynchronizations] of Object.entries(synchronizations)) {
   const absolutePath = path.join(root, relativePath);
@@ -144,9 +145,10 @@ for (const [relativePath, fileSynchronizations] of Object.entries(synchronizatio
     const expected = synchronization.expected ?? 1;
     const occurrences = text.split(synchronization.before).length - 1;
     if (occurrences !== expected) {
-      throw new Error(
+      synchronizationMismatches.push(
         `${relativePath}: expected ${expected} approved-manuscript synchronization target(s) ${JSON.stringify(synchronization.before)}, found ${occurrences}.`,
       );
+      continue;
     }
     text = text.split(synchronization.before).join(synchronization.after);
     synchronizationCount += occurrences;
@@ -159,6 +161,12 @@ for (const [relativePath, fileSynchronizations] of Object.entries(synchronizatio
       `Failed to write ${relativePath}: ${error instanceof Error ? error.message : String(error)}.`,
     );
   }
+}
+
+if (synchronizationMismatches.length > 0) {
+  throw new Error(
+    `Approved-manuscript synchronization preflight found ${synchronizationMismatches.length} mismatch(es):\n${synchronizationMismatches.join("\n")}`,
+  );
 }
 
 console.log(
