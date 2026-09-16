@@ -49,20 +49,27 @@ const assertNoHorizontalOverflow = async (page, label) => {
 const verifyHeadMetadata = async (page) => {
   assert.equal(await page.title(), siteTitle);
   assert.equal(await page.locator('meta[name="description"]').getAttribute("content"), summary);
-  assert.equal(await page.locator('meta[name="robots"]').getAttribute("content"), "noindex,nofollow,noarchive");
+  const robots = page.locator('meta[name="robots"]');
+  if ((await robots.count()) > 0) {
+    const robotsContent = (await robots.first().getAttribute("content")) ?? "";
+    assert(!/noindex/i.test(robotsContent), "DA-003 published-page correction preview unexpectedly carries a noindex robots directive.");
+  }
   assert.equal(await page.locator('meta[property="og:title"]').getAttribute("content"), siteTitle);
   assert.equal(await page.locator('meta[property="og:description"]').getAttribute("content"), summary);
   assert.match(
     (await page.locator('meta[property="og:image"]').getAttribute("content")) ?? "",
     /da-003-cover-option-a-evidence-crop-preview\.jpg/,
   );
-  const structuredData = await page.locator('script[type="application/ld+json"]').textContent();
-  assert(structuredData?.includes('"@type":"ShortStory"'), "DA-003 ShortStory structured data is missing.");
+  const structuredDataBlocks = await page.locator('script[type="application/ld+json"]').allTextContents();
+  assert(
+    structuredDataBlocks.some((content) => content.includes('"@type":"ShortStory"')),
+    "DA-003 ShortStory structured data is missing.",
+  );
 };
 
 const verifyStoryPage = async (page, label) => {
   await page.getByRole("heading", { name: title, exact: true }).waitFor();
-  await page.getByText("Final Approved Story v9", { exact: false }).waitFor();
+  await page.getByText("Final Approved Story v12", { exact: false }).waitFor();
   await page.getByText(sourceNote, { exact: true }).waitFor();
   await verifyHeadMetadata(page);
 
@@ -141,7 +148,7 @@ try {
   await verifyTimelineNeutrality(mobilePage);
 
   console.log(
-    "DA-003 private-preview rendered proof PASS: Stories card title/subtitle, story metadata, noindex controls, approved cover derivative, source note, nine ordered sections, chronology neutrality, desktop/iPhone layouts, and horizontal-overflow checks verified.",
+    "DA-003 v12 correction rendered proof PASS: Stories card title/subtitle, story metadata, approved cover derivative, source note, nine ordered sections, chronology neutrality, desktop/iPhone layouts, and horizontal-overflow checks verified.",
   );
 } finally {
   await mobileContext?.close();
