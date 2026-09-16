@@ -62,7 +62,7 @@ const verifyHeadMetadata = async (page) => {
 
 const verifyStoryPage = async (page, label) => {
   await page.getByRole("heading", { name: title, exact: true }).waitFor();
-  await page.getByText("Final Approved Story v9", { exact: false }).waitFor();
+  await page.getByText("Final Approved Story v12", { exact: false }).waitFor();
   await page.getByText(sourceNote, { exact: true }).waitFor();
   await verifyHeadMetadata(page);
 
@@ -141,7 +141,7 @@ try {
   await verifyTimelineNeutrality(mobilePage);
 
   console.log(
-    "DA-003 private-preview rendered proof PASS: Stories card title/subtitle, story metadata, noindex controls, approved cover derivative, source note, nine ordered sections, chronology neutrality, desktop/iPhone layouts, and horizontal-overflow checks verified.",
+    "DA-003 v12 correction rendered proof PASS: Stories card title/subtitle, story metadata, approved cover derivative, source note, nine ordered sections, chronology neutrality, desktop/iPhone layouts, and horizontal-overflow checks verified.",
   );
 } finally {
   await mobileContext?.close();
