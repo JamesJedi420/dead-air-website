@@ -60,8 +60,11 @@ const verifyHeadMetadata = async (page) => {
     (await page.locator('meta[property="og:image"]').getAttribute("content")) ?? "",
     /da-003-cover-option-a-evidence-crop-preview\.jpg/,
   );
-  const structuredData = await page.locator('script[type="application/ld+json"]').textContent();
-  assert(structuredData?.includes('"@type":"ShortStory"'), "DA-003 ShortStory structured data is missing.");
+  const structuredDataBlocks = await page.locator('script[type="application/ld+json"]').allTextContents();
+  assert(
+    structuredDataBlocks.some((content) => content.includes('"@type":"ShortStory"')),
+    "DA-003 ShortStory structured data is missing.",
+  );
 };
 
 const verifyStoryPage = async (page, label) => {
