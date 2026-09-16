@@ -6,5 +6,12 @@ const site = process.env.PUBLIC_SITE_URL ?? "https://readdeadair.com";
 export default defineConfig({
   site,
   output: "static",
-  integrations: [sitemap({ filter: (page) => !page.includes("/preview/") })],
+  integrations: [
+    sitemap({
+      filter: (page) =>
+        !page.includes("/preview/") &&
+        !page.includes("/subscribe/thanks/") &&
+        !page.includes("/subscribe/already-subscribed/"),
+    }),
+  ],
 });
