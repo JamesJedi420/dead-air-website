@@ -74,25 +74,18 @@ await writeFile(mobileAssetPath, mobileBytes);
 const canonicalFragments = await Promise.all(
   canonicalFragmentFiles.map((fileName) => readFile(path.join(sourceDirectory, fileName), "utf8")),
 );
-const trimmedFragments = canonicalFragments.map((fragment) => fragment.trimEnd());
-const assemblyCandidates = [
-  { label: "literal-concatenation", text: canonicalFragments.join("") },
-  { label: "trimmed-double-newline", text: trimmedFragments.join("\n\n") },
-  { label: "trimmed-double-newline-terminal", text: `${trimmedFragments.join("\n\n")}\n` },
-  { label: "trimmed-triple-newline", text: trimmedFragments.join("\n\n\n") },
-  { label: "trimmed-triple-newline-terminal", text: `${trimmedFragments.join("\n\n\n")}\n` },
-];
-const resolvedAssembly = assemblyCandidates.find(
-  (candidate) => sha256(Buffer.from(candidate.text, "utf8")) === sourceLock.canonicalSourceSha256,
-);
-if (!resolvedAssembly) {
-  const observed = assemblyCandidates
-    .map((candidate) => `${candidate.label}=${sha256(Buffer.from(candidate.text, "utf8"))}`)
-    .join(", ");
-  throw new Error(`DA-004 approved-source assembly does not reproduce locked hash ${sourceLock.canonicalSourceSha256}. Observed: ${observed}.`);
-}
-const canonicalSource = resolvedAssembly.text;
+// This exactly reproduces the source-lock canonicalization used for the authoritative
+// Google Doc export: trim every exported line, drop blank lines, separate retained
+// paragraphs/headings by one blank line, and retain one terminal newline.
+const canonicalLines = canonicalFragments
+  .flatMap((fragment) => fragment.split(/\r?\n/))
+  .map((line) => line.trim())
+  .filter(Boolean);
+const canonicalSource = `${canonicalLines.join("\n\n")}\n`;
 const canonicalSourceSha256 = sha256(Buffer.from(canonicalSource, "utf8"));
+if (canonicalSourceSha256 !== sourceLock.canonicalSourceSha256) {
+  throw new Error(`DA-004 approved-source hash drift: expected ${sourceLock.canonicalSourceSha256}, received ${canonicalSourceSha256}.`);
+}
 if (/DA-004 — Final Approved Story|REVISION STATUS:/m.test(canonicalSource)) throw new Error("DA-004 canonical fragments contain document-level preamble material.");
 
 const headingPattern = /^Scene (\d{2}) — (.+)$/gm;
@@ -112,4 +105,4 @@ const frontmatter = `---\nslug: da-004-close-enough-to-recognize\ntitle: Close E
 
 await mkdir(path.dirname(outputPath), { recursive: true });
 await writeFile(outputPath, `${frontmatter}${body}`, "utf8");
-console.log(`DA-004 v1.10 corrective edition materialized from authoritative source lock ${canonicalSourceSha256} using ${resolvedAssembly.label}; v3.0 responsive release art preserved; publicationDate=${publicationDate}; correctionPublicationAuthorized=false.`);
+console.log(`DA-004 v1.10 corrective edition materialized from authoritative source lock ${canonicalSourceSha256}; v3.0 responsive release art preserved; publicationDate=${publicationDate}; correctionPublicationAuthorized=false.`);
