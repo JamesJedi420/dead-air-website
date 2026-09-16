@@ -41,8 +41,8 @@ const synchronizations = {
   ],
   "src/content/stories/da-001-after-the-main-fan-stops.md": [
     {
-      before: "revision: Final Approved Story v20",
-      after: "revision: Final Approved Story v22",
+      before: "revision: \"Final Approved Story v20\"",
+      after: "revision: \"Final Approved Story v22\"",
     },
     {
       before: "That made her useful to every version of the evening and loyal to none of them.",
