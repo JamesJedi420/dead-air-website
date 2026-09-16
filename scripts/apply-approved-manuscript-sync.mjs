@@ -45,7 +45,14 @@ let synchronizationCount = 0;
 
 for (const [relativePath, fileSynchronizations] of Object.entries(synchronizations)) {
   const absolutePath = path.join(root, relativePath);
-  let text = await readFile(absolutePath, "utf8");
+  let text;
+  try {
+    text = await readFile(absolutePath, "utf8");
+  } catch (error) {
+    throw new Error(
+      `Failed to read ${relativePath}: ${error instanceof Error ? error.message : String(error)}.`,
+    );
+  }
 
   for (const synchronization of fileSynchronizations) {
     const expected = synchronization.expected ?? 1;
@@ -59,7 +66,13 @@ for (const [relativePath, fileSynchronizations] of Object.entries(synchronizatio
     synchronizationCount += occurrences;
   }
 
-  await writeFile(absolutePath, text, "utf8");
+  try {
+    await writeFile(absolutePath, text, "utf8");
+  } catch (error) {
+    throw new Error(
+      `Failed to write ${relativePath}: ${error instanceof Error ? error.message : String(error)}.`,
+    );
+  }
 }
 
 console.log(
