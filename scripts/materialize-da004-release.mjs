@@ -2,7 +2,6 @@ import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
-import { gunzipSync } from "node:zlib";
 
 const root = process.cwd();
 const sourceDirectory = path.join(root, "src", "manuscripts", "da-004");
@@ -25,7 +24,7 @@ const approvedAlt = "An empty, warmly lit hotel corridor leads to a closed dark 
 const openingFingerprint = "By the time Eli turned the camera on, rain had sheeted across the Kestrel’s front drive hard enough to turn the headlights of arriving cars into white smears on the pavement.";
 const closingFingerprint = "Neither of them named what had made the rhythm.";
 const expectedSceneTitles = ["Arrival","Public Ghosts","Employee Passage","One, Then Two","Source Hunt","The Chair / The Lie","Control Test","Martin Follows","The New Sequence","Raw Audio"];
-const canonicalSnapshotPath = path.join(root, sourceLock.canonicalSnapshotPath ?? "");
+const canonicalFragmentFiles = Array.from({ length: 10 }, (_value, index) => `part-${String(index + 1).padStart(2, "0")}.mdfrag`);
 
 const assets = {
   coverImage: `/assets/da-004/${desktopAssetFilename}`,
@@ -42,8 +41,9 @@ for (const [field, actual, expected] of [
   ["approvedRevision", sourceLock.approvedRevision, approvedRevision],
   ["authoritativeGoogleDocId", sourceLock.authoritativeGoogleDocId, sourceGoogleDocId],
   ["authoritativeGoogleDocRevisionId", sourceLock.authoritativeGoogleDocRevisionId, sourceGoogleDocRevisionId],
-  ["sourceSnapshotFormat", sourceLock.sourceSnapshotFormat, "gzip-utf8-canonical-scenes"],
+  ["sourceSnapshotFormat", sourceLock.sourceSnapshotFormat, "utf8-canonical-scene-fragments"],
   ["sceneCount", sourceLock.sceneCount, 10],
+  ["canonicalFragmentCount", sourceLock.canonicalFragmentCount, 10],
   ["lockStatus", sourceLock.lockStatus, "IMMUTABLE_APPROVED_SOURCE"],
   ["publicationDate", sourceLock.publicationDate, publicationDate],
   ["publicPredecessorRevision", sourceLock.publicPredecessorRevision, "Final Approved Story v1.7"],
@@ -71,13 +71,13 @@ await mkdir(publicAssetDirectory, { recursive: true });
 await writeFile(desktopAssetPath, desktopBytes);
 await writeFile(mobileAssetPath, mobileBytes);
 
-const snapshotBytes = await readFile(canonicalSnapshotPath);
-const snapshotSha256 = sha256(snapshotBytes);
-if (snapshotSha256 !== sourceLock.canonicalSnapshotSha256) throw new Error(`DA-004 canonical snapshot hash drift: ${snapshotSha256}.`);
-const canonicalSource = gunzipSync(snapshotBytes).toString("utf8");
+const canonicalFragments = await Promise.all(
+  canonicalFragmentFiles.map((fileName) => readFile(path.join(sourceDirectory, fileName), "utf8")),
+);
+const canonicalSource = canonicalFragments.join("");
 const canonicalSourceSha256 = sha256(Buffer.from(canonicalSource, "utf8"));
 if (canonicalSourceSha256 !== sourceLock.canonicalSourceSha256) throw new Error(`DA-004 approved-source hash drift: ${canonicalSourceSha256}.`);
-if (/DA-004 — Final Approved Story|REVISION STATUS:/m.test(canonicalSource)) throw new Error("DA-004 canonical snapshot contains document-level preamble material.");
+if (/DA-004 — Final Approved Story|REVISION STATUS:/m.test(canonicalSource)) throw new Error("DA-004 canonical fragments contain document-level preamble material.");
 
 const headingPattern = /^Scene (\d{2}) — (.+)$/gm;
 const headings = [...canonicalSource.matchAll(headingPattern)];
