@@ -2,6 +2,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 import { spe2893Manifest } from "./spe2893-approved-delta-manifest.mjs";
+import { spe2893UpstreamRebases } from "./spe2893-upstream-rebases.mjs";
 
 const root = process.cwd();
 const diagnosticDirectory = path.join(root, "artifacts");
@@ -17,7 +18,8 @@ for (const [relativePath, record] of Object.entries(spe2893Manifest)) {
 
   for (const [repairIndex, repair] of record.repairs.entries()) {
     const expected = repair.expected ?? 1;
-    const occurrences = text.split(repair.before).length - 1;
+    const currentBefore = spe2893UpstreamRebases.get(repair.before) ?? repair.before;
+    const occurrences = text.split(currentBefore).length - 1;
 
     if (occurrences !== expected) {
       issues.push({
@@ -26,12 +28,13 @@ for (const [relativePath, record] of Object.entries(spe2893Manifest)) {
         repairIndex,
         expected,
         occurrences,
-        before: repair.before,
+        candidateBefore: repair.before,
+        currentBefore,
       });
       continue;
     }
 
-    text = text.split(repair.before).join(repair.after);
+    text = text.split(currentBefore).join(repair.after);
     repairCount += occurrences;
   }
 
