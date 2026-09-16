@@ -39,6 +39,48 @@ const synchronizations = {
       after: "“I want to record the correction first.”\n\nDiane looked at her.\n\nAbby had brought a spiral notebook",
     },
   ],
+  "src/content/stories/da-001-after-the-main-fan-stops.md": [
+    {
+      before: "revision: Final Approved Story v20",
+      after: "revision: Final Approved Story v22",
+    },
+    {
+      before: "That made her useful to every version of the evening and loyal to none of them.",
+      after: "",
+    },
+    {
+      before: "“Continuous footage of us,” Diane said. “The lobby, the stairs, and this room are all outside the frame.”",
+      after: "“Continuous footage of us,” Diane said. “Not the lobby. Not the stairs. Not this room.”",
+    },
+    {
+      before: "He disliked the distinction because he understood it.",
+      after: "",
+    },
+    {
+      before: "Ron’s face hardened. “I gave you an interview. Leave it there.”",
+      after: "Ron’s face hardened. “My account was an interview, not an invitation.”",
+    },
+    {
+      before: "He had already imagined the opposite.",
+      after: "",
+    },
+    {
+      before: "Abby used her name carefully, as if speaking it did not grant access to the room Diane kept separate.",
+      after: "",
+    },
+    {
+      before: "Diane heard him connect her to the line under the door before he said a word.",
+      after: "",
+    },
+    {
+      before: "Ron heard the limit in Diane’s answer.",
+      after: "Diane’s answer was not a promise.\n\nRon heard the difference.",
+    },
+    {
+      before: "The sentence did not settle whether she owed him trust. It only told him where to stand.",
+      after: "",
+    },
+  ],
 };
 
 let synchronizationCount = 0;
