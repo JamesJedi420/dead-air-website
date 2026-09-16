@@ -5,14 +5,13 @@
   "authoritativeGoogleDocId": "1EUA5lOhf7AdNjeYXHOngDuZZ4MNnZW_Q2n-N-s2_zKE",
   "authoritativeGoogleDocRevisionId": "ANLCKQkmSlXuPFN7axutESKIhsFxqMcj3qtjv506QPbnUEgVJtw8Z1xOjBt5-Ao5o9XKdxtr-ch-aFIJ7sqaNQypDd9bCxtpCwSwrsrMFS8",
   "canonicalSourceSha256": "7fe01634a823fc3fcaa0f475ec92129f3b167ef9e0c2c49d23639719b91e511d",
-  "canonicalSnapshotSha256": "5642790ccd00bfefffd6a16a2b10f82008c9f67ec6e6b929b87eef90f8ed7c39",
-  "canonicalSnapshotPath": "src/manuscripts/da-004/approved-v1.10-canonical.txt.gz",
-  "sourceSnapshotFormat": "gzip-utf8-canonical-scenes",
+  "sourceSnapshotFormat": "utf8-canonical-scene-fragments",
+  "canonicalFragmentCount": 10,
   "sceneCount": 10,
   "lockStatus": "IMMUTABLE_APPROVED_SOURCE",
   "publicReleaseAuthorized": false,
   "publicationDate": "2026-09-14",
   "publicPredecessorRevision": "Final Approved Story v1.7",
   "publicPredecessorCommit": "654944b2148c97e64f2a06ad546eb910d3fb2265",
-  "notes": "Non-public corrective source lock for Final Approved Story v1.10. The canonical gzip snapshot is deterministically derived from the authoritative Google Doc export after removing document-level title/revision-status material, normalizing paragraph spacing, and converting the ten internal DA-004 scene headings to canonical Scene NN headings. The canonical source SHA-256 protects the decompressed manuscript content; the snapshot SHA-256 records the exact binary bytes stored in the repository. The prior v1.7 fragment set remains preserved in repository history as the public predecessor source. This lock authorizes preparation and validation only; it does not authorize merge or production publication."
+  "notes": "Non-public corrective source lock for Final Approved Story v1.10. The canonical source is stored as ten ordered UTF-8 scene fragments, part-01.mdfrag through part-10.mdfrag, deterministically derived from the authoritative Google Doc revision after removing document-level title/revision-status material, normalizing paragraph spacing, and converting the ten internal DA-004 scene headings to canonical Scene NN headings. The canonical source SHA-256 protects the exact concatenated manuscript content. The prior v1.7 source remains preserved in repository history as the public predecessor. This lock authorizes preparation and validation only; it does not authorize merge or production publication."
 }
