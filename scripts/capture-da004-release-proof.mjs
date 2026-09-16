@@ -27,8 +27,9 @@ const absoluteLocal = (value) => value.startsWith("/") ? new URL(value, baseUrl)
 const verify = async (page,label,isMobile) => {
   await open(page,`${baseUrl}${storyPath}`);
   assert.equal(await page.title(),`${title} | Dead Air`);
+  await page.getByText("Final Approved Story v1.10", { exact: false }).waitFor();
   assert.equal(await page.locator('meta[name="description"]').getAttribute("content"),summary);
-  assert.equal(await page.locator('meta[name="robots"]').count(),0,"Published page must not emit noindex robots metadata");
+  assert.equal(await page.locator('meta[name="robots"]').count(),0,"Published-page correction preview must not emit noindex robots metadata");
   const published = await page.locator('meta[property="article:published_time"]').getAttribute("content");
   assert(published?.startsWith("2026-09-14"),`Unexpected publication time ${published}`);
   assert.equal(await page.locator('link[rel="canonical"]').getAttribute("href"),`https://readdeadair.com${storyPath}`);
@@ -76,5 +77,5 @@ try {
   const dp=await desktop.newPage(); await verify(dp,"Desktop",false); await verifyPublicationSurfaces(dp);
   mobileContext=await browser.newContext({...devices["iPhone 13"]});
   const mp=await mobileContext.newPage(); await verify(mp,"iPhone 13",true);
-  console.log("DA-004 release proof PASS: public indexability, publication date, canonical/OG/Twitter metadata, v3.0 redraw responsive WebP art, exact alt, desktop/mobile crop, semantics, eager/high-priority hero, resource timing, archive/feed surfaces, and ten story sections verified.");
+  console.log("DA-004 v1.10 correction proof PASS: revision v1.10, public-route preview, publication date, canonical/OG/Twitter metadata, unchanged v3.0 responsive WebP art, exact alt, desktop/mobile crop, semantics, eager/high-priority hero, resource timing, archive/feed surfaces, and ten story sections verified.");
 } finally { await mobileContext?.close(); await desktop?.close(); await browser.close(); }
