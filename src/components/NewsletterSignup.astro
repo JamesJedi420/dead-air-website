@@ -1,0 +1,132 @@
+---
+interface Props {
+  id?: string;
+}
+
+const { id = "dead-air-email-updates" } = Astro.props;
+const headingId = `${id}-title`;
+---
+
+<section class="newsletter-signup" aria-labelledby={headingId} data-newsletter-signup>
+  <div class="newsletter-signup__copy">
+    <p class="eyebrow">Email Updates</p>
+    <h2 id={headingId}>Get new stories by email.</h2>
+    <p>Get an email when a new Dead Air story is published. No account required.</p>
+  </div>
+
+  <form
+    class="newsletter-signup__form"
+    method="post"
+    action="https://www.aweber.com/scripts/addlead.pl"
+    accept-charset="UTF-8"
+  >
+    <input type="hidden" name="listname" value="awlist6907601" />
+    <input type="hidden" name="redirect" value="https://readdeadair.com/subscribe/thanks/" />
+    <input type="hidden" name="meta_redirect_onlist" value="https://readdeadair.com/subscribe/already-subscribed/" />
+    <input type="hidden" name="meta_required" value="email" />
+    <input type="hidden" name="meta_adtracking" value="Dead Air Website" />
+    <input type="hidden" name="meta_tags" value="dead-air,release-updates" />
+
+    <label>
+      Name <span class="newsletter-signup__optional">(optional)</span>
+      <input type="text" name="name" autocomplete="name" />
+    </label>
+    <label>
+      Email address
+      <input type="email" name="email" autocomplete="email" inputmode="email" required />
+    </label>
+    <button type="submit">Get story updates</button>
+  </form>
+
+  <p class="newsletter-signup__privacy">
+    Release emails only. Unsubscribe at any time. <a href="/privacy/">Privacy</a>.
+  </p>
+</section>
+
+<style>
+  .newsletter-signup {
+    background: linear-gradient(180deg, rgba(176, 141, 74, 0.06), rgba(255, 255, 255, 0.012));
+    border: 1px solid var(--color-line);
+    border-left: 2px solid var(--color-brass-dark);
+    display: grid;
+    gap: 1.25rem 2rem;
+    grid-template-columns: minmax(0, 0.9fr) minmax(18rem, 1.1fr);
+    margin: 2.5rem 0;
+    max-width: 58rem;
+    padding: clamp(1.25rem, 3vw, 1.75rem);
+  }
+
+  .newsletter-signup__copy h2 {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    margin-bottom: 0.65rem;
+  }
+
+  .newsletter-signup__copy p:not(.eyebrow),
+  .newsletter-signup__privacy {
+    color: var(--color-muted);
+  }
+
+  .newsletter-signup__form {
+    align-content: start;
+    display: grid;
+    gap: 0.85rem;
+  }
+
+  .newsletter-signup__form label {
+    color: var(--color-muted);
+    display: grid;
+    font-size: 0.9rem;
+    gap: 0.35rem;
+  }
+
+  .newsletter-signup__optional {
+    color: var(--color-dim);
+    font-size: 0.78rem;
+    font-weight: 400;
+  }
+
+  .newsletter-signup__form input {
+    background: var(--color-panel);
+    border: 1px solid var(--color-line);
+    border-radius: 3px;
+    color: var(--color-text);
+    font: inherit;
+    min-height: 44px;
+    padding: 0.65rem 0.75rem;
+    width: 100%;
+  }
+
+  .newsletter-signup__form input:focus-visible,
+  .newsletter-signup__form button:focus-visible {
+    outline: 2px solid var(--color-brass);
+    outline-offset: 2px;
+  }
+
+  .newsletter-signup__form button {
+    background: var(--color-brass);
+    border: 0;
+    border-radius: 4px;
+    color: var(--color-ink);
+    cursor: pointer;
+    font: inherit;
+    font-weight: 700;
+    min-height: 44px;
+    padding: 0.7rem 1rem;
+  }
+
+  .newsletter-signup__form button:hover {
+    filter: brightness(1.12);
+  }
+
+  .newsletter-signup__privacy {
+    font-size: 0.78rem;
+    grid-column: 1 / -1;
+    margin: 0;
+  }
+
+  @media (max-width: 700px) {
+    .newsletter-signup {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
