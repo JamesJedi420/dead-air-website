@@ -49,7 +49,11 @@ const assertNoHorizontalOverflow = async (page, label) => {
 const verifyHeadMetadata = async (page) => {
   assert.equal(await page.title(), siteTitle);
   assert.equal(await page.locator('meta[name="description"]').getAttribute("content"), summary);
-  assert.equal(await page.locator('meta[name="robots"]').getAttribute("content"), "noindex,nofollow,noarchive");
+  const robots = page.locator('meta[name="robots"]');
+  if ((await robots.count()) > 0) {
+    const robotsContent = (await robots.first().getAttribute("content")) ?? "";
+    assert(!/noindex/i.test(robotsContent), "DA-003 published-page correction preview unexpectedly carries a noindex robots directive.");
+  }
   assert.equal(await page.locator('meta[property="og:title"]').getAttribute("content"), siteTitle);
   assert.equal(await page.locator('meta[property="og:description"]').getAttribute("content"), summary);
   assert.match(
