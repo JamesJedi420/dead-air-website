@@ -35,8 +35,8 @@ const synchronizations = {
       after: "The card trembled once between her fingers. She steadied it against her palm.",
     },
     {
-      before: "“I want to record the correction first.”\n\nAbby had brought a spiral notebook, adhesive evidence labels, two empty memory cards in separate plastic sleeves, and a small digital recorder with the serial number written on blue tape across its back.",
-      after: "“I want to record the correction first.”\n\nDiane looked at her.\n\nAbby had brought a spiral notebook, adhesive evidence labels, two empty memory cards in separate plastic sleeves, and a small digital recorder with the serial number written on blue tape across its back.",
+      before: "“I want to record the correction first.”\n\nAbby had brought a spiral notebook",
+      after: "“I want to record the correction first.”\n\nDiane looked at her.\n\nAbby had brought a spiral notebook",
     },
   ],
 };
