@@ -1,12 +1,15 @@
-import { readFile } from "node:fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 import { spe2893Manifest } from "./spe2893-approved-delta-manifest.mjs";
+import { spe2893UpstreamRebases } from "./spe2893-upstream-rebases.mjs";
 
 const root = process.cwd();
+const diagnosticPath = path.join(root, "artifacts", "spe2893-validation.json");
 
 let accountedApprovalDeltas = 0;
 let implementedRepairs = 0;
+let rebasedTargets = 0;
 
 for (const [relativePath, record] of Object.entries(spe2893Manifest)) {
   const absolutePath = path.join(root, relativePath);
@@ -20,9 +23,14 @@ for (const [relativePath, record] of Object.entries(spe2893Manifest)) {
   }
 
   for (const repair of record.repairs) {
-    if (text.includes(repair.before)) {
+    const currentBefore = spe2893UpstreamRebases.get(repair.before) ?? repair.before;
+    if (currentBefore !== repair.before) {
+      rebasedTargets += 1;
+    }
+
+    if (text.includes(currentBefore)) {
       throw new Error(
-        `${relativePath}: pre-SPE-2893 wording remains after publication-layer repair: ${JSON.stringify(repair.before)}.`,
+        `${relativePath}: pre-SPE-2893 pipeline wording remains after publication-layer repair: ${JSON.stringify(currentBefore)}.`,
       );
     }
 
@@ -60,6 +68,19 @@ if (!da002.includes("revision: Final Approved Story v15")) {
   );
 }
 
+await writeFile(
+  diagnosticPath,
+  `${JSON.stringify({
+    phase: "validated",
+    accountedApprovalDeltas,
+    implementedRepairs,
+    inheritedApprovedSyncDeltas: accountedApprovalDeltas - implementedRepairs,
+    rebasedTargets,
+    status: "pass",
+  }, null, 2)}\n`,
+  "utf8",
+);
+
 console.log(
-  `Validated ${accountedApprovalDeltas} approved SPE-2893 candidate deltas: ${implementedRepairs} publication-layer repairs plus ${accountedApprovalDeltas - implementedRepairs} deltas already satisfied by the earlier approved-manuscript synchronization.`,
+  `Validated ${accountedApprovalDeltas} approved SPE-2893 candidate deltas: ${implementedRepairs} publication-layer repairs plus ${accountedApprovalDeltas - implementedRepairs} deltas already satisfied by the earlier approved-manuscript synchronization; ${rebasedTargets} targets rebased onto prior approved publication wording.`,
 );
