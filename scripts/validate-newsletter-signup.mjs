@@ -7,11 +7,15 @@ const listName = "awlist6907601";
 const formAction = "https://www.aweber.com/scripts/addlead.pl";
 const successUrl = "https://readdeadair.com/subscribe/thanks/";
 const existingUrl = "https://readdeadair.com/subscribe/already-subscribed/";
+const adTracking = "dead-air-website";
 
 const read = (relativePath) => readFile(path.join(dist, relativePath), "utf8");
 const fail = (message) => {
   throw new Error(`Newsletter signup validation failed: ${message}`);
 };
+if (!/^[a-z0-9_-]{1,20}$/.test(adTracking)) {
+  fail(`Configured AWeber ad tracking value "${adTracking}" violates AWeber's documented naming rules.`);
+}
 const readRequired = async (relativePath, label) => {
   try {
     return await read(relativePath);
@@ -26,10 +30,11 @@ const hasNoindex = (html) => /<meta[^>]+name=["']robots["'][^>]+content=["'][^"'
 
 const requireSignup = (html, label) => {
   if (!html.includes("data-newsletter-signup")) fail(`${label} is missing the newsletter signup component.`);
-  if (!html.includes(`action=\"${formAction}\"`)) fail(`${label} has the wrong AWeber form action.`);
-  if (!html.includes(`name=\"listname\" value=\"${listName}\"`)) fail(`${label} has the wrong AWeber list id.`);
-  if (!html.includes(`name=\"redirect\" value=\"${successUrl}\"`)) fail(`${label} has the wrong success redirect.`);
-  if (!html.includes(`name=\"meta_redirect_onlist\" value=\"${existingUrl}\"`)) fail(`${label} has the wrong existing-subscriber redirect.`);
+  if (!html.includes(`action="${formAction}"`)) fail(`${label} has the wrong AWeber form action.`);
+  if (!html.includes(`name="listname" value="${listName}"`)) fail(`${label} has the wrong AWeber list id.`);
+  if (!html.includes(`name="redirect" value="${successUrl}"`)) fail(`${label} has the wrong success redirect.`);
+  if (!html.includes(`name="meta_redirect_onlist" value="${existingUrl}"`)) fail(`${label} has the wrong existing-subscriber redirect.`);
+  if (!html.includes(`name="meta_adtracking" value="${adTracking}"`)) fail(`${label} has the wrong AWeber ad tracking value.`);
   if (!html.includes('name="email"') || !/<input[^>]+type=["']email["'][^>]+required/i.test(html)) {
     fail(`${label} is missing a required email field.`);
   }
