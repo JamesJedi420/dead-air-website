@@ -63,7 +63,17 @@ if (html.includes("four hard wheel contacts followed by a softer drag")) throw n
 if (/name="robots" content="noindex/i.test(html)) throw new Error("DA-003 publication output is still marked noindex.");
 if (!/publicationDate:\s*2026-08-18/i.test(source)) throw new Error("DA-003 publication date is missing or incorrect.");
 if (!/previewOnly:\s*false/i.test(source)) throw new Error("DA-003 website source is still preview-only.");
-for (const chronologyNeedle of [\n  "timelineOrder: 3",\n  "timelineLabel: Summer 2017 — Harrow River investigation",\n  "sourceOrder: Independent source investigation",\n  "datePrecision: seasonal",\n  "chronologyNote: Warm-season placement is supported by the source environment; exact filming date is unknown. Position after DA-002 and before DA-004 is calendar ordering only and establishes no causal or paranormal connection.",\n  "slug: da-002-the-name-in-the-room",\n  "slug: da-004-close-enough-to-recognize",\n]) {\n  if (!source.includes(chronologyNeedle)) throw new Error(`DA-003 approved chronology metadata missing ${chronologyNeedle}.`);\n}
+for (const chronologyNeedle of [
+  "timelineOrder: 3",
+  "timelineLabel: Summer 2017 — Harrow River investigation",
+  "sourceOrder: Independent source investigation",
+  "datePrecision: seasonal",
+  "chronologyNote: Warm-season placement is supported by the source environment; exact filming date is unknown. Position after DA-002 and before DA-004 is calendar ordering only and establishes no causal or paranormal connection.",
+  "slug: da-002-the-name-in-the-room",
+  "slug: da-004-close-enough-to-recognize",
+]) {
+  if (!source.includes(chronologyNeedle)) throw new Error(`DA-003 approved chronology metadata missing ${chronologyNeedle}.`);
+}
 
 const headingMatches = [...html.matchAll(/<h2[^>]*>(?:<[^>]+>)*([1-9])\.\s/g)];
 if (headingMatches.length !== 9) throw new Error(`Expected 9 numbered DA-003 h2 sections, found ${headingMatches.length}.`);
