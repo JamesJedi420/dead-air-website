@@ -18,23 +18,23 @@ const timelineEntries = [
 
 <SiteLayout
   title="Narrative Timeline"
-  description="A relative chronology of events recorded across The Dead Air Archive."
+  description="An approximate dated chronology of events recorded across The Dead Air Archive."
 >
   <section class="section">
     <div class="section-header">
       <p class="eyebrow">Narrative Chronology</p>
       <h1>Timeline</h1>
       <p>
-        Entries are ordered by when their events appear to occur within the archive. Some dates are
-        approximate, disputed, withheld, or unknown. Publication order is separate.
+        Entries use the narrowest approved in-world date precision supported by the fiction and source record.
+        Recording dates, source publication dates, and Dead Air publication dates are tracked separately and do not automatically become story dates.
       </p>
     </div>
     {timelineEntries.length > 0 ? (
       <ol class="timeline-list">
         {timelineEntries.map((entry) => (
           <li>
-            <p class="timeline-position">Archive position {entry.timelineOrder}</p>
-            <p class="eyebrow">{entry.timelineLabel ?? "Relative chronology"}</p>
+            <p class="timeline-date">{entry.timelineLabel ?? "Date unresolved"}</p>
+            <p class="timeline-position">Continuity position {entry.timelineOrder}</p>
             <h2><a href={entry.url}>{entry.title}</a></h2>
             <p>{entry.summary}</p>
             <dl class="timeline-meta">
@@ -77,8 +77,11 @@ const timelineEntries = [
     text-transform: uppercase;
   }
 
-  .timeline-list .eyebrow {
-    margin-bottom: 0.4rem;
+  .timeline-date {
+    color: var(--color-brass);
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 0.35rem;
   }
 
   .timeline-meta {

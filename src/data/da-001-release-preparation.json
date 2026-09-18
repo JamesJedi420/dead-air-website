@@ -36,44 +36,134 @@
       "classification": "Literary paranormal horror",
       "readingTime": "105 minutes",
       "canonicalStatus": "established canon",
-      "tags": ["literary paranormal horror", "documentary horror", "institutional horror", "psychological horror"],
-      "phenomenon": ["contested audio", "disputed visual evidence", "object displacement", "institutional haunting"],
-      "evidenceType": ["video", "audio", "recorder files", "metadata", "software cache", "access records", "interviews", "physical object custody", "maintenance logs", "building plans", "source comparisons"],
-      "locations": ["Cedar Plain High School"],
-      "contentWarnings": ["Death and grief involving a former coworker", "Claustrophobic maintenance spaces", "Disputed voices and images", "Unsafe crawlspace access", "Institutional conflict"],
-      "contentNotes": ["No graphic violence."],
-      "cases": ["da-001"],
-      "characters": ["diane-madsen", "evan-kruse", "abby-larson", "wayne-nissen"],
-      "objects": ["unidentified-wet-brass-key"],
-      "mysteries": ["origin-and-ownership-of-the-wet-brass-key", "identity-and-meaning-of-the-answering-key-cadence", "relationship-among-the-recorded-phenomena-at-cedar-plain-high"]
+      "tags": [
+        "literary paranormal horror",
+        "documentary horror",
+        "institutional horror",
+        "psychological horror"
+      ],
+      "phenomenon": [
+        "contested audio",
+        "disputed visual evidence",
+        "object displacement",
+        "institutional haunting"
+      ],
+      "evidenceType": [
+        "video",
+        "audio",
+        "recorder files",
+        "metadata",
+        "software cache",
+        "access records",
+        "interviews",
+        "physical object custody",
+        "maintenance logs",
+        "building plans",
+        "source comparisons"
+      ],
+      "locations": [
+        "Cedar Plain High School"
+      ],
+      "contentWarnings": [
+        "Death and grief involving a former coworker",
+        "Claustrophobic maintenance spaces",
+        "Disputed voices and images",
+        "Unsafe crawlspace access",
+        "Institutional conflict"
+      ],
+      "contentNotes": [
+        "No graphic violence."
+      ],
+      "cases": [
+        "da-001"
+      ],
+      "characters": [
+        "diane-madsen",
+        "evan-kruse",
+        "abby-larson",
+        "wayne-nissen"
+      ],
+      "objects": [
+        "unidentified-wet-brass-key"
+      ],
+      "mysteries": [
+        "origin-and-ownership-of-the-wet-brass-key",
+        "identity-and-meaning-of-the-answering-key-cadence",
+        "relationship-among-the-recorded-phenomena-at-cedar-plain-high"
+      ]
     }
   },
   "chronology": {
     "timelineOrder": 1,
-    "timelineLabel": "Initial Cedar Plain investigation",
+    "timelineLabel": "January 2015 — Initial Cedar Plain investigation",
     "sourceOrder": "Original investigation",
-    "datePrecision": "relative",
-    "chronologyNote": "Placed before DA-002 in the relative archive chronology; the exact interval remains unresolved.",
+    "datePrecision": "approximate",
+    "chronologyNote": "Approximately January 2015; the sealed-corridor coda follows about three weeks later. This creative placement does not import the real source school's construction date or source publication date.",
     "follows": [],
-    "precedes": [{"collection": "stories", "slug": "da-002-the-name-in-the-room"}]
+    "precedes": [
+      {
+        "collection": "stories",
+        "slug": "da-002-the-name-in-the-room"
+      }
+    ]
   },
   "sections": [
-    {"source": "Scene 1 — Three-Thirty", "published": "1. Three-Thirty"},
-    {"source": "Scene 2 — Permission Slips", "published": "2. Permission Slips"},
-    {"source": "Scene 3 — The Quiet Test", "published": "3. The Quiet Test"},
-    {"source": "Scene 4 — Four Seconds", "published": "4. Four Seconds"},
-    {"source": "Scene 5 — The Markers", "published": "5. The Markers"},
-    {"source": "Scene 6 — The West Route", "published": "6. The West Route"},
-    {"source": "Scene 7 — The Cut", "published": "7. The Cut"},
-    {"source": "Scene 8 — The Glassless Window", "published": "8. The Glassless Window"},
-    {"source": "Scene 9 — The Key That Is Not Hers", "published": "9. The Key That Is Not Hers"},
-    {"source": "Scene 10 — Source Track", "published": "10. Source Track"}
+    {
+      "source": "Scene 1 — Three-Thirty",
+      "published": "1. Three-Thirty"
+    },
+    {
+      "source": "Scene 2 — Permission Slips",
+      "published": "2. Permission Slips"
+    },
+    {
+      "source": "Scene 3 — The Quiet Test",
+      "published": "3. The Quiet Test"
+    },
+    {
+      "source": "Scene 4 — Four Seconds",
+      "published": "4. Four Seconds"
+    },
+    {
+      "source": "Scene 5 — The Markers",
+      "published": "5. The Markers"
+    },
+    {
+      "source": "Scene 6 — The West Route",
+      "published": "6. The West Route"
+    },
+    {
+      "source": "Scene 7 — The Cut",
+      "published": "7. The Cut"
+    },
+    {
+      "source": "Scene 8 — The Glassless Window",
+      "published": "8. The Glassless Window"
+    },
+    {
+      "source": "Scene 9 — The Key That Is Not Hers",
+      "published": "9. The Key That Is Not Hers"
+    },
+    {
+      "source": "Scene 10 — Source Track",
+      "published": "10. Source Track"
+    }
   ],
   "continuity": {
     "successorPath": "src/content/stories/da-002-the-name-in-the-room.md",
-    "sharedCharacters": ["diane-madsen", "evan-kruse", "abby-larson"],
-    "sharedLocations": ["Cedar Plain High School"],
-    "sharedObjects": ["unidentified-wet-brass-key"],
-    "sharedMysteries": ["relationship-among-the-recorded-phenomena-at-cedar-plain-high"]
+    "sharedCharacters": [
+      "diane-madsen",
+      "evan-kruse",
+      "abby-larson"
+    ],
+    "sharedLocations": [
+      "Cedar Plain High School"
+    ],
+    "sharedObjects": [
+      "unidentified-wet-brass-key"
+    ],
+    "sharedMysteries": [
+      "relationship-among-the-recorded-phenomena-at-cedar-plain-high"
+    ]
   }
 }
