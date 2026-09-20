@@ -114,7 +114,7 @@ const synchronizations = {
       before: "The same timing had followed an ordinary statement. Maren could no longer treat the earlier sequence as unusual, even though she still felt the jolt of hearing the frog call before her mouth had fully closed.",
       after: "She still felt the jolt of hearing the frog call before her mouth had fully closed.",
     },
-  ],,
+  ],
   "src/content/stories/da-004-close-enough-to-recognize.md": [
     { before: "revision: Final Approved Story v1.7", after: "revision: Final Approved Story v1.10" },
     { before: "There it was—the question Eli had brought six hours and three bags of equipment to ask. He wanted Martin to say there was something in the room.", after: "" },
