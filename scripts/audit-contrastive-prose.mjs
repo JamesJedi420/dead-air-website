@@ -2,7 +2,13 @@ import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 
 const storiesDir = path.join(process.cwd(), "src", "content", "stories");
-const files = (await readdir(storiesDir)).filter((name) => name.endsWith(".md")).sort();
+let files;
+try {
+  files = (await readdir(storiesDir)).filter((name) => name.endsWith(".md")).sort();
+} catch (err) {
+  console.error(`Failed to read stories directory: ${err.message}`);
+  process.exit(1);
+}
 const hits = [];
 const bodies = new Map();
 
@@ -13,7 +19,13 @@ const add = (file, kind, line, excerpt) => {
 };
 
 for (const file of files) {
-  const text = await readFile(path.join(storiesDir, file), "utf8");
+  let text;
+  try {
+    text = await readFile(path.join(storiesDir, file), "utf8");
+  } catch (err) {
+    console.error(`Failed to read ${file}: ${err.message}`);
+    continue;
+  }
   const body = text.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, "");
   const lines = body.split(/\r?\n/);
   bodies.set(file, lines);
