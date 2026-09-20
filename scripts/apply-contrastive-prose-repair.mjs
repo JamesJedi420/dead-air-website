@@ -7,11 +7,11 @@ const root = process.cwd();
 const repairs = {
   "src/content/stories/da-001-after-the-main-fan-stops.md": [
     [
-      "“Continuous footage of us,” Diane said. “Not the lobby. Not the stairs. Not this room.”",
+      "“Continuous footage of us,” Diane said. “The lobby, the stairs, and this room were outside the camera.”",
       "“Continuous footage of us,” Diane said. “The lobby, the stairs, and this room are all outside the frame.”",
     ],
     [
-      "Ron’s face hardened. “My account was an interview, not an invitation.”",
+      "Ron’s face hardened. “I gave you an interview. I didn’t agree to be part of another test.”",
       "Ron’s face hardened. “I gave you an interview. Leave it there.”",
     ],
     [
