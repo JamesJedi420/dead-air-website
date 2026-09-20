@@ -26,10 +26,37 @@ jobs:
         run: npm ci
       - name: Build and validate site
         run: npm run build
+      - name: Upload SPE-2893 validation diagnostic
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: spe2893-validation
+          path: artifacts/spe2893-validation.json
+          if-no-files-found: ignore
+          retention-days: 7
       - name: Install Playwright Chromium
         run: |
           npm install --no-save --package-lock=false playwright@1.55.0
           npx playwright install --with-deps chromium
+      - name: Verify story sharing and resume reading
+        run: |
+          python3 -m http.server 4176 --directory dist > /tmp/dead-air-reader-tools-http.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          story='http://127.0.0.1:4176/stories/da-002-the-name-in-the-room/'
+          for attempt in {1..60}; do
+            if curl -fsS "$story" | grep -q 'The Name in the Room'; then break; fi
+            if [ "$attempt" -eq 60 ]; then cat /tmp/dead-air-reader-tools-http.log; exit 1; fi
+            sleep 0.5
+          done
+          READER_TOOLS_BASE_URL='http://127.0.0.1:4176' node scripts/capture-reader-tools-proof.mjs
+      - name: Upload reader tools proof
+        uses: actions/upload-artifact@v4
+        with:
+          name: reader-tools-proof
+          path: artifacts/reader-tools-proof/*.png
+          if-no-files-found: error
+          retention-days: 30
       - name: Capture DA-001 desktop and mobile visual proof
         run: |
           python3 -m http.server 4173 --directory dist > /tmp/dead-air-http.log 2>&1 &

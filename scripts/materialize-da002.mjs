@@ -22,25 +22,10 @@ const sourceCardSummary =
   `A final cleansing at ${legacySchoolToken} High becomes a struggle over names, consent, source custody, and the difference between relief and proof.`;
 const approvedCardSummary =
   "A documentary crew returns to Cedar Plain High for a final session with a medium. In the basement, equipment fails, a fire door moves, and a sound recording leaves much to interpretation.";
-const correctedRevision = "Final Approved Story v14";
+const correctedRevision = "Final Approved Story v13";
 const correctiveReplacements = [
   ["Three different records and one blank.", "Four different records and one blank."],
   ["one possible four-word pattern: not my name.", "one possible three-word pattern: not my name."],
-];
-const v14ContrastiveProseReplacements = [
-  [
-    "He continued. “You put your name on the door, the visitor passes, the keys, the cameras, the end time. After that, supervision is not neutrality. When somebody crosses a line, it is your line they crossed because you opened the room.”",
-    "He continued. “You put your name on the door, the visitor passes, the keys, the cameras, the end time. Once you open the room, you own the boundaries. If somebody crosses one, it happened under your supervision.”",
-  ],
-  [
-    "Evan can operate a second camera, but his files count as production sources, not independent corroboration.”",
-    "Evan can operate a second camera. His files stay within the production record and do not count as independent corroboration.”",
-  ],
-  ["“I am recording distance, not blame.”", "“I only need the distance for the record.”"],
-  [
-    "Miriam walked to the front row and stopped beside the seat with the hat beneath it. “A woman. Older. She associates herself with performance, but not with the students in the way the young person downstairs seemed to.”",
-    "Miriam walked to the front row and stopped beside the seat with the hat beneath it. “A woman. Older. She associates herself with performance. Her connection to the students feels different from the young person downstairs.”",
-  ],
 ];
 const legacySourceNote = [
   "## Fictionalization and Source Note",
@@ -64,14 +49,16 @@ const chronologyMetadata = [
   `revision: ${correctedRevision}`,
   "publicationDate: 2026-07-27",
   "timelineOrder: 2",
-  "timelineLabel: Return investigation and attempted cleansing",
+  "timelineLabel: Late February 2015 — Return investigation and attempted cleansing",
   "sourceOrder: Follow-up investigation",
-  "datePrecision: relative",
-  "chronologyNote: Placed after DA-001 in the relative archive chronology; the exact interval remains unresolved.",
+  "datePrecision: approximate",
+  "chronologyNote: Approved fictional placement after DA-001. Source research reports the cleansing footage was filmed in early January 2015, so this deliberately diverges from source filming order; publication dates are not event dates.",
   "follows:",
   "  - collection: stories",
   "    slug: da-001-after-the-main-fan-stops",
-  "precedes: []",
+  "precedes:",
+  "  - collection: stories",
+  "    slug: da-003-the-recorder-kept-running",
 ].join("\n");
 
 const sha256 = (value) => createHash("sha256").update(value, "utf8").digest("hex");
@@ -126,20 +113,15 @@ manuscript = manuscript
   .replaceAll(legacyVenueToken, "Renshaw Theatre")
   .replaceAll(legacyWorkTitleToken, "The Spare Chaperon");
 
-const applyCorrectiveLayer = (label, replacements) => {
-  for (const [before, after] of replacements) {
-    const occurrences = manuscript.split(before).length - 1;
-    if (occurrences !== 1) {
-      throw new Error(
-        `Expected exactly one DA-002 ${label} corrective target ${JSON.stringify(before)}, found ${occurrences}.`,
-      );
-    }
-    manuscript = manuscript.replace(before, after);
+// Preserve the frozen v12 repository import and apply only the two mandatory
+// objective corrections authorized for Final Approved Story v13.
+for (const [before, after] of correctiveReplacements) {
+  const occurrences = manuscript.split(before).length - 1;
+  if (occurrences !== 1) {
+    throw new Error(`Expected exactly one DA-002 corrective target ${JSON.stringify(before)}, found ${occurrences}.`);
   }
-};
-
-applyCorrectiveLayer("v13 objective-error", correctiveReplacements);
-applyCorrectiveLayer("v14 contrastive-prose", v14ContrastiveProseReplacements);
+  manuscript = manuscript.replace(before, after);
+}
 
 for (const [sourceHeading, publishedHeading] of publishedSectionHeadings) {
   const headingOccurrences = manuscript.split(sourceHeading).length - 1;
@@ -164,5 +146,5 @@ const actualPublicationSha256 = sha256(manuscript);
 
 await writeFile(outputPath, manuscript, "utf8");
 console.log(
-  `Materialized DA-002 ${correctedRevision} for publication (${actualPublicationSha256}); frozen v12 repository source preserved (${actualSourceSha256}); REN-001 school-identity, REN-002 Miriam Danner, REN-003 Marian Ketter, REN-004 Renshaw Theatre, and REN-005 The Spare Chaperon migrations applied after source verification; bounded v13 objective and v14 contrastive-prose correction layers applied; approved website/card subtitle applied as publishing metadata; standard source note supplied by the shared story template; public divisions rendered as numbered section headings; narrative chronology fixed at archive position 2 after DA-001.`,
+  `Materialized DA-002 ${correctedRevision} for publication (${actualPublicationSha256}); frozen v12 repository source preserved (${actualSourceSha256}); REN-001 school-identity, REN-002 Miriam Danner, REN-003 Marian Ketter, REN-004 Renshaw Theatre, and REN-005 The Spare Chaperon migrations applied after source verification; bounded objective-error correction layer applied; approved website/card subtitle applied as publishing metadata; standard source note supplied by the shared story template; public divisions rendered as numbered section headings; narrative chronology fixed at late February 2015 after DA-001, with the source-filming divergence disclosed.`,
 );

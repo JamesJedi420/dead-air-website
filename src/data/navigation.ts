@@ -14,6 +14,7 @@ export const utilityNav = [
   { href: "/mysteries/", label: "Mysteries" },
   { href: "/research-and-provenance/", label: "Research" },
   { href: "/content-notes/", label: "Content Notes" },
+  { href: "/subscribe/", label: "Email Updates" },
   { href: "/contact/", label: "Contact" },
   { href: "/privacy/", label: "Privacy" },
   { href: "/feed.xml", label: "RSS" },

@@ -5,7 +5,52 @@ import SiteLayout from "../layouts/SiteLayout.astro";
 import { isPublished, normalizeEntry, sortEntries } from "../lib/archive";
 
 const stories = sortEntries((await getCollection("stories")).filter(isPublished));
-const entries = stories.map((entry) => normalizeEntry("stories", entry));
+
+// Legacy stories predate explicit cardImage metadata. Keep each exception explicit so
+// future published stories cannot silently fall back to a differently proportioned
+// cover/hero image and lose meaningful content or readable in-image text.
+const fallbackCardMedia: Record<string, { image: string; alt: string }> = {
+  "da-001-after-the-main-fan-stops": {
+    image: "/images/da-001-story-card.svg",
+    alt: "A stopped industrial ventilation fan at the end of a dark institutional corridor, with a brass key in the foreground.",
+  },
+  "da-002-the-name-in-the-room": {
+    image: "/images/da-002-story-card.svg",
+    alt: "A closed institutional fire door in a dim basement corridor with a portable audio recorder in the foreground.",
+  },
+  "da-003-the-recorder-kept-running": {
+    image: "/images/da-003-cover-option-a-evidence-crop-preview.jpg",
+    alt: "Portable recorder resting on wet rocks beside dark water beneath the Dead Air mark; no person, grave marker, or apparition is visible.",
+  },
+};
+
+const entries = stories.map((entry) => {
+  const normalized = normalizeEntry("stories", entry);
+  const fallback = fallbackCardMedia[normalized.slug];
+  const cardImage = (entry.data as { cardImage?: string }).cardImage;
+
+  if (cardImage && !normalized.coverAlt) {
+    throw new Error(
+      `Published story ${normalized.slug} has explicit cardImage metadata but no coverAlt. Add approved alt text before release.`,
+    );
+  }
+
+  const media = cardImage
+    ? { image: cardImage, alt: normalized.coverAlt }
+    : fallback;
+
+  if (!media) {
+    throw new Error(
+      `Published story ${normalized.slug} has no role-specific card image. Add explicit cardImage metadata using a crop-safe 3:2 derivative; do not rely on cover/hero cropping.`,
+    );
+  }
+
+  return {
+    ...normalized,
+    coverImage: media.image,
+    coverAlt: media.alt,
+  };
+});
 ---
 
 <SiteLayout title="Stories" description="Published literary paranormal-horror stories from Dead Air.">

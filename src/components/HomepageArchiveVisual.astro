@@ -1,0 +1,111 @@
+<div class="home-archive-visual" aria-hidden="true" data-home-archive-visual>
+  <svg viewBox="0 0 1200 675" focusable="false" role="presentation">
+    <defs>
+      <linearGradient id="archive-falloff" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#191713" />
+        <stop offset="0.58" stop-color="#12110f" />
+        <stop offset="1" stop-color="#0b0b0a" />
+      </linearGradient>
+      <linearGradient id="corridor-light" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#f1ece1" stop-opacity="0.12" />
+        <stop offset="1" stop-color="#b08d4a" stop-opacity="0" />
+      </linearGradient>
+      <pattern id="archive-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+        <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#b08d4a" stroke-opacity="0.055" stroke-width="1" />
+      </pattern>
+      <pattern id="scan-lines" width="8" height="8" patternUnits="userSpaceOnUse">
+        <path d="M0 7.5H8" stroke="#f1ece1" stroke-opacity="0.018" stroke-width="1" />
+      </pattern>
+    </defs>
+
+    <rect x="1" y="1" width="1198" height="673" rx="2" fill="url(#archive-falloff)" stroke="#332f27" stroke-width="2" />
+    <rect x="1" y="1" width="1198" height="673" fill="url(#archive-grid)" />
+    <rect x="1" y="1" width="1198" height="673" fill="url(#scan-lines)" />
+
+    <g class="corridor" fill="none" stroke-linecap="square" stroke-linejoin="miter">
+      <path d="M166 96H1037L1160 28" stroke="#332f27" stroke-width="3" />
+      <path d="M166 579H1037L1160 647" stroke="#332f27" stroke-width="3" />
+      <path d="M166 96L166 579" stroke="#332f27" stroke-width="3" />
+      <path d="M1037 96V579" stroke="#332f27" stroke-width="3" />
+      <path d="M166 96L797 270" stroke="#7e682f" stroke-opacity="0.5" stroke-width="2" />
+      <path d="M166 579L797 405" stroke="#7e682f" stroke-opacity="0.5" stroke-width="2" />
+      <path d="M1160 28L797 270" stroke="#332f27" stroke-width="2" />
+      <path d="M1160 647L797 405" stroke="#332f27" stroke-width="2" />
+      <path d="M280 579L814 405" stroke="#332f27" stroke-width="2" />
+      <path d="M530 579L830 405" stroke="#332f27" stroke-width="2" />
+      <path d="M780 579L846 405" stroke="#332f27" stroke-width="2" />
+      <path d="M1030 579L862 405" stroke="#332f27" stroke-width="2" />
+      <path d="M316 96L814 270" stroke="#332f27" stroke-width="2" />
+      <path d="M610 96L832 270" stroke="#332f27" stroke-width="2" />
+      <path d="M900 96L850 270" stroke="#332f27" stroke-width="2" />
+    </g>
+
+    <g>
+      <path d="M439 112L567 148L537 174L409 137Z" fill="#f1ece1" fill-opacity="0.06" stroke="#8f8676" stroke-opacity="0.25" stroke-width="2" />
+      <path d="M646 169L730 192L711 209L627 185Z" fill="#f1ece1" fill-opacity="0.05" stroke="#8f8676" stroke-opacity="0.2" stroke-width="2" />
+      <path d="M409 137L567 148L797 338L166 338Z" fill="url(#corridor-light)" opacity="0.45" />
+    </g>
+
+    <g class="threshold">
+      <rect x="796" y="212" width="214" height="326" fill="#0b0b0a" fill-opacity="0.86" stroke="#b08d4a" stroke-width="4" />
+      <rect x="819" y="235" width="168" height="303" fill="none" stroke="#7e682f" stroke-width="2" />
+      <rect x="842" y="258" width="122" height="280" fill="#070706" stroke="#332f27" stroke-width="2" />
+      <path d="M1010 212L1038 190V560L1010 538Z" fill="#12110f" stroke="#332f27" stroke-width="2" />
+      <path d="M842 538H964" stroke="#b63b32" stroke-width="4" />
+    </g>
+
+    <g fill="none" stroke="#b08d4a" stroke-opacity="0.48" stroke-width="2">
+      <path d="M72 72H128M72 72V128" />
+      <path d="M1128 72H1072M1128 72V128" />
+      <path d="M72 603H128M72 603V547" />
+      <path d="M1128 603H1072M1128 603V547" />
+    </g>
+    <g fill="none" stroke="#8f8676" stroke-opacity="0.16" stroke-width="2">
+      <path d="M86 224H330" />
+      <path d="M86 242H260" />
+      <path d="M86 260H302" />
+      <path d="M86 452H354" />
+      <path d="M86 470H286" />
+    </g>
+    <path d="M1086 167V405" stroke="#b63b32" stroke-opacity="0.8" stroke-width="5" />
+    <path d="M1098 167V405" stroke="#b63b32" stroke-opacity="0.18" stroke-width="1" />
+  </svg>
+</div>
+
+<style>
+  .home-archive-visual {
+    background: var(--color-panel);
+    border: 1px solid var(--color-line);
+    box-shadow: 0 2.2rem 5rem rgba(0, 0, 0, 0.34);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .home-archive-visual::before,
+  .home-archive-visual::after {
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    z-index: 1;
+  }
+
+  .home-archive-visual::before {
+    border: 1px solid rgba(176, 141, 74, 0.16);
+    inset: 0.7rem;
+  }
+
+  .home-archive-visual::after {
+    background: linear-gradient(90deg, transparent, rgba(241, 236, 225, 0.035), transparent);
+    height: 1px;
+    left: 0;
+    right: 0;
+    top: 41%;
+  }
+
+  svg {
+    aspect-ratio: 16 / 9;
+    display: block;
+    height: auto;
+    width: 100%;
+  }
+</style>

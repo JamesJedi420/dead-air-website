@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1536" height="1024" viewBox="0 0 1536 1024" role="img">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#161612"/>
+      <stop offset="0.58" stop-color="#0c0c0a"/>
+      <stop offset="1" stop-color="#070706"/>
+    </linearGradient>
+    <linearGradient id="door" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#25241e"/>
+      <stop offset="1" stop-color="#11110e"/>
+    </linearGradient>
+    <linearGradient id="brass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#d1ae65"/>
+      <stop offset="0.55" stop-color="#9a7839"/>
+      <stop offset="1" stop-color="#5c4720"/>
+    </linearGradient>
+    <radialGradient id="light" cx="50%" cy="38%" r="58%">
+      <stop offset="0" stop-color="#a8a077" stop-opacity="0.15"/>
+      <stop offset="1" stop-color="#0b0b09" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="grain" x="-20%" y="-20%" width="140%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.72" numOctaves="2" seed="29"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer><feFuncA type="table" tableValues="0 0.065"/></feComponentTransfer>
+    </filter>
+  </defs>
+  <rect width="1536" height="1024" fill="url(#bg)"/>
+  <rect width="1536" height="1024" fill="url(#light)"/>
+  <path d="M0 0H1536L1192 713H344Z" fill="#12120f"/>
+  <path d="M0 1024V0L344 713 530 1024Z" fill="#090908"/>
+  <path d="M1536 1024V0L1192 713 1006 1024Z" fill="#090908"/>
+  <path d="M344 713H1192L1536 1024H0Z" fill="#10100d"/>
+  <path d="M520 98H1016L950 151H586Z" fill="#d4cba7" opacity="0.09"/>
+  <path d="M634 273H901L867 307H668Z" fill="#d4cba7" opacity="0.06"/>
+
+  <!-- Closed fire door -->
+  <g>
+    <rect x="594" y="248" width="350" height="468" rx="4" fill="url(#door)" stroke="#494538" stroke-width="8"/>
+    <rect x="626" y="282" width="286" height="400" fill="none" stroke="#302d25" stroke-width="3"/>
+    <path d="M648 543H889" stroke="#756a48" stroke-width="15" stroke-linecap="round"/>
+    <rect x="846" y="523" width="26" height="40" rx="4" fill="url(#brass)"/>
+    <path d="M769 248V716" stroke="#1b1a16" stroke-width="3" opacity="0.65"/>
+  </g>
+
+  <!-- Recorder in foreground -->
+  <g transform="translate(523 812) rotate(-6)">
+    <rect x="0" y="0" width="330" height="158" rx="22" fill="#151511" stroke="#4a4536" stroke-width="7"/>
+    <rect x="26" y="25" width="139" height="72" rx="6" fill="#080907" stroke="#6f613b" stroke-width="3"/>
+    <path d="M44 63H62L72 45 85 82 99 54 113 68 126 50 143 65" fill="none" stroke="#b08d4a" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <g stroke="#5a5545" stroke-width="5" stroke-linecap="round">
+      <path d="M205 35V118"/><path d="M223 35V118"/><path d="M241 35V118"/><path d="M259 35V118"/><path d="M277 35V118"/><path d="M295 35V118"/>
+    </g>
+    <circle cx="64" cy="127" r="8" fill="#8e2c26"/>
+    <circle cx="98" cy="127" r="8" fill="#706338"/>
+  </g>
+
+  <!-- Cable leading toward the door -->
+  <path d="M852 899C1050 872 1097 787 1048 699 1017 643 1015 601 1059 570" fill="none" stroke="#302d25" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="1059" cy="570" r="10" fill="#b08d4a" opacity="0.72"/>
+
+  <rect width="1536" height="1024" filter="url(#grain)" opacity="0.74"/>
+  <rect x="18" y="18" width="1500" height="988" fill="none" stroke="#332f27" stroke-width="3" opacity="0.7"/>
+</svg>
