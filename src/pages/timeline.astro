@@ -1,6 +1,6 @@
 ---
 import SiteLayout from "../layouts/SiteLayout.astro";
-import { collectionLabels, formatLabel, normalizeEntry } from "../lib/archive";
+import { normalizeEntry } from "../lib/archive";
 import { getPublishedCollection } from "../lib/loadArchive";
 
 const timelineEntries = [
@@ -18,15 +18,15 @@ const timelineEntries = [
 
 <SiteLayout
   title="Narrative Timeline"
-  description="An approximate dated chronology of events recorded across The Dead Air Archive."
+  description="An approximate chronology of events recorded across The Dead Air Archive."
 >
   <section class="section">
     <div class="section-header">
       <p class="eyebrow">Narrative Chronology</p>
       <h1>Timeline</h1>
       <p>
-        Entries use the narrowest approved in-world date precision supported by the fiction and source record.
-        Recording dates, source publication dates, and Dead Air publication dates are tracked separately and do not automatically become story dates.
+        Stories are placed by when their events occur, not by publication order. Dates remain approximate,
+        seasonal, or otherwise qualified where the surviving record does not support greater precision.
       </p>
     </div>
     {timelineEntries.length > 0 ? (
@@ -34,27 +34,8 @@ const timelineEntries = [
         {timelineEntries.map((entry) => (
           <li>
             <p class="timeline-date">{entry.timelineLabel ?? "Date unresolved"}</p>
-            <p class="timeline-position">Continuity position {entry.timelineOrder}</p>
             <h2><a href={entry.url}>{entry.title}</a></h2>
             <p>{entry.summary}</p>
-            <dl class="timeline-meta">
-              <div>
-                <dt>Record type</dt>
-                <dd>{collectionLabels[entry.collection]}</dd>
-              </div>
-              {entry.sourceOrder && (
-                <div>
-                  <dt>Source sequence</dt>
-                  <dd>{entry.sourceOrder}</dd>
-                </div>
-              )}
-              {entry.datePrecision && (
-                <div>
-                  <dt>Date precision</dt>
-                  <dd>{formatLabel(entry.datePrecision)}</dd>
-                </div>
-              )}
-            </dl>
             {entry.chronologyNote && <p class="chronology-note">{entry.chronologyNote}</p>}
           </li>
         ))}
@@ -68,15 +49,6 @@ const timelineEntries = [
 </SiteLayout>
 
 <style>
-  .timeline-position {
-    color: var(--color-dim);
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    margin-bottom: 0.35rem;
-    text-transform: uppercase;
-  }
-
   .timeline-date {
     color: var(--color-brass);
     font-size: 0.95rem;
@@ -84,34 +56,10 @@ const timelineEntries = [
     margin-bottom: 0.35rem;
   }
 
-  .timeline-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem 1.5rem;
-    margin: 1rem 0;
-  }
-
-  .timeline-meta div {
-    display: grid;
-    gap: 0.1rem;
-  }
-
-  .timeline-meta dt {
-    color: var(--color-brass);
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
-  .timeline-meta dd,
-  .chronology-note {
-    color: var(--color-muted);
-    margin: 0;
-  }
-
   .chronology-note {
     border-left: 2px solid var(--color-line);
+    color: var(--color-muted);
+    margin: 1rem 0 0;
     padding-left: 0.75rem;
   }
 </style>
