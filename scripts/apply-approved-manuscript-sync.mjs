@@ -17,7 +17,7 @@ const synchronizations = {
   ],
   "src/content/stories/da-001-after-the-main-fan-stops.md": [
     {
-      before: "revision: \"Final Approved Story v20\"",
+      before: "revision: \"Final Approved Story v21\"",
       after: "revision: \"Final Approved Story v23\"",
     },
     {
