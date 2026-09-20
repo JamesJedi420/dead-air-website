@@ -72,6 +72,7 @@
     X-Frame-Options = "DENY"
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    Content-Security-Policy = "form-action 'self' https://www.aweber.com"
 
 [[headers]]
   for = "/_astro/*"
