@@ -144,7 +144,10 @@ if (!(await exists(timelineHtmlPath))) {
     ]) {
       if (!item.includes(expected)) fail(`${entry.title}: timeline item missing ${JSON.stringify(expected)}`);
     }
-    if (item.includes(entry.publicationDate)) fail(`${entry.title}: Dead Air publication date is presented as a narrative event date`);\n    for (const internalLabel of ["Continuity position", "Archive position", "Source sequence", "Date precision"]) {\n      if (item.includes(internalLabel)) fail(`${entry.title}: public timeline exposes internal label ${JSON.stringify(internalLabel)}`);\n    }
+    if (item.includes(entry.publicationDate)) fail(`${entry.title}: Dead Air publication date is presented as a narrative event date`);
+    for (const internalLabel of ["Continuity position", "Archive position", "Source sequence", "Date precision"]) {
+      if (item.includes(internalLabel)) fail(`${entry.title}: public timeline exposes internal label ${JSON.stringify(internalLabel)}`);
+    }
   }
 }
 
