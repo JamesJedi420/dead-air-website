@@ -69,77 +69,6 @@ const exists = async (filePath) => {
 };
 
 const readScalar = (frontmatter, key) => {
-  const raw = frontmatter.match(new RegExp(`^${key}:\\s*(.+)import { readFile, stat } from "node:fs/promises";
-import path from "node:path";
-import process from "node:process";
-
-const root = process.cwd();
-const timelineHtmlPath = path.join(root, "dist", "timeline", "index.html");
-
-const entries = [
-  {
-    path: "da-001-after-the-main-fan-stops.md",
-    route: "/stories/da-001-after-the-main-fan-stops/",
-    title: "After the Main Fan Stops",
-    order: "1",
-    label: "January 2015 — Initial Cedar Plain investigation",
-    sourceOrder: "Original investigation",
-    precision: "approximate",
-    note: "Approximately January 2015; the sealed-corridor coda follows about three weeks later. This creative placement does not import the real source school's construction date or source publication date.",
-    follows: [],
-    precedes: ["da-002-the-name-in-the-room"],
-    publicationDate: "August 1, 2026",
-  },
-  {
-    path: "da-002-the-name-in-the-room.md",
-    route: "/stories/da-002-the-name-in-the-room/",
-    title: "The Name in the Room",
-    order: "2",
-    label: "Late February 2015 — Return investigation and attempted cleansing",
-    sourceOrder: "Follow-up investigation",
-    precision: "approximate",
-    note: "Approved fictional placement after DA-001. Source research reports the cleansing footage was filmed in early January 2015, so this deliberately diverges from source filming order; publication dates are not event dates.",
-    follows: ["da-001-after-the-main-fan-stops"],
-    precedes: ["da-003-the-recorder-kept-running"],
-    publicationDate: "July 27, 2026",
-  },
-  {
-    path: "da-003-the-recorder-kept-running.md",
-    route: "/stories/da-003-the-recorder-kept-running/",
-    title: "The Recorder Kept Running",
-    order: "3",
-    label: "Summer 2017 — Harrow River investigation",
-    sourceOrder: "Independent source investigation",
-    precision: "seasonal",
-    note: "Warm-season placement is supported by the source environment; exact filming date is unknown. Position after DA-002 and before DA-004 is calendar ordering only and establishes no causal or paranormal connection.",
-    follows: ["da-002-the-name-in-the-room"],
-    precedes: ["da-004-close-enough-to-recognize"],
-    publicationDate: "August 18, 2026",
-  },
-  {
-    path: "da-004-close-enough-to-recognize.md",
-    route: "/stories/da-004-close-enough-to-recognize/",
-    title: "Close Enough to Recognize",
-    order: "4",
-    label: "September 2017 — Kestrel Hotel overnight investigation",
-    sourceOrder: "Independent source investigation",
-    precision: "approximate",
-    note: "Approximate September 2017 placement, bounded more cautiously as late summer / early autumn. Conflicting source publication dates are provenance only; position after DA-003 establishes no causal or paranormal connection.",
-    follows: ["da-003-the-recorder-kept-running"],
-    precedes: [],
-    publicationDate: "September 14, 2026",
-  },
-];
-
-const exists = async (filePath) => {
-  try {
-    return (await stat(filePath)).isFile();
-  } catch {
-    return false;
-  }
-};
-
-const readScalar = (frontmatter, key) => {
   const raw = frontmatter.match(new RegExp(`^${key}:\\s*(.+)$`, "m"))?.[1]?.trim();
   if (raw === undefined) return undefined;
   if (raw.startsWith('"') && raw.endsWith('"')) {
@@ -216,7 +145,10 @@ if (!(await exists(timelineHtmlPath))) {
     }
     const item = html.slice(listItemStart, listItemEnd + "</li>".length);
     for (const expected of [
+      `Continuity position ${entry.order}`,
       entry.label,
+      entry.sourceOrder,
+      entry.precision === "seasonal" ? "Seasonal" : "Approximate",
       entry.note,
       entry.title,
     ]) {
