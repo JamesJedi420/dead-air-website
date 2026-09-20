@@ -139,7 +139,8 @@ const exists = async (filePath) => {
   }
 };
 
-, "m"))?.[1]?.trim();
+const readScalar = (frontmatter, key) => {
+  const raw = frontmatter.match(new RegExp(`^${key}:\\s*(.+)$`, "m"))?.[1]?.trim();
   if (raw === undefined) return undefined;
   if (raw.startsWith('"') && raw.endsWith('"')) {
     try {
