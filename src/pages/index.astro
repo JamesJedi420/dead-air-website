@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import ArchiveCard from "../components/ArchiveCard.astro";
 import HomepageArchiveVisual from "../components/HomepageArchiveVisual.astro";
+import NewsletterSignup from "../components/NewsletterSignup.astro";
 import SiteLayout from "../layouts/SiteLayout.astro";
 import { entryUrl, isPublished } from "../lib/archive";
 
@@ -84,6 +85,10 @@ const caseMeta = publishedCases.length > 0
       />
     </section>
   )}
+
+  <section class="section email-updates" aria-label="Dead Air email updates">
+    <NewsletterSignup id="home-email-updates" />
+  </section>
 
   <section class="section" aria-labelledby="index-title">
     <div class="section-header">
@@ -258,6 +263,11 @@ const caseMeta = publishedCases.length > 0
 
   .latest-release .archive-card {
     max-width: 48rem;
+  }
+
+  .email-updates {
+    padding-bottom: 0;
+    padding-top: 0;
   }
 
   .archive-threshold {
