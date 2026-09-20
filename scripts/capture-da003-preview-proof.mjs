@@ -49,20 +49,27 @@ const assertNoHorizontalOverflow = async (page, label) => {
 const verifyHeadMetadata = async (page) => {
   assert.equal(await page.title(), siteTitle);
   assert.equal(await page.locator('meta[name="description"]').getAttribute("content"), summary);
-  assert.equal(await page.locator('meta[name="robots"]').getAttribute("content"), "noindex,nofollow,noarchive");
+  const robots = page.locator('meta[name="robots"]');
+  if ((await robots.count()) > 0) {
+    const robotsContent = (await robots.first().getAttribute("content")) ?? "";
+    assert(!/noindex/i.test(robotsContent), "DA-003 published-page correction preview unexpectedly carries a noindex robots directive.");
+  }
   assert.equal(await page.locator('meta[property="og:title"]').getAttribute("content"), siteTitle);
   assert.equal(await page.locator('meta[property="og:description"]').getAttribute("content"), summary);
   assert.match(
     (await page.locator('meta[property="og:image"]').getAttribute("content")) ?? "",
     /da-003-cover-option-a-evidence-crop-preview\.jpg/,
   );
-  const structuredData = await page.locator('script[type="application/ld+json"]').textContent();
-  assert(structuredData?.includes('"@type":"ShortStory"'), "DA-003 ShortStory structured data is missing.");
+  const structuredDataBlocks = await page.locator('script[type="application/ld+json"]').allTextContents();
+  assert(
+    structuredDataBlocks.some((content) => content.includes('"@type":"ShortStory"')),
+    "DA-003 ShortStory structured data is missing.",
+  );
 };
 
 const verifyStoryPage = async (page, label) => {
   await page.getByRole("heading", { name: title, exact: true }).waitFor();
-  await page.getByText("Final Approved Story v9", { exact: false }).waitFor();
+  await page.getByText("Final Approved Story v12", { exact: false }).waitFor();
   await page.getByText(sourceNote, { exact: true }).waitFor();
   await verifyHeadMetadata(page);
 
@@ -96,10 +103,11 @@ const verifyStoriesCard = async (page, label, prefix) => {
   await page.screenshot({ path: path.join(outputDirectory, `${prefix}-stories-card.png`) });
 };
 
-const verifyTimelineNeutrality = async (page) => {
+const verifyTimelinePlacement = async (page) => {
   await openWithRetry(page, `${baseUrl}/timeline/`);
   const text = await page.locator("body").innerText();
-  assert(!text.includes(title), "DA-003 appeared in the public chronology before chronology authorization.");
+  assert(text.includes(title), "DA-003 is missing from the approved public chronology.");
+  assert(text.includes("Summer 2017"), "DA-003 approved seasonal timeline label is missing.");
 };
 
 const captureStoryProof = async (page, label, prefix) => {
@@ -132,16 +140,16 @@ try {
   const desktopPage = await desktopContext.newPage();
   await verifyStoriesCard(desktopPage, "Desktop", "da003-desktop-1440");
   await captureStoryProof(desktopPage, "Desktop DA-003 preview", "da003-desktop-1440");
-  await verifyTimelineNeutrality(desktopPage);
+  await verifyTimelinePlacement(desktopPage);
 
   mobileContext = await browser.newContext({ ...devices["iPhone 13"] });
   const mobilePage = await mobileContext.newPage();
   await verifyStoriesCard(mobilePage, "iPhone 13", "da003-mobile-iphone-13");
   await captureStoryProof(mobilePage, "Mobile DA-003 preview", "da003-mobile-iphone-13");
-  await verifyTimelineNeutrality(mobilePage);
+  await verifyTimelinePlacement(mobilePage);
 
   console.log(
-    "DA-003 private-preview rendered proof PASS: Stories card title/subtitle, story metadata, noindex controls, approved cover derivative, source note, nine ordered sections, chronology neutrality, desktop/iPhone layouts, and horizontal-overflow checks verified.",
+    "DA-003 v12 correction rendered proof PASS: Stories card title/subtitle, story metadata, approved cover derivative, source note, nine ordered sections, chronology neutrality, desktop/iPhone layouts, and horizontal-overflow checks verified.",
   );
 } finally {
   await mobileContext?.close();

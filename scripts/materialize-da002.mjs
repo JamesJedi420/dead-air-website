@@ -49,14 +49,16 @@ const chronologyMetadata = [
   `revision: ${correctedRevision}`,
   "publicationDate: 2026-07-27",
   "timelineOrder: 2",
-  "timelineLabel: Return investigation and attempted cleansing",
+  "timelineLabel: Late February 2015 — Return investigation and attempted cleansing",
   "sourceOrder: Follow-up investigation",
-  "datePrecision: relative",
-  "chronologyNote: Placed after DA-001 in the relative archive chronology; the exact interval remains unresolved.",
+  "datePrecision: approximate",
+  "chronologyNote: Approved fictional placement after DA-001. Source research reports the cleansing footage was filmed in early January 2015, so this deliberately diverges from source filming order; publication dates are not event dates.",
   "follows:",
   "  - collection: stories",
   "    slug: da-001-after-the-main-fan-stops",
-  "precedes: []",
+  "precedes:",
+  "  - collection: stories",
+  "    slug: da-003-the-recorder-kept-running",
 ].join("\n");
 
 const sha256 = (value) => createHash("sha256").update(value, "utf8").digest("hex");
@@ -144,5 +146,5 @@ const actualPublicationSha256 = sha256(manuscript);
 
 await writeFile(outputPath, manuscript, "utf8");
 console.log(
-  `Materialized DA-002 ${correctedRevision} for publication (${actualPublicationSha256}); frozen v12 repository source preserved (${actualSourceSha256}); REN-001 school-identity, REN-002 Miriam Danner, REN-003 Marian Ketter, REN-004 Renshaw Theatre, and REN-005 The Spare Chaperon migrations applied after source verification; bounded objective-error correction layer applied; approved website/card subtitle applied as publishing metadata; standard source note supplied by the shared story template; public divisions rendered as numbered section headings; narrative chronology fixed at archive position 2 after DA-001.`,
+  `Materialized DA-002 ${correctedRevision} for publication (${actualPublicationSha256}); frozen v12 repository source preserved (${actualSourceSha256}); REN-001 school-identity, REN-002 Miriam Danner, REN-003 Marian Ketter, REN-004 Renshaw Theatre, and REN-005 The Spare Chaperon migrations applied after source verification; bounded objective-error correction layer applied; approved website/card subtitle applied as publishing metadata; standard source note supplied by the shared story template; public divisions rendered as numbered section headings; narrative chronology fixed at late February 2015 after DA-001, with the source-filming divergence disclosed.`,
 );

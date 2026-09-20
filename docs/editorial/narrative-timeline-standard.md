@@ -2,11 +2,11 @@
 
 ## Purpose
 
-The Dead Air Archive maintains a narrative chronology that is separate from publication order and from the dates of the source material. The chronology follows the approximate sequence of the reported investigations and transcripts that informed the fiction while preserving the archive's fictionalization, redaction, and uncertainty boundaries.
+The Dead Air Archive maintains a narrative chronology that is separate from publication order and from source recording or release dates. The chronology uses approved in-world calendar placements derived from story continuity, source chronology, seasonal evidence, and explicit adaptation decisions while preserving fictionalization, redaction, and uncertainty boundaries.
 
 ## House rule
 
-Dead Air stories are placed in narrative chronology according to the approximate order of their source investigations. Exact dates may be fictionalized, withheld, seasonal, or left unresolved, but follow-up investigations, returns to prior locations, and consequences of earlier cases must retain their relative order. Publication order does not determine narrative order.
+Dead Air stories are placed in narrative chronology according to the narrowest approved in-world dating supported by the fiction and source record. Source chronology is evidence, not an automatic controlling order: an adaptation may deliberately diverge from source filming order when the divergence is documented and approved. Publication order does not determine narrative order.
 
 ## Three distinct orders
 
@@ -49,14 +49,16 @@ Use the narrowest precision supported by the fiction and source sequence:
 
 A source upload date, video release date, transcript timestamp, or publication date does not automatically become an in-world event date.
 
-## Initial locked sequence
+## Approved calendar sequence
 
-| Narrative order | Entry | Timeline label | Source sequence |
-| --- | --- | --- | --- |
-| 1 | DA-001 — *The Building Keeps the Hour* | Initial Cedar Plain investigation | Original investigation |
-| 2 | DA-002 — *The Name in the Room* | Return investigation and attempted cleansing | Follow-up investigation |
+| Narrative order | Entry | Approved placement | Precision | Source sequence |
+| --- | --- | --- | --- | --- |
+| 1 | DA-001 — *After the Main Fan Stops* | January 2015 | Approximate | Original investigation |
+| 2 | DA-002 — *The Name in the Room* | Late February 2015 | Approximate | Follow-up investigation |
+| 3 | DA-003 — *The Recorder Kept Running* | Summer 2017 | Seasonal | Independent source investigation |
+| 4 | DA-004 — *Close Enough to Recognize* | September 2017 | Approximate | Independent source investigation |
 
-DA-001 may remain absent from the public site until its story is publication-ready. Its public-safe chronology reservation makes it a resolvable position-1 target without publishing a placeholder. DA-002 retains `timelineOrder: 2` and an explicit `follows` relationship so later publication of DA-001 cannot reverse the established sequence.
+DA-001 → DA-002 is established story continuity. DA-002 → DA-003 → DA-004 is an approved calendar ordering only and does not establish causal contact, shared exposure, shared paranormal mechanism, or character knowledge across those independent cases. DA-002 is also an approved source-to-fiction chronology divergence: preserved research places the source cleansing footage in early January 2015, while the fiction requires the return to occur after DA-001's later corridor coda, inspections, and documentary circulation.
 
 ## Adaptation boundaries
 

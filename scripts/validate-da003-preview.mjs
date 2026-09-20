@@ -36,7 +36,7 @@ const html = await readFile(routePath, "utf8");
 const source = await readFile(storySource, "utf8");
 for (const needle of [
   "The Recorder Kept Running",
-  "Final Approved Story v9",
+  "Final Approved Story v12",
   "1. The Unfinished House",
   "9. The Cut We Keep",
   "The passenger door stood open when Maren looked up from the camera.",
@@ -63,7 +63,17 @@ if (html.includes("four hard wheel contacts followed by a softer drag")) throw n
 if (/name="robots" content="noindex/i.test(html)) throw new Error("DA-003 publication output is still marked noindex.");
 if (!/publicationDate:\s*2026-08-18/i.test(source)) throw new Error("DA-003 publication date is missing or incorrect.");
 if (!/previewOnly:\s*false/i.test(source)) throw new Error("DA-003 website source is still preview-only.");
-if (/timelineOrder|timelineLabel|sourceOrder|datePrecision|chronologyNote|follows:|precedes:/i.test(source)) throw new Error("Unsupported DA-003 cross-case chronology metadata was materialized.");
+for (const chronologyNeedle of [
+  "timelineOrder: 3",
+  "timelineLabel: Summer 2017 — Harrow River investigation",
+  "sourceOrder: Independent source investigation",
+  "datePrecision: seasonal",
+  "chronologyNote: Warm-season placement is supported by the source environment; exact filming date is unknown. Position after DA-002 and before DA-004 is calendar ordering only and establishes no causal or paranormal connection.",
+  "slug: da-002-the-name-in-the-room",
+  "slug: da-004-close-enough-to-recognize",
+]) {
+  if (!source.includes(chronologyNeedle)) throw new Error(`DA-003 approved chronology metadata missing ${chronologyNeedle}.`);
+}
 
 const headingMatches = [...html.matchAll(/<h2[^>]*>(?:<[^>]+>)*([1-9])\.\s/g)];
 if (headingMatches.length !== 9) throw new Error(`Expected 9 numbered DA-003 h2 sections, found ${headingMatches.length}.`);
@@ -88,4 +98,4 @@ for (const name of sitemapCandidates) {
 }
 if (!sitemapText.includes(canonicalUrl)) throw new Error("Sitemap does not include the canonical DA-003 route.");
 
-console.log(`DA-003 Website v1.1 correction validation PASS: corrected edition Final Approved Story v9; frozen Website v1.0 source ${sourceHash} (raw approved export ${expectedRawExportSha256}); cover ${coverHash}; nine numbered sections; standard source note; indexable metadata; publication date 2026-08-18; RSS/search/sitemap inclusion; chronology neutrality; claim ceiling; no internal-material leakage.`);
+console.log(`DA-003 v12 correction-preparation validation PASS: corrected edition Final Approved Story v12; frozen Website v1.0 source ${sourceHash} (raw approved export ${expectedRawExportSha256}); cover ${coverHash}; nine numbered sections; standard source note; indexable metadata; publication date 2026-08-18; RSS/search/sitemap inclusion; approved seasonal chronology without causal promotion; claim ceiling; no internal-material leakage.`);

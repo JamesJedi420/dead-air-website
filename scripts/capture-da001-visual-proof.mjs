@@ -53,7 +53,7 @@ const assertNoHorizontalOverflow = async (page, label) => {
 const verifyStoryContent = async (page) => {
   assert.equal(await page.title(), `${storyTitle} | Dead Air`);
   await page.getByRole("heading", { name: storyTitle, exact: true }).waitFor();
-  await page.getByText("Final Approved Story v20", { exact: false }).waitFor();
+  await page.getByText("Final Approved Story v23", { exact: false }).waitFor();
   await page
     .getByText(
       "Based on reported paranormal-investigation accounts. Some events, characters, and identifying details have been fictionalized.",
@@ -162,8 +162,10 @@ try {
   }
   assert(da001Index >= 0, "Timeline must contain the DA-001 story entry.");
   assert(da002Index > da001Index, "Timeline must place the DA-002 story entry after DA-001.");
-  assert.match(da001Text, /Archive position\s+1/i, "DA-001 timeline card must show archive position 1.");
-  assert.match(da002Text, /Archive position\s+2/i, "DA-002 timeline card must show archive position 2.");
+  assert.match(da001Text, /January 2015 — Initial Cedar Plain investigation/i, "DA-001 timeline card must show its approved January 2015 chronology label.");
+  assert.match(da002Text, /Late February 2015 — Return investigation and attempted cleansing/i, "DA-002 timeline card must show its approved late-February 2015 chronology label.");
+  assert.doesNotMatch(da001Text, /(?:Archive|Continuity) position/i, "DA-001 timeline card must not expose an internal position label.");
+  assert.doesNotMatch(da002Text, /(?:Archive|Continuity) position/i, "DA-002 timeline card must not expose an internal position label.");
   await assertNoHorizontalOverflow(desktopPage, "Desktop timeline page");
 
   mobileContext = await browser.newContext({ ...devices["iPhone 13"] });
