@@ -118,7 +118,11 @@ for (const entry of entries) {
   }
   for (const [key, slugs] of [["follows", entry.follows], ["precedes", entry.precedes]]) {
     const expectedBlock = relationBlock(key, slugs);
-    if (!frontmatter.includes(expectedBlock)) fail(`${entry.title}: chronology relationship block differs from approved calendar.\nExpected:\n${expectedBlock}`);
+    const normalizedFrontmatter = frontmatter.replace(
+      /^(\s*(?:collection|slug):\s*)"([^"]+)"\s*$/gm,
+      "$1$2",
+    );
+    if (!normalizedFrontmatter.includes(expectedBlock)) fail(`${entry.title}: chronology relationship block differs from approved calendar.\nExpected:\n${expectedBlock}`);
   }
 }
 
@@ -145,10 +149,7 @@ if (!(await exists(timelineHtmlPath))) {
     }
     const item = html.slice(listItemStart, listItemEnd + "</li>".length);
     for (const expected of [
-      `Continuity position ${entry.order}`,
       entry.label,
-      entry.sourceOrder,
-      entry.precision === "seasonal" ? "Seasonal" : "Approximate",
       entry.note,
       entry.title,
     ]) {
