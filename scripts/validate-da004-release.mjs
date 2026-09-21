@@ -39,14 +39,14 @@ const readText = async (relative) => readFile(path.join(dist, relative), "utf8")
 
 if (!(await exists(dist))) throw new Error("Astro dist directory missing.");
 const lock = JSON.parse(await readFile(lockPath, "utf8"));
-if (lock.canonicalFragmentSha256 !== expectedSourceSha || lock.publicReleaseAuthorized !== true || lock.publicationDate !== publicationDate || lock.lockStatus !== "IMMUTABLE_APPROVED_SOURCE") throw new Error("DA-004 publication source lock mismatch.");
+if (lock.canonicalFragmentSha256 !== expectedSourceSha || lock.approvedRevision !== "Final Approved Story v1.7" || lock.publicReleaseAuthorized !== true || lock.publicationDate !== publicationDate || lock.lockStatus !== "IMMUTABLE_APPROVED_SOURCE") throw new Error("DA-004 historical v1.7 publication source lock mismatch.");
 
 const sourceText = await readFile(source, "utf8");
 for (const value of [
-  `slug: ${slug}`, `title: ${title}`, `summary: ${summary}`, "status: active", "draft: false", "previewOnly: false", `publicationDate: ${publicationDate}`, `coverAlt: \"${alt}\"`, `ogImageAlt: \"${alt}\"`, "## 1. Arrival", "## 10. Raw Audio",
-]) if (!sourceText.includes(value)) throw new Error(`DA-004 publication source missing ${value}`);
-for (const asset of assets) if (!sourceText.includes(asset)) throw new Error(`DA-004 publication source missing approved release asset ${asset}`);
-if (sourceText.includes(oldAlt) || oldAssetTokens.some((token) => sourceText.includes(token))) throw new Error("Superseded DA-004 hero-art lineage remains active in publication source.");
+  `slug: ${slug}`, `title: ${title}`, `summary: ${summary}`, "status: active", "draft: false", "previewOnly: false", "revision: Final Approved Story v1.10", `publicationDate: ${publicationDate}`, `coverAlt: \"${alt}\"`, `ogImageAlt: \"${alt}\"`, "## 1. Arrival", "## 10. Raw Audio",
+]) if (!sourceText.includes(value)) throw new Error(`DA-004 v1.10 correction source missing ${value}`);
+for (const asset of assets) if (!sourceText.includes(asset)) throw new Error(`DA-004 correction source missing approved release asset ${asset}`);
+if (sourceText.includes(oldAlt) || oldAssetTokens.some((token) => sourceText.includes(token))) throw new Error("Superseded DA-004 hero-art lineage remains active in correction source.");
 
 for (const relative of [hero, mobile]) {
   const target = path.join(dist, relative.replace(/^\//, ""));
@@ -57,27 +57,27 @@ for (const relative of [hero, mobile]) {
 
 const publicPage = path.join(dist, "stories", slug, "index.html");
 const previewPage = path.join(dist, "preview", slug, "index.html");
-if (!(await exists(publicPage))) throw new Error("DA-004 public story route missing.");
-if (await exists(previewPage)) throw new Error("DA-004 private preview route must not ship after publication authorization.");
+if (!(await exists(publicPage))) throw new Error("DA-004 correction-preview story route missing.");
+if (await exists(previewPage)) throw new Error("DA-004 private preview route must not ship after the original publication authorization.");
 const html = await readFile(publicPage, "utf8");
-for (const value of [title, summary, alt, canonicalUrl, "fetchpriority=\"high\"", "loading=\"eager\"", "article:published_time"]) if (!html.includes(value)) throw new Error(`DA-004 public page missing ${value}`);
-if (/noindex|nofollow|noarchive/i.test(html)) throw new Error("DA-004 public story page remains noindexed.");
-for (const asset of assets) if (!html.includes(asset)) throw new Error(`DA-004 public page/structured data missing approved asset ${asset}`);
-if (html.includes(oldAlt) || oldAssetTokens.some((token) => html.includes(token))) throw new Error("Superseded DA-004 hero art/alt leaked into public page.");
+for (const value of [title, summary, alt, canonicalUrl, "Final Approved Story v1.10", "fetchpriority=\"high\"", "loading=\"eager\"", "article:published_time"]) if (!html.includes(value)) throw new Error(`DA-004 correction preview missing ${value}`);
+if (/noindex|nofollow|noarchive/i.test(html)) throw new Error("DA-004 correction preview unexpectedly renders a noindex public story page.");
+for (const asset of assets) if (!html.includes(asset)) throw new Error(`DA-004 correction page/structured data missing approved asset ${asset}`);
+if (html.includes(oldAlt) || oldAssetTokens.some((token) => html.includes(token))) throw new Error("Superseded DA-004 hero art/alt leaked into correction page.");
 
 const storiesIndex = await readText("stories/index.html");
-if (!storiesIndex.includes(title) || !storiesIndex.includes(slug)) throw new Error("DA-004 missing from public stories archive.");
+if (!storiesIndex.includes(title) || !storiesIndex.includes(slug)) throw new Error("DA-004 missing from correction-build stories archive.");
 const feed = await readText("feed.xml");
-if (!feed.includes(title) || !feed.includes(`/stories/${slug}/`) || !feed.includes("2026")) throw new Error("DA-004 missing or incomplete in RSS feed.");
+if (!feed.includes(title) || !feed.includes(`/stories/${slug}/`) || !feed.includes("2026")) throw new Error("DA-004 missing or incomplete in correction-build RSS feed.");
 const feedOccurrences = feed.split(`<title>${title}</title>`).length - 1;
 if (feedOccurrences !== 1) throw new Error(`Expected exactly one DA-004 RSS item, found ${feedOccurrences}.`);
 
 const sitemapFiles = (await readdir(dist)).filter((name) => /^sitemap.*\.xml$/i.test(name));
 let sitemapText = "";
 for (const name of sitemapFiles) sitemapText += await readText(name);
-if (!sitemapText.includes(`/stories/${slug}/`)) throw new Error("DA-004 missing from public sitemap output.");
+if (!sitemapText.includes(`/stories/${slug}/`)) throw new Error("DA-004 missing from correction-build sitemap output.");
 
 const forbiddenFeedTokens = ["previewOnly: true", "status: withheld", "publicReleaseAuthorized", "PTW-", "CPO-"];
 for (const token of forbiddenFeedTokens) if (feed.includes(token)) throw new Error(`Internal/withheld token leaked into RSS: ${token}`);
 
-console.log("DA-004 release validation PASS: public route, indexability, publication metadata, v3.0 redraw responsive art, archive, RSS, sitemap, and leak controls confirmed.");
+console.log("DA-004 v1.10 non-public correction validation PASS: historical v1.7 source lock preserved; v1.10 overlay rendered; route, indexability, publication metadata, v3.0 responsive art, archive, RSS, sitemap, and leak controls confirmed. Full v1.10 source-lock migration remains required before any later corrective publication merge.");
