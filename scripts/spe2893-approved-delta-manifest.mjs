@@ -6,6 +6,10 @@ export const spe2893Manifest = {
     "approvalDeltaCount": 14,
     "repairs": [
       {
+        "before": "There it was—the question Eli had brought six hours and three bags of equipment to ask. Not what made the sound. Not where it came from. Something.",
+        "after": ""
+      },
+      {
         "before": "Eli’s face changed. “What?”",
         "after": "“What?”"
       },
@@ -38,32 +42,27 @@ export const spe2893Manifest = {
         "after": ""
       },
       {
+        "before": "There it was.\n\nNot relief exactly.\n\nSomething close enough.",
+        "after": ""
+      },
+      {
         "before": "Martin had called out, not Eli.",
+        "after": ""
+      },
+      {
+        "before": "For the first time since the new sequence, something in his face eased.\n\nNot because the event had become ordinary.\n\nBecause they disagreed.",
+        "after": ""
+      },
+      {
+        "before": "For most of the night, Eli had been the one trying to close that distance.\n\nHe had wanted Martin to move from I heard it to I believe you, from I can’t explain it to something Eli could carry home as confirmation.\n\nNow Martin was trying to move one step past the event himself.\n\nEli did not let him.",
+        "after": ""
+      },
+      {
+        "before": "Martin wanted the recordings.\n\nMartin wanted to listen again.\n\nMartin had followed the knocks out of the room, knocked the rhythm back, and now wanted the original files in his own possession.",
         "after": ""
       }
     ],
-    "preSatisfied": [
-      {
-        "absent": "There it was—the question Eli had brought six hours and three bags of equipment to ask. He wanted Martin to say there was something in the room.",
-        "reason": "Already removed by the DA-004 Final Approved Story v1.10 synchronization before SPE-2893 runs."
-      },
-      {
-        "absent": "Some of the tension left Martin’s face.",
-        "reason": "Already removed by the DA-004 Final Approved Story v1.10 synchronization before SPE-2893 runs."
-      },
-      {
-        "absent": "For the first time since the new sequence, something in Martin’s face eased when Eli placed the sound somewhere else.",
-        "reason": "Already removed by the DA-004 Final Approved Story v1.10 synchronization before SPE-2893 runs."
-      },
-      {
-        "absent": "For most of the night, Eli had been the one trying to close that distance.\n\nHe had wanted Martin to move from I heard it to I believe you, from I can’t explain it to something Eli could carry home as confirmation.\n\nNow Martin was trying to move one step past the event himself.\n\nEli did not let him.",
-        "reason": "Already removed by the DA-004 Final Approved Story v1.10 synchronization before SPE-2893 runs."
-      },
-      {
-        "absent": "Martin wanted the recordings.\n\nMartin wanted to listen again.\n\nMartin had followed the knocks out of the room, knocked the rhythm back, and now wanted the original files in his own possession.",
-        "reason": "Already removed by the DA-004 Final Approved Story v1.10 synchronization before SPE-2893 runs."
-      }
-    ]
+    "preSatisfied": []
   },
   "src/content/stories/da-001-after-the-main-fan-stops.md": {
     "candidateId": "DA-001 v22",
