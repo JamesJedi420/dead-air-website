@@ -115,6 +115,18 @@ const synchronizations = {
       after: "She still felt the jolt of hearing the frog call before her mouth had fully closed.",
     },
   ],
+  "src/content/stories/da-004-close-enough-to-recognize.md": [
+    { before: "revision: Final Approved Story v1.7", after: "revision: Final Approved Story v1.10" },
+    { before: "There it was—the question Eli had brought six hours and three bags of equipment to ask. He wanted Martin to say there was something in the room.", after: "" },
+    { before: "Eli lowered the camera. An hour ago he would have taken Martin’s silence as victory. He had wanted exactly this: his father unable to dismiss something, unable to turn it into a loose hinge or a draft or a story somebody had told before they arrived.\n\nNow Martin looked less convinced than cornered.", after: "Eli lowered the camera. An hour ago he would have taken Martin’s silence as victory.\n\nNow Martin looked less convinced than cornered." },
+    { before: "No unexplained chair movement he had to solve. No chair dragging itself across carpet while the room sat empty. No reason to rewind the camera except to confirm a movement Martin had just admitted making.", after: "" },
+    { before: "He had separated himself from Martin. He had not separated either of them from the conditions Martin had warned him about.", after: "" },
+    { before: "The gesture looked different coming from him than it ever had in Eli’s memory. Martin stood in the hotel corridor and repeated the cadence in his ordinary voice. Eli watched his father wait for an answer after two hours of demanding a source, a mechanism, and proof before he would call any sound communication.", after: "The gesture looked different coming from him than it ever had in Eli’s memory." },
+    { before: "Some of the tension left Martin’s face.", after: "" },
+    { before: "For the first time since the new sequence, something in Martin’s face eased when Eli placed the sound somewhere else.\n\nThe new impacts left them with the same problem they had already faced: both men had heard them, and neither could place them precisely.", after: "" },
+    { before: "For most of the night, Eli had been the one trying to close that distance.\n\nHe had wanted Martin to move from I heard it to I believe you, from I can’t explain it to something Eli could carry home as confirmation.\n\nNow Martin was trying to move one step past the event himself.\n\nEli did not let him.", after: "" },
+    { before: "Martin wanted the recordings.\n\nMartin wanted to listen again.\n\nMartin had followed the knocks out of the room, knocked the rhythm back, and now wanted the original files in his own possession.\n\nEli could have made all of that mean something larger.", after: "" },
+  ],
 };
 
 let synchronizationCount = 0;
