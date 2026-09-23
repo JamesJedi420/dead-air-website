@@ -169,6 +169,8 @@ const frontmatter = [
   "---",
   `slug: ${scalar(manifest.slug)}`,
   `title: ${scalar(manifest.title)}`,
+  `cardImage: ${scalar("https://res.cloudinary.com/szvtq9d8/image/upload/v1790061353/dead-air/after-main-fan-stops/publication/after-main-fan-stops-key-card-3x2.webp")}`,
+  `coverAlt: ${scalar("A worn brass key lies wet on a scratched dark work surface under practical overhead light.")}`,
   `summary: ${scalar(metadata.summary)}`,
   "status: active",
   `classification: ${scalar(metadata.classification)}`,
