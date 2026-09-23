@@ -41,20 +41,16 @@ const synchronizations = {
   ],
   "src/content/stories/da-001-after-the-main-fan-stops.md": [
     {
-      before: "revision: \"Final Approved Story v20\"",
+      before: "revision: \"Final Approved Story v21\"",
       after: "revision: \"Final Approved Story v23\"",
     },
     {
-      before: "“Continuous footage of us,” Diane said. “The lobby, the stairs, and this room are all outside the frame.”",
+      before: "“Continuous footage of us,” Diane said. “The lobby, the stairs, and this room were outside the camera.”",
       after: "“Continuous footage of us,” Diane said. “Not the lobby. Not the stairs. Not this room.”",
     },
     {
-      before: "Ron’s face hardened. “I gave you an interview. Leave it there.”",
+      before: "Ron’s face hardened. “I gave you an interview. I didn’t agree to be part of another test.”",
       after: "Ron’s face hardened. “My account was an interview, not an invitation.”",
-    },
-    {
-      before: "Ron heard the limit in Diane’s answer.",
-      after: "Diane’s answer was not a promise.\n\nRon heard the difference.",
     },
     {
       before: "He treated her warning as material.",
