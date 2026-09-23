@@ -10,10 +10,6 @@ const stories = sortEntries((await getCollection("stories")).filter(isPublished)
 // future published stories cannot silently fall back to a differently proportioned
 // cover/hero image and lose meaningful content or readable in-image text.
 const fallbackCardMedia: Record<string, { image: string; alt: string }> = {
-  "da-001-after-the-main-fan-stops": {
-    image: "/images/da-001-story-card.svg",
-    alt: "A stopped industrial ventilation fan at the end of a dark institutional corridor, with a brass key in the foreground.",
-  },
   "da-002-the-name-in-the-room": {
     image: "/images/da-002-story-card.svg",
     alt: "A closed institutional fire door in a dim basement corridor with a portable audio recorder in the foreground.",
