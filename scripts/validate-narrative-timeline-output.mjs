@@ -68,8 +68,18 @@ const exists = async (filePath) => {
   }
 };
 
-const readScalar = (frontmatter, key) =>
-  frontmatter.match(new RegExp(`^${key}:\\s*(.+)$`, "m"))?.[1]?.trim();
+const readScalar = (frontmatter, key) => {
+  const raw = frontmatter.match(new RegExp(`^${key}:\\s*(.+)$`, "m"))?.[1]?.trim();
+  if (raw === undefined) return undefined;
+  if (raw.startsWith('"') && raw.endsWith('"')) {
+    try {
+      return JSON.parse(raw);
+    } catch {
+      return raw;
+    }
+  }
+  return raw;
+};
 
 const relationBlock = (key, slugs) => {
   if (slugs.length === 0) return `${key}: []`;
@@ -108,7 +118,11 @@ for (const entry of entries) {
   }
   for (const [key, slugs] of [["follows", entry.follows], ["precedes", entry.precedes]]) {
     const expectedBlock = relationBlock(key, slugs);
-    if (!frontmatter.includes(expectedBlock)) fail(`${entry.title}: chronology relationship block differs from approved calendar.\nExpected:\n${expectedBlock}`);
+    const normalizedFrontmatter = frontmatter.replace(
+      /^(\s*(?:-\s+)?(?:collection|slug):\s*)"([^"]+)"\s*$/gm,
+      "$1$2",
+    );
+    if (!normalizedFrontmatter.includes(expectedBlock)) fail(`${entry.title}: chronology relationship block differs from approved calendar.\nExpected:\n${expectedBlock}`);
   }
 }
 
@@ -134,19 +148,24 @@ if (!(await exists(timelineHtmlPath))) {
       continue;
     }
     const item = html.slice(listItemStart, listItemEnd + "</li>".length);
+    const normalizedItem = item
+      .replaceAll("&apos;", "'")
+      .replaceAll("&#39;", "'")
+      .replaceAll("&#x27;", "'")
+      .replaceAll("&quot;", '"')
+      .replaceAll("&lt;", "<")
+      .replaceAll("&gt;", ">")
+      .replaceAll("&amp;", "&");
     for (const expected of [
-      `Continuity position ${entry.order}`,
       entry.label,
-      entry.sourceOrder,
-      entry.precision === "seasonal" ? "Seasonal" : "Approximate",
       entry.note,
       entry.title,
     ]) {
-      if (!item.includes(expected)) fail(`${entry.title}: timeline item missing ${JSON.stringify(expected)}`);
+      if (!normalizedItem.includes(expected)) fail(`${entry.title}: timeline item missing ${JSON.stringify(expected)}`);
     }
-    if (item.includes(entry.publicationDate)) fail(`${entry.title}: Dead Air publication date is presented as a narrative event date`);
+    if (normalizedItem.includes(entry.publicationDate)) fail(`${entry.title}: Dead Air publication date is presented as a narrative event date`);
     for (const internalLabel of ["Continuity position", "Archive position", "Source sequence", "Date precision"]) {
-      if (item.includes(internalLabel)) fail(`${entry.title}: public timeline exposes internal label ${JSON.stringify(internalLabel)}`);
+      if (normalizedItem.includes(internalLabel)) fail(`${entry.title}: public timeline exposes internal label ${JSON.stringify(internalLabel)}`);
     }
   }
 }

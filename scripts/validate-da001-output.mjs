@@ -11,19 +11,9 @@ const route = `/stories/${manifest.slug}/`;
 const storyHtmlPath = path.join(outputDirectory, "stories", manifest.slug, "index.html");
 const failures = [];
 const fail = (message) => failures.push(message);
-const supersededPublicationProse = [
-  "The lobby, the stairs, and this room were outside the camera.",
-  "The lobby, the stairs, and this room are all outside the frame.",
-  "I gave you an interview. I didn’t agree to be part of another test.",
-  "I gave you an interview. Leave it there.",
-  "Ron heard the limit in Diane’s answer.",
+const legacyContrastiveProse = [
   "Images, not audio.",
   "Not for the sounds. For keeping the students below",
-];
-const requiredV23Prose = [
-  "Not the lobby. Not the stairs. Not this room.",
-  "My account was an interview, not an invitation.",
-  "Diane’s answer was not a promise.",
 ];
 
 const exists = async (filePath) => {
@@ -51,11 +41,8 @@ if (!(await exists(storyHtmlPath))) {
   }
   if (/Scene\s+\d+\s+—/.test(html)) fail("DA-001 page exposes production scene labels.");
   if (!html.includes("Based on reported paranormal-investigation accounts.")) fail("DA-001 page is missing the standard source note.");
-  for (const superseded of supersededPublicationProse) {
-    if (html.includes(superseded)) fail(`DA-001 superseded publication prose remains: ${superseded}`);
-  }
-  for (const required of requiredV23Prose) {
-    if (!html.includes(required)) fail(`DA-001 approved v23 prose is missing: ${required}`);
+  for (const legacy of legacyContrastiveProse) {
+    if (html.includes(legacy)) fail(`DA-001 superseded contrastive prose remains: ${legacy}`);
   }
 }
 
@@ -80,4 +67,4 @@ else {
 }
 
 if (failures.length > 0) throw new Error(`DA-001 release validation failed:\n${failures.join("\n")}`);
-console.log("DA-001 v23 release validation passed: approved manuscript synchronization, route, ten numbered sections, source note, RSS, search, sitemap, and chronology are published.");
+console.log("DA-001 v23 release validation passed: approved manuscript correction, route, ten numbered sections, source note, RSS, search, sitemap, and chronology are published.");

@@ -76,7 +76,7 @@ jobs:
           if-no-files-found: error
           retention-days: 30
       - name: Capture DA-004 publication desktop/mobile proof
-        if: github.event_name == 'pull_request' && github.event.pull_request.number == 51
+        if: github.event_name == 'pull_request' && startsWith(github.head_ref, 'release/da-004-')
         run: |
           python3 -m http.server 4175 --directory dist > /tmp/dead-air-da004-http.log 2>&1 &
           server_pid=$!
@@ -89,7 +89,7 @@ jobs:
           done
           VISUAL_BASE_URL='http://127.0.0.1:4175' node scripts/capture-da004-release-proof.mjs
       - name: Upload DA-004 publication proof
-        if: github.event_name == 'pull_request' && github.event.pull_request.number == 51
+        if: github.event_name == 'pull_request' && startsWith(github.head_ref, 'release/da-004-')
         uses: actions/upload-artifact@v4
         with:
           name: da004-release-proof
@@ -97,7 +97,7 @@ jobs:
           if-no-files-found: error
           retention-days: 30
       - name: Capture DA-003 private-preview desktop and mobile proof
-        if: github.event_name == 'pull_request' && github.event.pull_request.number == 35
+        if: github.event_name == 'pull_request' && (github.event.pull_request.number == 35 || github.head_ref == 'release/da-003-v12-correction')
         run: |
           python3 -m http.server 4174 --directory dist > /tmp/dead-air-da003-http.log 2>&1 &
           server_pid=$!
@@ -109,7 +109,7 @@ jobs:
           done
           VISUAL_BASE_URL=http://127.0.0.1:4174 node scripts/capture-da003-preview-proof.mjs
       - name: Upload DA-003 private-preview proof
-        if: github.event_name == 'pull_request' && github.event.pull_request.number == 35
+        if: github.event_name == 'pull_request' && (github.event.pull_request.number == 35 || github.head_ref == 'release/da-003-v12-correction')
         uses: actions/upload-artifact@v4
         with:
           name: da003-private-preview-proof

@@ -45,12 +45,16 @@ const synchronizations = {
       after: "revision: \"Final Approved Story v23\"",
     },
     {
-      before: "“Continuous footage of us,” Diane said. “The lobby, the stairs, and this room were outside the camera.”",
+      before: "“Continuous footage of us,” Diane said. “The lobby, the stairs, and this room are all outside the frame.”",
       after: "“Continuous footage of us,” Diane said. “Not the lobby. Not the stairs. Not this room.”",
     },
     {
-      before: "Ron’s face hardened. “I gave you an interview. I didn’t agree to be part of another test.”",
+      before: "Ron’s face hardened. “I gave you an interview. Leave it there.”",
       after: "Ron’s face hardened. “My account was an interview, not an invitation.”",
+    },
+    {
+      before: "Ron heard the limit in Diane’s answer.",
+      after: "Diane’s answer was not a promise.\n\nRon heard the difference.",
     },
     {
       before: "He treated her warning as material.",
@@ -95,6 +99,20 @@ const synchronizations = {
     {
       before: "Diane held still. No voice, cold breath, or light change accompanied the mechanical transfer of force through worn metal, the withdrawal of a bolt, and the faint release of paint along the door’s edge. The key fit the lock. That fact required no interpretation.",
       after: "Diane held still. No voice, cold breath, or light change accompanied the mechanical transfer of force through worn metal, the withdrawal of a bolt, and the faint release of paint along the door’s edge. The key fit the lock.",
+    },
+  ],
+  "src/content/stories/da-003-the-recorder-kept-running.md": [
+    {
+      before: "revision: Final Approved Story v9",
+      after: "revision: Final Approved Story v12",
+    },
+    {
+      before: "Maren turned the camera on herself long enough to state the time, location, route division, reunion time, and the rule they had already broken by separating. Then she filmed Jonah repeating his route and conditions. She did not ask him to explain what he expected to prove. His proposal was already on the earlier recording. Arguing again would not undo the separation she had just authorized.",
+      after: "Maren turned the camera on herself long enough to state the time, location, route division, reunion time, and the rule they had already broken by separating. Then she filmed Jonah repeating his route and conditions.",
+    },
+    {
+      before: "The same timing had followed an ordinary statement. Maren could no longer treat the earlier sequence as unusual, even though she still felt the jolt of hearing the frog call before her mouth had fully closed.",
+      after: "She still felt the jolt of hearing the frog call before her mouth had fully closed.",
     },
   ],
 };
