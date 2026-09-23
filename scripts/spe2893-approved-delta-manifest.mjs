@@ -101,10 +101,6 @@ export const spe2893Manifest = {
         "after": ""
       },
       {
-        "before": "The sentence stated the conflict plainly. Diane watched Evan absorb it as rebuke and usable audio.",
-        "after": ""
-      },
-      {
         "before": "Abby used her name with concern rather than pressure.",
         "after": ""
       },
@@ -145,7 +141,12 @@ export const spe2893Manifest = {
         "after": ""
       }
     ],
-    "preSatisfied": []
+    "preSatisfied": [
+      {
+        "absent": "The sentence stated the conflict plainly. Diane watched Evan absorb it as rebuke and usable audio.",
+        "reason": "Already removed by apply-approved-manuscript-sync.mjs before SPE-2893 runs."
+      }
+    ]
   },
   "src/content/stories/da-002-the-name-in-the-room.md": {
     "candidateId": "DA-002 v15",
