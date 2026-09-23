@@ -5,20 +5,6 @@ import process from "node:process";
 const root = process.cwd();
 
 const repairs = {
-  "src/content/stories/da-001-after-the-main-fan-stops.md": [
-    [
-      "“Continuous footage of us,” Diane said. “Not the lobby. Not the stairs. Not this room.”",
-      "“Continuous footage of us,” Diane said. “The lobby, the stairs, and this room are all outside the frame.”",
-    ],
-    [
-      "Ron’s face hardened. “My account was an interview, not an invitation.”",
-      "Ron’s face hardened. “I gave you an interview. Leave it there.”",
-    ],
-    [
-      "Diane’s answer was not a promise.\n\nRon heard the difference.",
-      "Ron heard the limit in Diane’s answer.",
-    ],
-  ],
   "src/content/stories/da-002-the-name-in-the-room.md": [
     [
       "Ron answered before she could. “A cleansing is not an investigation.”\n\n“That’s why we’re recording it.”",
