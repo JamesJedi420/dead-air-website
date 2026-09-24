@@ -14,7 +14,7 @@ Dead Air stories are placed in narrative chronology according to the narrowest a
 2. **Publication order** — when reader-facing entries become public.
 3. **Source chronology** — the approximate order of the underlying investigations, recordings, or transcripts.
 
-The public Timeline page is governed by narrative order. RSS and release records remain governed by publication order. Private source records may document source chronology but are never published merely to support the public timeline.
+The public Timeline page is governed by narrative order. Its primary reader-facing information is the approved approximate date/range, the precision/confidence of that placement, and meaningful elapsed intervals between adjacent cases. Numeric timeline/archive position is implementation metadata and must not be the primary public presentation. RSS and release records remain governed by publication order. Private source records may document source chronology but are never published merely to support the public timeline.
 
 ## Required chronology metadata
 
@@ -47,7 +47,7 @@ Use the narrowest precision supported by the fiction and source sequence:
 - `seasonal` when season or broad time of year is the intended level of certainty;
 - `relative` when only before-and-after relationships are secure.
 
-A source upload date, video release date, transcript timestamp, or publication date does not automatically become an in-world event date.
+A source upload date, video release date, transcript timestamp, or publication date does not automatically become an in-world event date. The public page translates datePrecision into reader-facing confidence language and may show a bounded elapsed interval between adjacent entries when both approved placements support it. Such intervals are chronology aids only: they do not imply causal contact, shared exposure, or a paranormal relationship.
 
 ## Approved calendar sequence
 
@@ -71,6 +71,6 @@ The public timeline must never imply that disputed paranormal claims, edited rec
 - `src/content.config.ts` defines the chronology fields and permitted date-precision values.
 - `src/data/narrative-timeline-reservations.json` records public-safe positions for established but unpublished entries.
 - `scripts/validate-narrative-timeline.mjs` requires complete chronology metadata and validates relationship existence and direction for every published story or case assigned a timeline position.
-- `src/pages/timeline.astro` orders entries by `timelineOrder`, not by publication date.
+- `src/pages/timeline.astro` orders entries by `timelineOrder` internally but presents approved dates/ranges, confidence language, and meaningful inter-case intervals to readers rather than archive positions.
 - `scripts/validate-narrative-timeline-output.mjs` scopes rendered assertions to the relevant timeline entry rather than rejecting legitimate dates elsewhere on the page.
 - Story-specific release validators may lock important chronology fields when continuity depends on them.
