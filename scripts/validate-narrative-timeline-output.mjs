@@ -18,6 +18,7 @@ const entries = [
     follows: [],
     precedes: ["da-002-the-name-in-the-room"],
     publicationDate: "August 1, 2026",
+    interval: null,
   },
   {
     path: "da-002-the-name-in-the-room.md",
@@ -31,6 +32,7 @@ const entries = [
     follows: ["da-001-after-the-main-fan-stops"],
     precedes: ["da-003-the-recorder-kept-running"],
     publicationDate: "July 27, 2026",
+    interval: "About one month after the DA-001 investigation; about three weeks after its sealed-corridor coda.",
   },
   {
     path: "da-003-the-recorder-kept-running.md",
@@ -44,6 +46,7 @@ const entries = [
     follows: ["da-002-the-name-in-the-room"],
     precedes: ["da-004-close-enough-to-recognize"],
     publicationDate: "August 18, 2026",
+    interval: null,
   },
   {
     path: "da-004-close-enough-to-recognize.md",
@@ -57,6 +60,7 @@ const entries = [
     follows: ["da-003-the-recorder-kept-running"],
     precedes: [],
     publicationDate: "September 14, 2026",
+    interval: null,
   },
 ];
 
@@ -135,13 +139,6 @@ if (!(await exists(timelineHtmlPath))) {
     fail("timeline does not distinguish story dating from recording/publication dates");
   }
   if (!html.includes("Confidence describes the date placement")) fail("timeline does not explain date-confidence semantics");
-  for (const interval of [
-    "About one month after the DA-001 investigation; about three weeks after its sealed-corridor coda.",
-    "About 2 years and 4 months after DA-002.",
-    "Roughly 1–3 months after DA-003.",
-  ]) {
-    if (!html.includes(interval)) fail(`timeline missing approved inter-case interval ${JSON.stringify(interval)}`);
-  }
 
   for (const entry of entries) {
     const routeIndex = html.indexOf(`href="${entry.route}"`);
@@ -164,6 +161,12 @@ if (!(await exists(timelineHtmlPath))) {
       .replaceAll("&lt;", "<")
       .replaceAll("&gt;", ">")
       .replaceAll("&amp;", "&");
+    const intervals = [...normalizedItem.matchAll(/<p\b[^>]*\bclass="[^"]*\btimeline-interval\b[^"]*"[^>]*>([\s\S]*?)<\/p>/g)]
+      .map((match) => match[1].trim());
+    const expectedIntervals = entry.interval === null ? [] : [entry.interval];
+    if (JSON.stringify(intervals) !== JSON.stringify(expectedIntervals)) {
+      fail(`${entry.title}: expected inter-case intervals ${JSON.stringify(expectedIntervals)}, received ${JSON.stringify(intervals)}`);
+    }
     for (const expected of [
       entry.label,
       entry.note,
