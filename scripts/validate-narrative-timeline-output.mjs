@@ -131,8 +131,16 @@ if (!(await exists(timelineHtmlPath))) {
 } else {
   const html = await readFile(timelineHtmlPath, "utf8");
   if (!html.includes("Narrative Chronology")) fail("narrative chronology heading is missing");
-  if (!html.includes("Recording dates, source publication dates, and Dead Air publication dates are tracked separately")) {
+  if (!html.includes("Recording dates, source publication dates, and Dead Air release")) {
     fail("timeline does not distinguish story dating from recording/publication dates");
+  }
+  if (!html.includes("Confidence describes the date placement")) fail("timeline does not explain date-confidence semantics");
+  for (const interval of [
+    "About one month after the DA-001 investigation; about three weeks after its sealed-corridor coda.",
+    "About 2 years and 4 months after DA-002.",
+    "Roughly 1–3 months after DA-003.",
+  ]) {
+    if (!html.includes(interval)) fail(`timeline missing approved inter-case interval ${JSON.stringify(interval)}`);
   }
 
   for (const entry of entries) {
@@ -163,6 +171,8 @@ if (!(await exists(timelineHtmlPath))) {
     ]) {
       if (!normalizedItem.includes(expected)) fail(`${entry.title}: timeline item missing ${JSON.stringify(expected)}`);
     }
+    const expectedConfidence = { exact: "High date confidence", approximate: "Approximate date", seasonal: "Seasonal placement", relative: "Relative placement" }[entry.precision];
+    if (!normalizedItem.includes(expectedConfidence)) fail(`${entry.title}: timeline item missing confidence label ${JSON.stringify(expectedConfidence)}`);
     if (normalizedItem.includes(entry.publicationDate)) fail(`${entry.title}: Dead Air publication date is presented as a narrative event date`);
     for (const internalLabel of ["Continuity position", "Archive position", "Source sequence", "Date precision"]) {
       if (normalizedItem.includes(internalLabel)) fail(`${entry.title}: public timeline exposes internal label ${JSON.stringify(internalLabel)}`);
@@ -175,5 +185,5 @@ if (failures.length > 0) {
 }
 
 console.log(
-  "Narrative timeline output validation passed: DA-001–DA-004 show approved approximate/seasonal case dates, source/publication dates remain separate, and calendar-only ordering does not promote causal or paranormal connections.",
+  "Narrative timeline output validation passed: DA-001–DA-004 show approved approximate/seasonal case dates, reader-facing confidence and meaningful intervals, source/publication dates remain separate, and calendar-only ordering does not promote causal or paranormal connections.",
 );
