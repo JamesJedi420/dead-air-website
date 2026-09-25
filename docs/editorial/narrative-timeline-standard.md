@@ -49,7 +49,7 @@ Use the narrowest precision supported by the fiction and source sequence:
 
 A source upload date, video release date, transcript timestamp, or publication date does not automatically become an in-world event date. The public page translates datePrecision into reader-facing confidence language and may show a bounded elapsed interval between adjacent entries when both approved placements support it. Such intervals are chronology aids only: they do not imply causal contact, shared exposure, or a paranormal relationship.
 
-Interval ranges must cover every permitted placement, including uncertainty at both endpoints. Omit an interval when the approved dating does not support useful bounds. DA-003's seasonal placement and DA-004's approximate placement currently show no numeric elapsed interval. Output validation checks both the expected interval and its absence within each individual case entry.
+Interval ranges must cover every permitted placement, including uncertainty at both endpoints. Omit an interval when the approved dating does not support useful bounds. The current DA-001–DA-004 placements do not support numeric inter-case intervals, so none are displayed. DA-001's within-case coda timing remains in its chronology note; it does not establish an elapsed interval to DA-002. Output validation checks both the expected interval and its absence within each individual case entry.
 
 ## Approved calendar sequence
 

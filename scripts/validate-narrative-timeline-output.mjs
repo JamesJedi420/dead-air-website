@@ -32,7 +32,7 @@ const entries = [
     follows: ["da-001-after-the-main-fan-stops"],
     precedes: ["da-003-the-recorder-kept-running"],
     publicationDate: "July 27, 2026",
-    interval: "About one month after the DA-001 investigation; about three weeks after its sealed-corridor coda.",
+    interval: null,
   },
   {
     path: "da-003-the-recorder-kept-running.md",
@@ -161,6 +161,9 @@ if (!(await exists(timelineHtmlPath))) {
       .replaceAll("&lt;", "<")
       .replaceAll("&gt;", ">")
       .replaceAll("&amp;", "&");
+    if (!/^<li\b[^>]*>\s*<p\b[^>]*\bclass="timeline-date"[^>]*>/.test(normalizedItem)) {
+      fail(`${entry.title}: the case date must be the first element so the timeline marker stays aligned`);
+    }
     const intervals = [...normalizedItem.matchAll(/<p\b[^>]*\bclass="[^"]*\btimeline-interval\b[^"]*"[^>]*>([\s\S]*?)<\/p>/g)]
       .map((match) => match[1].trim());
     const expectedIntervals = entry.interval === null ? [] : [entry.interval];
@@ -188,5 +191,5 @@ if (failures.length > 0) {
 }
 
 console.log(
-  "Narrative timeline output validation passed: DA-001–DA-004 show approved approximate/seasonal case dates, reader-facing confidence and meaningful intervals, source/publication dates remain separate, and calendar-only ordering does not promote causal or paranormal connections.",
+  "Narrative timeline output validation passed: DA-001–DA-004 show approved approximate/seasonal case dates, reader-facing confidence without unsupported elapsed intervals, source/publication dates remain separate, and calendar-only ordering does not promote causal or paranormal connections.",
 );

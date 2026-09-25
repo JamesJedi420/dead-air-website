@@ -21,10 +21,6 @@ const precisionLabels = {
   seasonal: "Seasonal placement",
   relative: "Relative placement",
 } as const;
-
-const intervalLabels = new Map([
-  ["da-002-the-name-in-the-room", "About one month after the DA-001 investigation; about three weeks after its sealed-corridor coda."],
-]);
 ---
 
 <SiteLayout
@@ -44,19 +40,15 @@ const intervalLabels = new Map([
     </div>
     {timelineEntries.length > 0 ? (
       <ol class="timeline-list">
-        {timelineEntries.map((entry) => {
-          const interval = intervalLabels.get(entry.slug);
-          return (
-            <li class="timeline-entry">
-              {interval && <p class="timeline-interval">{interval}</p>}
-              <p class="timeline-date">{entry.timelineLabel ?? "Date unresolved"}</p>
-              {entry.datePrecision && <p class="timeline-confidence">{precisionLabels[entry.datePrecision]}</p>}
-              <h2><a href={entry.url}>{entry.title}</a></h2>
-              <p>{entry.summary}</p>
-              {entry.chronologyNote && <p class="chronology-note">{entry.chronologyNote}</p>}
-            </li>
-          );
-        })}
+        {timelineEntries.map((entry) => (
+          <li class="timeline-entry">
+            <p class="timeline-date">{entry.timelineLabel ?? "Date unresolved"}</p>
+            {entry.datePrecision && <p class="timeline-confidence">{precisionLabels[entry.datePrecision]}</p>}
+            <h2><a href={entry.url}>{entry.title}</a></h2>
+            <p>{entry.summary}</p>
+            {entry.chronologyNote && <p class="chronology-note">{entry.chronologyNote}</p>}
+          </li>
+        ))}
       </ol>
     ) : (
       <div class="callout">
@@ -76,7 +68,7 @@ const intervalLabels = new Map([
 
   .timeline-entry {
     border-left: 1px solid var(--color-line);
-    margin-left: 0.45rem;
+    margin: 0 0 0 0.45rem;
     padding: 0 0 2.75rem 1.5rem;
     position: relative;
   }
@@ -105,13 +97,6 @@ const intervalLabels = new Map([
     letter-spacing: 0.04em;
     margin: 0 0 0.75rem;
     text-transform: uppercase;
-  }
-
-  .timeline-interval {
-    color: var(--color-muted);
-    font-size: 0.9rem;
-    font-style: italic;
-    margin: 0 0 1.1rem;
   }
 
   .chronology-note {
