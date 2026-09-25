@@ -18,6 +18,7 @@ const entries = [
     follows: [],
     precedes: ["da-002-the-name-in-the-room"],
     publicationDate: "August 1, 2026",
+    interval: null,
   },
   {
     path: "da-002-the-name-in-the-room.md",
@@ -31,6 +32,7 @@ const entries = [
     follows: ["da-001-after-the-main-fan-stops"],
     precedes: ["da-003-the-recorder-kept-running"],
     publicationDate: "July 27, 2026",
+    interval: null,
   },
   {
     path: "da-003-the-recorder-kept-running.md",
@@ -44,6 +46,7 @@ const entries = [
     follows: ["da-002-the-name-in-the-room"],
     precedes: ["da-004-close-enough-to-recognize"],
     publicationDate: "August 18, 2026",
+    interval: null,
   },
   {
     path: "da-004-close-enough-to-recognize.md",
@@ -57,6 +60,7 @@ const entries = [
     follows: ["da-003-the-recorder-kept-running"],
     precedes: [],
     publicationDate: "September 14, 2026",
+    interval: null,
   },
 ];
 
@@ -131,9 +135,10 @@ if (!(await exists(timelineHtmlPath))) {
 } else {
   const html = await readFile(timelineHtmlPath, "utf8");
   if (!html.includes("Narrative Chronology")) fail("narrative chronology heading is missing");
-  if (!html.includes("Recording dates, source publication dates, and Dead Air publication dates are tracked separately")) {
+  if (!html.includes("Recording dates, source publication dates, and Dead Air release")) {
     fail("timeline does not distinguish story dating from recording/publication dates");
   }
+  if (!html.includes("Confidence describes the date placement")) fail("timeline does not explain date-confidence semantics");
 
   for (const entry of entries) {
     const routeIndex = html.indexOf(`href="${entry.route}"`);
@@ -156,6 +161,15 @@ if (!(await exists(timelineHtmlPath))) {
       .replaceAll("&lt;", "<")
       .replaceAll("&gt;", ">")
       .replaceAll("&amp;", "&");
+    if (!/^<li\b[^>]*>\s*<p\b[^>]*\bclass="timeline-date"[^>]*>/.test(normalizedItem)) {
+      fail(`${entry.title}: the case date must be the first element so the timeline marker stays aligned`);
+    }
+    const intervals = [...normalizedItem.matchAll(/<p\b[^>]*\bclass="[^"]*\btimeline-interval\b[^"]*"[^>]*>([\s\S]*?)<\/p>/g)]
+      .map((match) => match[1].trim());
+    const expectedIntervals = entry.interval === null ? [] : [entry.interval];
+    if (JSON.stringify(intervals) !== JSON.stringify(expectedIntervals)) {
+      fail(`${entry.title}: expected inter-case intervals ${JSON.stringify(expectedIntervals)}, received ${JSON.stringify(intervals)}`);
+    }
     for (const expected of [
       entry.label,
       entry.note,
@@ -163,6 +177,8 @@ if (!(await exists(timelineHtmlPath))) {
     ]) {
       if (!normalizedItem.includes(expected)) fail(`${entry.title}: timeline item missing ${JSON.stringify(expected)}`);
     }
+    const expectedConfidence = { exact: "High date confidence", approximate: "Approximate date", seasonal: "Seasonal placement", relative: "Relative placement" }[entry.precision];
+    if (!normalizedItem.includes(expectedConfidence)) fail(`${entry.title}: timeline item missing confidence label ${JSON.stringify(expectedConfidence)}`);
     if (normalizedItem.includes(entry.publicationDate)) fail(`${entry.title}: Dead Air publication date is presented as a narrative event date`);
     for (const internalLabel of ["Continuity position", "Archive position", "Source sequence", "Date precision"]) {
       if (normalizedItem.includes(internalLabel)) fail(`${entry.title}: public timeline exposes internal label ${JSON.stringify(internalLabel)}`);
@@ -175,5 +191,5 @@ if (failures.length > 0) {
 }
 
 console.log(
-  "Narrative timeline output validation passed: DA-001–DA-004 show approved approximate/seasonal case dates, source/publication dates remain separate, and calendar-only ordering does not promote causal or paranormal connections.",
+  "Narrative timeline output validation passed: DA-001–DA-004 show approved approximate/seasonal case dates, reader-facing confidence without unsupported elapsed intervals, source/publication dates remain separate, and calendar-only ordering does not promote causal or paranormal connections.",
 );
