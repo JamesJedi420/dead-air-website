@@ -1,17 +1,17 @@
 {
   "case": "DA-004",
   "title": "Close Enough to Recognize",
-  "approvedRevision": "Final Approved Story v1.10",
-  "authoritativeGoogleDocId": "1EUA5lOhf7AdNjeYXHOngDuZZ4MNnZW_Q2n-N-s2_zKE",
-  "authoritativeGoogleDocRevisionId": "ANLCKQkmSlXuPFN7axutESKIhsFxqMcj3qtjv506QPbnUEgVJtw8Z1xOjBt5-Ao5o9XKdxtr-ch-aFIJ7sqaNQypDd9bCxtpCwSwrsrMFS8",
-  "canonicalSourceSha256": "7fe01634a823fc3fcaa0f475ec92129f3b167ef9e0c2c49d23639719b91e511d",
+  "approvedRevision": "Final Approved Story v1.12",
+  "authoritativeGoogleDocId": "1YjOb7tfJeFGFOw7X57ZpQj2BO_Rv4FTNzJZygGVbi44",
+  "authoritativeGoogleDocRevisionId": "ANLCKQk-8i0ll57762__B9O8siGgz153l9C3lRMEFqmxMlz7afaa2-88FueTYrb8SIOK4nEWtSVi2meFTikt-Pe13nVlfD_zIZBGEy1OzhQ",
+  "canonicalSourceSha256": "9322c834442738badb13764f831e6e4d9ccf24d4069871f9af2e31b6244d933a",
   "sourceSnapshotFormat": "utf8-canonical-scene-fragments",
   "canonicalFragmentCount": 10,
   "sceneCount": 10,
   "lockStatus": "IMMUTABLE_APPROVED_SOURCE",
   "publicReleaseAuthorized": true,
   "publicationDate": "2026-09-14",
-  "publicPredecessorRevision": "Final Approved Story v1.7",
-  "publicPredecessorCommit": "654944b2148c97e64f2a06ad546eb910d3fb2265",
-  "notes": "Final Approved Story v1.10 corrective source lock. The canonical source is stored as ten ordered UTF-8 scene fragments deterministically derived from the authoritative Google Doc revision. Corrective website publication/source-lock alignment was explicitly authorized on 2026-09-21 after live v1.10 output verification; publicationDate remains 2026-09-14 and the prior v1.7 source remains preserved in repository history as the public predecessor."
+  "publicPredecessorRevision": "Final Approved Story v1.10",
+  "publicPredecessorCommit": "f5fbbc2bed48e013634c08e4923f21e0e02ffe9d",
+  "notes": "Final Approved Story v1.12 bounded publication-source reconciliation. The canonical source remains ten ordered UTF-8 scene fragments and differs from the v1.10 public predecessor only at the two separately approved sentences in the Scene 09→10 seam and final sentence. The authoritative Google Doc is v1.12; title, website/card subtitle, publicationDate, art, chronology metadata, continuity, and canon status remain unchanged."
 }
