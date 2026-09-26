@@ -8,6 +8,8 @@ const baseUrl = process.env.VISUAL_BASE_URL ?? "http://127.0.0.1:4173";
 const storyPath = "/stories/da-001-after-the-main-fan-stops/";
 const storyTitle = "After the Main Fan Stops";
 const outputDirectory = path.join(process.cwd(), "artifacts", "da001-visual-proof");
+const approvedV24Sentence =
+  "The chair had changed location after inventory, so the figure required another check.";
 const sections = [
   "1. Three-Thirty",
   "2. Permission Slips",
@@ -53,7 +55,8 @@ const assertNoHorizontalOverflow = async (page, label) => {
 const verifyStoryContent = async (page) => {
   assert.equal(await page.title(), `${storyTitle} | Dead Air`);
   await page.getByRole("heading", { name: storyTitle, exact: true }).waitFor();
-  await page.getByText("Final Approved Story v23", { exact: false }).waitFor();
+  await page.getByText("Final Approved Story v24", { exact: false }).waitFor();
+  await page.getByText(approvedV24Sentence, { exact: false }).waitFor();
   await page
     .getByText(
       "Based on reported paranormal-investigation accounts. Some events, characters, and identifying details have been fictionalized.",
@@ -176,7 +179,7 @@ try {
   await captureViewportProof(mobilePage, "da001-mobile-iphone-13");
 
   console.log(
-    "DA-001 visual proof passed: desktop and iPhone 13 viewport captures cover the page top, Section 5, Section 10, and footer; layouts have no horizontal overflow; story metadata, source note, ten ordered sections, stories-index link, navigation paths, and DA-001 → DA-002 chronology are correct.",
+    "DA-001 visual proof passed: desktop and iPhone 13 viewport captures cover the page top, Section 5, Section 10, and footer; layouts have no horizontal overflow; story metadata, v24 correction, source note, ten ordered sections, stories-index link, navigation paths, and DA-001 → DA-002 chronology are correct.",
   );
 } finally {
   await mobileContext?.close();
