@@ -15,14 +15,14 @@ const desktopAssetPath = path.join(publicAssetDirectory, desktopAssetFilename);
 const mobileAssetPath = path.join(publicAssetDirectory, mobileAssetFilename);
 
 const sourceLock = JSON.parse(await readFile(sourceLockPath, "utf8"));
-const sourceGoogleDocId = "1EUA5lOhf7AdNjeYXHOngDuZZ4MNnZW_Q2n-N-s2_zKE";
-const sourceGoogleDocRevisionId = "ANLCKQkmSlXuPFN7axutESKIhsFxqMcj3qtjv506QPbnUEgVJtw8Z1xOjBt5-Ao5o9XKdxtr-ch-aFIJ7sqaNQypDd9bCxtpCwSwrsrMFS8";
-const approvedRevision = "Final Approved Story v1.10";
+const sourceGoogleDocId = "1YjOb7tfJeFGFOw7X57ZpQj2BO_Rv4FTNzJZygGVbi44";
+const sourceGoogleDocRevisionId = "ANLCKQk-8i0ll57762__B9O8siGgz153l9C3lRMEFqmxMlz7afaa2-88FueTYrb8SIOK4nEWtSVi2meFTikt-Pe13nVlfD_zIZBGEy1OzhQ";
+const approvedRevision = "Final Approved Story v1.12";
 const publicationDate = "2026-09-14";
 const approvedWebsiteCardSubtitle = "Eli brings his father to the Kestrel Hotel hoping for one paranormal event they can share. Then they hear a knock pattern from an old family story.";
 const approvedAlt = "An empty, warmly lit hotel corridor leads to a closed dark service door with a brass STAFF ONLY plaque.";
 const openingFingerprint = "By the time Eli turned the camera on, rain had sheeted across the Kestrel’s front drive hard enough to turn the headlights of arriving cars into white smears on the pavement.";
-const closingFingerprint = "Neither of them named what had made the rhythm.";
+const closingFingerprint = "Neither of them said whether the rhythm meant anything.";
 const expectedSceneTitles = ["Arrival","Public Ghosts","Employee Passage","One, Then Two","Source Hunt","The Chair / The Lie","Control Test","Martin Follows","The New Sequence","Raw Audio"];
 const canonicalFragmentFiles = Array.from({ length: 10 }, (_value, index) => `part-${String(index + 1).padStart(2, "0")}.mdfrag`);
 
@@ -46,11 +46,11 @@ for (const [field, actual, expected] of [
   ["canonicalFragmentCount", sourceLock.canonicalFragmentCount, 10],
   ["lockStatus", sourceLock.lockStatus, "IMMUTABLE_APPROVED_SOURCE"],
   ["publicationDate", sourceLock.publicationDate, publicationDate],
-  ["publicPredecessorRevision", sourceLock.publicPredecessorRevision, "Final Approved Story v1.7"],
+  ["publicPredecessorRevision", sourceLock.publicPredecessorRevision, "Final Approved Story v1.10"],
 ]) {
   if (actual !== expected) throw new Error(`DA-004 source lock ${field} mismatch: expected ${JSON.stringify(expected)}, found ${JSON.stringify(actual)}.`);
 }
-if (sourceLock.publicReleaseAuthorized !== true) throw new Error("DA-004 v1.10 corrective source lock must be publication-authorized for this release.");
+if (sourceLock.publicReleaseAuthorized !== true) throw new Error("DA-004 v1.12 source lock must be publication-authorized for this release.");
 
 const sha256 = (value) => createHash("sha256").update(value).digest("hex");
 const decodeReleaseAsset = async (prefix, chunkCount) => {
@@ -105,4 +105,4 @@ const frontmatter = `---\nslug: da-004-close-enough-to-recognize\ntitle: Close E
 
 await mkdir(path.dirname(outputPath), { recursive: true });
 await writeFile(outputPath, `${frontmatter}${body}`, "utf8");
-console.log(`DA-004 v1.10 corrective edition materialized from authoritative source lock ${canonicalSourceSha256}; v3.0 responsive release art preserved; publicationDate=${publicationDate}; correctionPublicationAuthorized=true.`);
+console.log(`DA-004 v1.12 edition materialized from authoritative source lock ${canonicalSourceSha256}; v3.0 responsive release art preserved; publicationDate=${publicationDate}; publicationAuthorized=true.`);
