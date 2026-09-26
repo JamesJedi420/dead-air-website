@@ -53,7 +53,7 @@ await writeFile(
     repairCount,
     storyCount,
     bypassedCase: "DA-004",
-    bypassReason: "Final Approved Story v1.10 is a later authoritative manuscript and must materialize without older publication-layer mutation.",
+    bypassReason: "Final Approved Story v1.12 is the later authoritative manuscript and must materialize without older publication-layer mutation.",
     issues,
   }, null, 2)}\n`,
   "utf8",
@@ -66,5 +66,5 @@ if (issues.length > 0) {
 }
 
 console.log(
-  `Applied ${repairCount} approved SPE-2893 publication-layer repairs across ${storyCount} unchanged-scope story file(s); DA-004 bypassed for authoritative v1.10 materialization.`,
+  `Applied ${repairCount} approved SPE-2893 publication-layer repairs across ${storyCount} unchanged-scope story file(s); DA-004 bypassed for authoritative v1.12 materialization.`,
 );

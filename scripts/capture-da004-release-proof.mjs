@@ -8,7 +8,7 @@ const baseUrl = process.env.VISUAL_BASE_URL ?? "http://127.0.0.1:4175";
 const slug = "da-004-close-enough-to-recognize";
 const storyPath = `/stories/${slug}/`;
 const title = "Close Enough to Recognize";
-const revision = "Final Approved Story v1.10";
+const revision = "Final Approved Story v1.12";
 const summary = "Eli brings his father to the Kestrel Hotel hoping for one paranormal event they can share. Then they hear a knock pattern from an old family story.";
 const alt = "An empty, warmly lit hotel corridor leads to a closed dark service door with a brass STAFF ONLY plaque.";
 const heroPath = "/assets/da-004/da004_art001_v3_0_16x9_1600x900.webp";
@@ -30,7 +30,7 @@ const verify = async (page, label, isMobile) => {
   assert.equal(await page.title(), `${title} | Dead Air`);
   await page.getByText(revision, { exact: false }).waitFor();
   assert.equal(await page.locator('meta[name="description"]').getAttribute("content"), summary);
-  assert.equal(await page.locator('meta[name="robots"]').count(), 0, "Authorized correction must remain indexable on the canonical production route.");
+  assert.equal(await page.locator('meta[name="robots"]').count(), 0, "Authorized publication must remain indexable on the canonical production route.");
   const published = await page.locator('meta[property="article:published_time"]').getAttribute("content");
   assert(published?.startsWith("2026-09-14"), `Unexpected publication time ${published}`);
   assert.equal(await page.locator('link[rel="canonical"]').getAttribute("href"), `https://readdeadair.com${storyPath}`);
@@ -76,5 +76,5 @@ try {
   const dp = await desktop.newPage(); await verify(dp, "Desktop", false); await verifyPublicationSurfaces(dp);
   mobileContext = await browser.newContext({ ...devices["iPhone 13"] });
   const mp = await mobileContext.newPage(); await verify(mp, "iPhone 13", true);
-  console.log("DA-004 v1.10 publication proof PASS: authoritative revision, unchanged publication date/canonical metadata, v3.0 responsive WebP art, exact alt, desktop/mobile crop, semantics, archive/feed surfaces, and ten story sections verified for corrective publication.");
+  console.log("DA-004 v1.12 publication proof PASS: authoritative revision, unchanged publication date/canonical metadata, v3.0 responsive WebP art, exact alt, desktop/mobile crop, semantics, archive/feed surfaces, and ten story sections verified.");
 } finally { await mobileContext?.close(); await desktop?.close(); await browser.close(); }
