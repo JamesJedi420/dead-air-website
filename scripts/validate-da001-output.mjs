@@ -15,6 +15,10 @@ const legacyContrastiveProse = [
   "Images, not audio.",
   "Not for the sounds. For keeping the students below",
 ];
+const approvedV24Sentence =
+  "The chair had changed location after inventory, so the figure required another check.";
+const supersededV23Sentence =
+  "Someone had moved the chair after inventory, so the figure required another check.";
 
 const exists = async (filePath) => {
   try {
@@ -35,7 +39,9 @@ if (!(await exists(storyHtmlPath))) {
 } else {
   const html = await readFile(storyHtmlPath, "utf8");
   if (!html.includes(manifest.title)) fail("DA-001 page is missing its approved title.");
-  if (!html.includes("Final Approved Story v23")) fail("DA-001 page is missing its v23 correction revision.");
+  if (!html.includes("Final Approved Story v24")) fail("DA-001 page is missing its v24 correction revision.");
+  if (!html.includes(approvedV24Sentence)) fail("DA-001 page is missing the approved v24 chair-custody sentence.");
+  if (html.includes(supersededV23Sentence)) fail("DA-001 page still contains the superseded v23 chair-agency sentence.");
   for (const section of manifest.sections) {
     if (!html.includes(section.published)) fail(`DA-001 page is missing section ${JSON.stringify(section.published)}.`);
   }
@@ -67,4 +73,4 @@ else {
 }
 
 if (failures.length > 0) throw new Error(`DA-001 release validation failed:\n${failures.join("\n")}`);
-console.log("DA-001 v23 release validation passed: approved manuscript correction, route, ten numbered sections, source note, RSS, search, sitemap, and chronology are published.");
+console.log("DA-001 v24 release validation passed: approved manuscript correction, route, ten numbered sections, source note, RSS, search, sitemap, and chronology are published.");
