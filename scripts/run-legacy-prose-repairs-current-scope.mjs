@@ -24,7 +24,7 @@ for (const relativePath of legacyScripts) {
 
   const patched = source.replace(
     marker,
-    `// DA-004 now materializes directly from its authoritative v1.10 source lock.\n// Keep the historical repair definitions for auditability, but do not mutate DA-004 after source lock.\ndelete repairs[${JSON.stringify(da004Path)}];\n\n${marker}`,
+    `// DA-004 now materializes directly from its authoritative v1.12 source lock.\n// Keep the historical repair definitions for auditability, but do not mutate DA-004 after source lock.\ndelete repairs[${JSON.stringify(da004Path)}];\n\n${marker}`,
   );
   const tempPath = path.join(root, "scripts", `.scoped-${path.basename(relativePath)}`);
   await writeFile(tempPath, patched, "utf8");
@@ -35,4 +35,4 @@ for (const relativePath of legacyScripts) {
   }
 }
 
-console.log("Applied legacy prose-repair layers to DA-001–DA-003 only; DA-004 reserved for authoritative v1.10 materialization.");
+console.log("Applied legacy prose-repair layers to DA-001–DA-003 only; DA-004 reserved for authoritative v1.12 materialization.");
