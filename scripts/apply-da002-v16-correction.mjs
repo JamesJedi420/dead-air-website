@@ -20,22 +20,33 @@ const corrections = [
     after: "",
   },
   {
-    before: "Ron stated the fact without accusation.",
-    after: "",
-  },
-  {
-    before: "Her tone was gentle. Evan had no easy reply.",
-    after: "Her tone was gentle.",
-  },
-  {
     before: "Diane held the facilities recorder close enough to capture the spoken time without turning the act into ceremony.",
     after: "Diane held the facilities recorder close enough to capture the spoken time.",
   },
 ];
 
-let manuscript = await readFile(storyPath, "utf8");
-let correctionCount = 0;
+const preSatisfied = [
+  {
+    absent: "Ron stated the fact without accusation.",
+    reason: "Already removed by the approved SPE-2893 publication layer before the v16 correction runs.",
+  },
+  {
+    absent: "Her tone was gentle. Evan had no easy reply.",
+    reason: "Already narrowed to ‘Her tone was gentle.’ by the approved SPE-2893 publication layer before the v16 correction runs.",
+  },
+];
 
+let manuscript = await readFile(storyPath, "utf8");
+
+for (const condition of preSatisfied) {
+  if (manuscript.includes(condition.absent)) {
+    throw new Error(
+      `DA-002 v16 pre-satisfied condition failed; stale text remains ${JSON.stringify(condition.absent)}. ${condition.reason}`,
+    );
+  }
+}
+
+let correctionCount = 0;
 for (const correction of corrections) {
   const occurrences = manuscript.split(correction.before).length - 1;
   if (occurrences !== 1) {
@@ -49,5 +60,5 @@ for (const correction of corrections) {
 
 await writeFile(storyPath, manuscript, "utf8");
 console.log(
-  `Applied DA-002 Final Approved Story v16 correction layer: ${correctionCount - 1} bounded prose corrections plus version synchronization.`,
+  `Applied DA-002 Final Approved Story v16 correction layer: ${correctionCount - 1} remaining prose corrections plus version synchronization; ${preSatisfied.length} approved v16 prose corrections were already satisfied by the existing publication layer.`,
 );
