@@ -1,0 +1,52 @@
+name: Ops deploy exact main to Netlify production
+
+on:
+  push:
+    branches:
+      - ops/netlify-deploy-f5ea
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      SITE_ID: 78053981-b72d-428f-9622-1b7177ace21d
+      EXPECTED_SHA: f5ea86f2e96599b97ef0a288e83e9f366b836902
+      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN || secrets.NETLIFY_TOKEN || secrets.NETLIFY_PERSONAL_ACCESS_TOKEN }}
+    steps:
+      - name: Check out exact approved main commit
+        uses: actions/checkout@v4
+        with:
+          ref: f5ea86f2e96599b97ef0a288e83e9f366b836902
+          fetch-depth: 1
+
+      - name: Verify exact source commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          ACTUAL_SHA="$(git rev-parse HEAD)"
+          test "$ACTUAL_SHA" = "$EXPECTED_SHA"
+          echo "Deploy source verified: $ACTUAL_SHA"
+
+      - name: Require Netlify credential
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "${NETLIFY_AUTH_TOKEN:-}" ]; then
+            echo "::error::No NETLIFY_AUTH_TOKEN, NETLIFY_TOKEN, or NETLIFY_PERSONAL_ACCESS_TOKEN repository secret is configured."
+            exit 2
+          fi
+
+      - name: Deploy exact commit to Netlify production
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx -y netlify-cli@latest deploy \
+            --build \
+            --prod \
+            --site "$SITE_ID" \
+            --auth "$NETLIFY_AUTH_TOKEN" \
+            --message "Deploy exact main $EXPECTED_SHA"
