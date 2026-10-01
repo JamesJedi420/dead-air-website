@@ -6,11 +6,12 @@ import path from "node:path";
 const expectedSha = "f5ea86f2e96599b97ef0a288e83e9f366b836902";
 const siteId = "78053981-b72d-428f-9622-1b7177ace21d";
 const context = process.env.CONTEXT ?? "";
-const branch = process.env.BRANCH ?? process.env.HEAD ?? "";
+const reviewId = process.env.REVIEW_ID ?? "";
 const proxyUrl = process.env.CHATGPT_NETLIFY_DEPLOY_PROXY_URL ?? "";
 
-if (context !== "deploy-preview" || branch !== "ops/netlify-deploy-f5ea") {
-  console.log("Temporary production-deploy bridge skipped outside its exact deploy-preview branch.");
+console.log(`Temporary deployment bridge context=${context} review=${reviewId || "none"}.`);
+if (context !== "deploy-preview" || reviewId !== "96") {
+  console.log("Temporary production-deploy bridge skipped outside deploy preview 96.");
   process.exit(0);
 }
 
