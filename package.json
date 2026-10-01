@@ -8,7 +8,7 @@
     "dev": "astro dev",
     "prebuild": "node scripts/materialize-da002.mjs && node scripts/materialize-da001-ren001.mjs && node scripts/materialize-da003-preview.mjs && node scripts/materialize-da004-release.mjs && node scripts/run-legacy-prose-repairs-current-scope.mjs && node scripts/apply-approved-manuscript-sync.mjs && node scripts/apply-da001-v24-publication-sync.mjs && node scripts/apply-spe2893-current-scope.mjs && node scripts/validate-spe2893-current-scope.mjs && node scripts/apply-da002-v16-correction.mjs && node scripts/validate-story-section-headings.mjs && node scripts/validate-narrative-timeline.mjs",
     "build": "astro check && astro build",
-    "postbuild": "node scripts/validate-da001-output.mjs && node scripts/validate-da002-release.mjs && node scripts/validate-da002-v16-correction.mjs && node scripts/validate-da003-preview.mjs && node scripts/validate-da004-release.mjs && node scripts/validate-narrative-timeline-output.mjs && node scripts/validate-rss-output.mjs && node scripts/validate-site-identity.mjs && node scripts/validate-public-surface-copy.mjs && node scripts/validate-reader-tools.mjs && node scripts/validate-newsletter-signup.mjs",
+    "postbuild": "node scripts/validate-da001-output.mjs && node scripts/validate-da002-release.mjs && node scripts/validate-da002-v16-correction.mjs && node scripts/validate-da003-preview.mjs && node scripts/validate-da004-release.mjs && node scripts/validate-narrative-timeline-output.mjs && node scripts/validate-rss-output.mjs && node scripts/validate-site-identity.mjs && node scripts/validate-public-surface-copy.mjs && node scripts/validate-reader-tools.mjs && node scripts/validate-newsletter-signup.mjs && node scripts/validate-cloudflare-pages-static.mjs",
     "prepreview": "node scripts/materialize-da002.mjs && node scripts/materialize-da001-ren001.mjs && node scripts/materialize-da003-preview.mjs && node scripts/materialize-da004-release.mjs && node scripts/run-legacy-prose-repairs-current-scope.mjs && node scripts/apply-approved-manuscript-sync.mjs && node scripts/apply-da001-v24-publication-sync.mjs && node scripts/apply-spe2893-current-scope.mjs && node scripts/validate-spe2893-current-scope.mjs && node scripts/apply-da002-v16-correction.mjs && node scripts/validate-story-section-headings.mjs && node scripts/validate-narrative-timeline.mjs",
     "preview": "astro preview",
     "materialize:da001": "node scripts/materialize-da001-ren001.mjs",
@@ -33,7 +33,8 @@
     "validate:narrative-timeline": "node scripts/validate-narrative-timeline.mjs",
     "validate:public-surface-copy": "node scripts/validate-public-surface-copy.mjs",
     "validate:reader-tools": "node scripts/validate-reader-tools.mjs",
-    "validate:newsletter-signup": "node scripts/validate-newsletter-signup.mjs"
+    "validate:newsletter-signup": "node scripts/validate-newsletter-signup.mjs",
+    "validate:cloudflare-pages": "node scripts/validate-cloudflare-pages-static.mjs"
   },
   "engines": {
     "node": ">=22.12.0"
