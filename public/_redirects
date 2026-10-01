@@ -1,0 +1,8 @@
+# Cloudflare Pages legacy path redirects.
+# Host-level dead-air-website.netlify.app redirects remain on Netlify during migration
+# and are intentionally not duplicated here because Pages _redirects does not
+# support domain-level redirects.
+/stories/da-001-the-building-keeps-the-hour /stories/da-001-after-the-main-fan-stops/ 301
+/stories/da-001-the-building-keeps-the-hour/ /stories/da-001-after-the-main-fan-stops/ 301
+/dead-air-da-002-the-name-in-the-room /stories/da-002-the-name-in-the-room/ 301
+/dead-air-da-002-the-name-in-the-room/ /stories/da-002-the-name-in-the-room/ 301
