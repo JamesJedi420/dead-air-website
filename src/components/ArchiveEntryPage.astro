@@ -51,8 +51,8 @@ const contentNotes = [...entry.data.contentWarnings, ...entry.data.contentNotes]
     </header>
 
     {contentNotes.length > 0 && (
-      <aside class="callout pre-reading-note" aria-label="Content notes">
-        <p class="eyebrow">Content Notes</p>
+      <aside class="callout pre-reading-note" aria-label="Content warnings">
+        <p class="eyebrow">Content Warnings</p>
         <ul>
           {contentNotes.map((note) => <li>{note}</li>)}
         </ul>
