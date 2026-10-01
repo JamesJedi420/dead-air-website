@@ -41,6 +41,7 @@ const baseEntry = {
   precedes: z.array(relatedEntry).default([]),
   publicationDate: z.coerce.date().optional(),
   revision: z.string().optional(),
+  suppressPublicRevision: z.boolean().default(false),
   canonicalStatus: canonicalStatus.default("provisional canon"),
   date: z.coerce.date().optional(),
   tags: z.array(z.string()).default([]),
