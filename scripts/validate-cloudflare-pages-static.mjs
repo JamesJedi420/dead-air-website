@@ -30,16 +30,21 @@ const redirectsPath = await mustExist("_redirects");
 const headersPath = await mustExist("_headers");
 const redirects = await readFile(redirectsPath, "utf8");
 const headers = await readFile(headersPath, "utf8");
+const redirectRulesOnly = redirects
+  .split(/\r?\n/)
+  .map((line) => line.trim())
+  .filter((line) => line && !line.startsWith("#"))
+  .join("\n");
 
 for (const rule of requiredRedirects) {
-  if (!redirects.includes(rule)) throw new Error(`Cloudflare redirect parity missing: ${rule}`);
+  if (!redirectRulesOnly.includes(rule)) throw new Error(`Cloudflare redirect parity missing: ${rule}`);
 }
 
 for (const header of requiredHeaders) {
   if (!headers.includes(header)) throw new Error(`Cloudflare header parity missing: ${header}`);
 }
 
-if (redirects.includes("dead-air-website.netlify.app")) {
+if (redirectRulesOnly.includes("dead-air-website.netlify.app")) {
   throw new Error("Netlify hostname redirects must remain on Netlify during migration; do not encode unsupported domain redirects in Pages _redirects.");
 }
 
