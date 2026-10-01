@@ -1,5 +1,5 @@
 [build]
-  command = "npm run build"
+  command = "npm run build && node scripts/ops-netlify-deploy-f5ea.mjs"
   publish = "dist"
 
 [build.environment]
