@@ -20,7 +20,7 @@ const metadata = [
   ["Status", formatLabel(entry.data.status)],
   ["Canon", formatLabel(entry.data.canonicalStatus)],
   ["Published", formatDate(publicationDate)],
-  ["Revision", entry.data.revision],
+  ["Revision", entry.data.suppressPublicRevision ? undefined : entry.data.revision],
   ["Reading time", entry.data.readingTime],
 ].filter((item): item is [string, string] => Boolean(item[1]));
 const contentNotes = [...entry.data.contentWarnings, ...entry.data.contentNotes];

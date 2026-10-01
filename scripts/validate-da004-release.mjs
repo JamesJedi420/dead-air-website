@@ -16,6 +16,18 @@ const expectedRevision = "Final Approved Story v1.12";
 const canonicalUrl = `https://readdeadair.com/stories/${slug}/`;
 const hero = "/assets/da-004/da004_art001_v3_0_16x9_1600x900.webp";
 const mobile = "/assets/da-004/da004_art001_v3_0_2x3_1024x1536.webp";
+const approvedWarnings = [
+  "Family conflict involving a childhood deception",
+  "Anxiety and acute investigation stress",
+  "Nausea and bodily unease",
+];
+const supersededWarningItems = [
+  "Psychological distress and panic",
+  "Unexplained knocking and voice-like audio",
+  "Contested hotel ghost lore",
+  "Nighttime wandering in restricted-adjacent hotel corridors",
+];
+const sourceNote = "Based on reported paranormal-investigation accounts. Some events, characters, and identifying details have been fictionalized.";
 const assets = [
   hero,
   mobile,
@@ -35,7 +47,10 @@ const lock = JSON.parse(await readFile(lockPath, "utf8"));
 if (lock.canonicalSourceSha256 !== expectedSourceSha || lock.approvedRevision !== expectedRevision || lock.publicReleaseAuthorized !== true || lock.publicationDate !== publicationDate || lock.lockStatus !== "IMMUTABLE_APPROVED_SOURCE") throw new Error("DA-004 v1.12 source lock mismatch.");
 
 const sourceText = await readFile(source, "utf8");
-for (const value of [`slug: ${slug}`, `title: ${title}`, `summary: ${summary}`, "status: active", "draft: false", "previewOnly: false", `revision: ${expectedRevision}`, `publicationDate: ${publicationDate}`, `coverAlt: \"${alt}\"`, `ogImageAlt: \"${alt}\"`, "## 1. Arrival", "## 10. Raw Audio"]) if (!sourceText.includes(value)) throw new Error(`DA-004 approved source missing ${value}`);
+for (const value of [`slug: ${slug}`, `title: ${title}`, `summary: ${summary}`, "status: active", "draft: false", "previewOnly: false", `revision: ${expectedRevision}`, "suppressPublicRevision: true", `publicationDate: ${publicationDate}`, `coverAlt: \"${alt}\"`, `ogImageAlt: \"${alt}\"`, "## 1. Arrival", "## 10. Raw Audio"]) if (!sourceText.includes(value)) throw new Error(`DA-004 approved source missing ${value}`);
+for (const warning of approvedWarnings) if (!sourceText.includes(`  - ${warning}`)) throw new Error(`DA-004 approved source missing integrity-audited warning ${warning}`);
+for (const warning of supersededWarningItems) if (sourceText.includes(warning)) throw new Error(`Superseded/non-warning DA-004 content-note item remains in approved source: ${warning}`);
+if (sourceText.includes("contentNotes:") || sourceText.includes(sourceNote)) throw new Error("DA-004 source/fictionalization disclosure must not be embedded in the warning-box metadata.");
 for (const asset of assets) if (!sourceText.includes(asset)) throw new Error(`DA-004 approved source missing release asset ${asset}`);
 if (sourceText.includes(oldAlt) || oldAssetTokens.some((token) => sourceText.includes(token))) throw new Error("Superseded DA-004 hero-art lineage remains active in approved source.");
 
@@ -51,7 +66,12 @@ const previewPage = path.join(dist, "preview", slug, "index.html");
 if (!(await exists(publicPage))) throw new Error("DA-004 publication story route missing.");
 if (await exists(previewPage)) throw new Error("DA-004 obsolete private preview route must not ship.");
 const html = await readFile(publicPage, "utf8");
-for (const value of [title, summary, alt, expectedRevision, canonicalUrl, "fetchpriority=\"high\"", "loading=\"eager\"", "article:published_time"]) if (!html.includes(value)) throw new Error(`DA-004 publication missing ${value}`);
+for (const value of [title, summary, alt, canonicalUrl, "fetchpriority=\"high\"", "loading=\"eager\"", "article:published_time"]) if (!html.includes(value)) throw new Error(`DA-004 publication missing ${value}`);
+if (html.includes(expectedRevision) || html.includes("<dt>Revision</dt>")) throw new Error("DA-004 reader-facing page exposes an internal manuscript/revision label.");
+for (const warning of approvedWarnings) if (!html.includes(warning)) throw new Error(`DA-004 publication missing integrity-audited warning ${warning}`);
+for (const warning of supersededWarningItems) if (html.includes(warning)) throw new Error(`Superseded/non-warning DA-004 content-note item remains reader-facing: ${warning}`);
+const sourceNoteOccurrences = html.split(sourceNote).length - 1;
+if (sourceNoteOccurrences !== 1) throw new Error(`Expected the separate standard source/fictionalization note exactly once, found ${sourceNoteOccurrences}.`);
 if (/noindex|nofollow|noarchive/i.test(html)) throw new Error("DA-004 publication no longer mirrors the currently public route semantics.");
 for (const asset of assets) if (!html.includes(asset)) throw new Error(`DA-004 publication/structured data missing approved asset ${asset}`);
 if (html.includes(oldAlt) || oldAssetTokens.some((token) => html.includes(token))) throw new Error("Superseded DA-004 hero art/alt leaked into publication.");
@@ -71,4 +91,4 @@ if (!sitemapText.includes(`/stories/${slug}/`)) throw new Error("DA-004 missing 
 const forbiddenFeedTokens = ["previewOnly: true", "status: withheld", "publicReleaseAuthorized", "PTW-", "CPO-"];
 for (const token of forbiddenFeedTokens) if (feed.includes(token)) throw new Error(`Internal/withheld token leaked into RSS: ${token}`);
 
-console.log("DA-004 v1.12 publication validation PASS: authoritative source hash/revision, publication authorization, unchanged publication metadata/date, v3.0 responsive art, archive, RSS, sitemap, and leak controls confirmed.");
+console.log("DA-004 v1.12 publication validation PASS: authoritative source hash/revision retained internally, Content Warning Integrity exact copy, separate source note, public revision-label suppression, unchanged publication metadata/date, v3.0 responsive art, archive, RSS, sitemap, and leak controls confirmed.");

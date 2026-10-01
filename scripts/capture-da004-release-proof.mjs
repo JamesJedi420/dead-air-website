@@ -11,6 +11,18 @@ const title = "Close Enough to Recognize";
 const revision = "Final Approved Story v1.12";
 const summary = "Eli brings his father to the Kestrel Hotel hoping for one paranormal event they can share. Then they hear a knock pattern from an old family story.";
 const alt = "An empty, warmly lit hotel corridor leads to a closed dark service door with a brass STAFF ONLY plaque.";
+const approvedWarnings = [
+  "Family conflict involving a childhood deception",
+  "Anxiety and acute investigation stress",
+  "Nausea and bodily unease",
+];
+const supersededWarningItems = [
+  "Psychological distress and panic",
+  "Unexplained knocking and voice-like audio",
+  "Contested hotel ghost lore",
+  "Nighttime wandering in restricted-adjacent hotel corridors",
+];
+const sourceNote = "Based on reported paranormal-investigation accounts. Some events, characters, and identifying details have been fictionalized.";
 const heroPath = "/assets/da-004/da004_art001_v3_0_16x9_1600x900.webp";
 const mobilePath = "/assets/da-004/da004_art001_v3_0_2x3_1024x1536.webp";
 const card = "https://res.cloudinary.com/szvtq9d8/image/upload/v1789370665/dead-air/da-004/publication/da004_art001_v2_1_3x2_1536x1024.webp";
@@ -28,7 +40,8 @@ const absoluteLocal = (value) => value.startsWith("/") ? new URL(value, baseUrl)
 const verify = async (page, label, isMobile) => {
   await open(page, `${baseUrl}${storyPath}`);
   assert.equal(await page.title(), `${title} | Dead Air`);
-  await page.getByText(revision, { exact: false }).waitFor();
+  assert.equal(await page.getByText(revision, { exact: false }).count(), 0, "Internal manuscript revision must not be reader-facing.");
+  assert.equal(await page.getByText("Revision", { exact: true }).count(), 0, "Reader-facing Revision metadata label must be suppressed.");
   assert.equal(await page.locator('meta[name="description"]').getAttribute("content"), summary);
   assert.equal(await page.locator('meta[name="robots"]').count(), 0, "Authorized publication must remain indexable on the canonical production route.");
   const published = await page.locator('meta[property="article:published_time"]').getAttribute("content");
@@ -37,6 +50,14 @@ const verify = async (page, label, isMobile) => {
   assert.equal(await page.locator('meta[property="og:image"]').getAttribute("content"), og);
   assert.equal(await page.locator('meta[name="twitter:image"]').getAttribute("content"), og);
   assert.equal(await page.locator('meta[property="og:image:alt"]').getAttribute("content"), alt);
+
+  const warningBox = page.locator('aside[aria-label="Content notes"]');
+  assert.equal(await warningBox.count(), 1, "DA-004 Content Notes warning box missing.");
+  const warningItems = await warningBox.locator("li").allTextContents();
+  assert.deepEqual(warningItems.map((item) => item.trim()), approvedWarnings, "DA-004 public warning copy differs from the approved Content Warning Integrity disposition.");
+  for (const item of supersededWarningItems) assert.equal(await warningBox.getByText(item, { exact: true }).count(), 0, `Superseded/non-warning item remains in warning box: ${item}`);
+  assert.equal(await warningBox.getByText(sourceNote, { exact: true }).count(), 0, "Source/fictionalization disclosure must not appear inside the warning box.");
+  assert.equal(await page.getByText(sourceNote, { exact: true }).count(), 1, "Standard source/fictionalization disclosure must remain once outside the warning box.");
 
   const img = page.locator('#story-hero-image');
   assert.equal(await img.count(), 1);
@@ -76,5 +97,5 @@ try {
   const dp = await desktop.newPage(); await verify(dp, "Desktop", false); await verifyPublicationSurfaces(dp);
   mobileContext = await browser.newContext({ ...devices["iPhone 13"] });
   const mp = await mobileContext.newPage(); await verify(mp, "iPhone 13", true);
-  console.log("DA-004 v1.12 publication proof PASS: authoritative revision, unchanged publication date/canonical metadata, v3.0 responsive WebP art, exact alt, desktop/mobile crop, semantics, archive/feed surfaces, and ten story sections verified.");
+  console.log("DA-004 v1.12 publication proof PASS: authoritative revision retained internally but suppressed publicly, exact Content Warning Integrity copy, separate source note, unchanged publication date/canonical metadata, v3.0 responsive WebP art, exact alt, desktop/mobile crop, semantics, archive/feed surfaces, and ten story sections verified.");
 } finally { await mobileContext?.close(); await desktop?.close(); await browser.close(); }
