@@ -68,6 +68,8 @@ if (await exists(previewPage)) throw new Error("DA-004 obsolete private preview 
 const html = await readFile(publicPage, "utf8");
 for (const value of [title, summary, alt, canonicalUrl, "fetchpriority=\"high\"", "loading=\"eager\"", "article:published_time"]) if (!html.includes(value)) throw new Error(`DA-004 publication missing ${value}`);
 if (html.includes(expectedRevision) || html.includes("<dt>Revision</dt>")) throw new Error("DA-004 reader-facing page exposes an internal manuscript/revision label.");
+if (!/<aside[^>]*aria-label="Content warnings"[^>]*>[\s\S]*?<p class="eyebrow">Content Warnings<\/p>/.test(html)) throw new Error("DA-004 reader-facing warning box must use the approved Content Warnings label and accessibility name.");
+if (/aria-label="Content notes"/.test(html)) throw new Error("DA-004 reader-facing warning box still exposes the superseded Content Notes accessibility label.");
 for (const warning of approvedWarnings) if (!html.includes(warning)) throw new Error(`DA-004 publication missing integrity-audited warning ${warning}`);
 for (const warning of supersededWarningItems) if (html.includes(warning)) throw new Error(`Superseded/non-warning DA-004 content-note item remains reader-facing: ${warning}`);
 const sourceNoteOccurrences = html.split(sourceNote).length - 1;
@@ -91,4 +93,4 @@ if (!sitemapText.includes(`/stories/${slug}/`)) throw new Error("DA-004 missing 
 const forbiddenFeedTokens = ["previewOnly: true", "status: withheld", "publicReleaseAuthorized", "PTW-", "CPO-"];
 for (const token of forbiddenFeedTokens) if (feed.includes(token)) throw new Error(`Internal/withheld token leaked into RSS: ${token}`);
 
-console.log("DA-004 v1.12 publication validation PASS: authoritative source hash/revision retained internally, Content Warning Integrity exact copy, separate source note, public revision-label suppression, unchanged publication metadata/date, v3.0 responsive art, archive, RSS, sitemap, and leak controls confirmed.");
+console.log("DA-004 v1.12 publication validation PASS: authoritative source hash/revision retained internally, Content Warnings label and Content Warning Integrity exact copy, separate source note, public revision-label suppression, unchanged publication metadata/date, v3.0 responsive art, archive, RSS, sitemap, and leak controls confirmed.");

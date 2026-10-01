@@ -147,7 +147,7 @@ if (!(await exists(storyHtmlPath))) {
     [html.includes(sourceNote), "standard story source note missing"],
     [!html.includes("Fictionalization and Source Note"), "legacy source-note heading remains"],
     [!html.includes("This literary paranormal-horror story adapts reported paranormal-investigation"), "legacy source-note paragraph remains"],
-    [html.includes("Content Notes"), "content-notes region missing"],
+    [html.includes("Content Warnings"), "content-warnings region missing"],
     [html.includes("No graphic violence."), "content note text missing"],
     [html.includes("Abby reached the stairwell landing before Evan touched the lever."), "corrected Scene 8 opening missing"],
     [html.includes("The cabinet held two labels, two chains of custody, and no name."), "custody ending missing"],
@@ -260,5 +260,5 @@ if (failures.length > 0) {
 }
 
 console.log(
-  `DA-002 publication validation passed: manuscript route, standardized source note, metadata, canonical URL, publication date, numbered section order, content notes, long-form output, responsive reading CSS, accessibility hooks, internal links, public indexes, RSS, sitemap, and legacy redirects verified.`,
+  `DA-002 publication validation passed: manuscript route, standardized source note, metadata, canonical URL, publication date, numbered section order, Content Warnings label, long-form output, responsive reading CSS, accessibility hooks, internal links, public indexes, RSS, sitemap, and legacy redirects verified.`,
 );

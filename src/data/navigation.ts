@@ -13,7 +13,7 @@ export const utilityNav = [
   { href: "/objects/", label: "Objects" },
   { href: "/mysteries/", label: "Mysteries" },
   { href: "/research-and-provenance/", label: "Research" },
-  { href: "/content-notes/", label: "Content Notes" },
+  { href: "/content-notes/", label: "Content Warnings" },
   { href: "/subscribe/", label: "Email Updates" },
   { href: "/contact/", label: "Contact" },
   { href: "/privacy/", label: "Privacy" },

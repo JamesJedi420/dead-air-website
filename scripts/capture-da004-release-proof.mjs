@@ -51,8 +51,9 @@ const verify = async (page, label, isMobile) => {
   assert.equal(await page.locator('meta[name="twitter:image"]').getAttribute("content"), og);
   assert.equal(await page.locator('meta[property="og:image:alt"]').getAttribute("content"), alt);
 
-  const warningBox = page.locator('aside[aria-label="Content notes"]');
-  assert.equal(await warningBox.count(), 1, "DA-004 Content Notes warning box missing.");
+  const warningBox = page.locator('aside[aria-label="Content warnings"]');
+  assert.equal(await warningBox.count(), 1, "DA-004 Content Warnings box missing.");
+  assert.equal(await warningBox.getByText("Content Warnings", { exact: true }).count(), 1, "DA-004 visible Content Warnings heading missing.");
   const warningItems = await warningBox.locator("li").allTextContents();
   assert.deepEqual(warningItems.map((item) => item.trim()), approvedWarnings, "DA-004 public warning copy differs from the approved Content Warning Integrity disposition.");
   for (const item of supersededWarningItems) assert.equal(await warningBox.getByText(item, { exact: true }).count(), 0, `Superseded/non-warning item remains in warning box: ${item}`);
@@ -97,5 +98,5 @@ try {
   const dp = await desktop.newPage(); await verify(dp, "Desktop", false); await verifyPublicationSurfaces(dp);
   mobileContext = await browser.newContext({ ...devices["iPhone 13"] });
   const mp = await mobileContext.newPage(); await verify(mp, "iPhone 13", true);
-  console.log("DA-004 v1.12 publication proof PASS: authoritative revision retained internally but suppressed publicly, exact Content Warning Integrity copy, separate source note, unchanged publication date/canonical metadata, v3.0 responsive WebP art, exact alt, desktop/mobile crop, semantics, archive/feed surfaces, and ten story sections verified.");
+  console.log("DA-004 v1.12 publication proof PASS: authoritative revision retained internally but suppressed publicly, exact Content Warnings label and Content Warning Integrity copy, separate source note, unchanged publication date/canonical metadata, v3.0 responsive WebP art, exact alt, desktop/mobile crop, semantics, archive/feed surfaces, and ten story sections verified.");
 } finally { await mobileContext?.close(); await desktop?.close(); await browser.close(); }
