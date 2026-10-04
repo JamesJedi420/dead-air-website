@@ -42,10 +42,11 @@ The implementation ultimately uses Cloudflare Workers Static Assets rather than 
 12. Netlify Forms was disabled and obsolete Netlify environment configuration was removed.
 13. The Contact page was migrated away from Netlify Forms to the approved public contact address `deadaircasefiles@gmail.com`.
 14. Cloudflare preview builds for non-production branches were disabled after the retirement PR's repository validation passed; production builds remain tied to `main`.
+15. The former Netlify Lighthouse deployment gate was ported into GitHub validation using the same DA-002 audit path and minimum scores: performance 0.80, accessibility 1.00, best practices 0.90, and SEO 1.00.
 
 ## Retirement boundary
 
-Netlify is no longer a production routing, DNS, form-processing, or Git-deployment dependency for Dead Air. Historical Netlify references in archived release records remain valid as provenance and should not be rewritten merely to normalize old records.
+Netlify is no longer a production routing, DNS, form-processing, Git-deployment, or release-validation dependency for Dead Air. Historical Netlify references in archived release records remain valid as provenance and should not be rewritten merely to normalize old records.
 
 The former `dead-air-website.netlify.app` hostname is legacy infrastructure only and is not a canonical or promotional URL.
 
