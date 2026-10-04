@@ -45,21 +45,21 @@ for (const header of requiredHeaders) {
 }
 
 if (redirectRulesOnly.includes("dead-air-website.netlify.app")) {
-  throw new Error("Netlify hostname redirects must remain on Netlify during migration; do not encode unsupported domain redirects in Pages _redirects.");
+  throw new Error("Legacy infrastructure-host redirects must not be encoded in the static path redirect file.");
 }
 
 const astroConfig = await readFile(path.join(root, "astro.config.mjs"), "utf8");
 if (!astroConfig.includes('output: "static"')) {
-  throw new Error("Cloudflare Pages migration requires the current Astro static-output architecture.");
+  throw new Error("Cloudflare Workers Static Assets hosting requires the current Astro static-output architecture.");
 }
 
 for (const forbidden of ["_worker.js", "functions"]) {
   try {
     await access(path.join(dist, forbidden));
-    throw new Error(`Unexpected ${forbidden} output detected; static Pages header/redirect assumptions require review.`);
+    throw new Error(`Unexpected ${forbidden} output detected; static-asset header/redirect assumptions require review.`);
   } catch (error) {
     if (error?.code !== "ENOENT") throw error;
   }
 }
 
-console.log("Cloudflare Pages static migration validation PASS: static Astro output, redirect parity, and header parity verified.");
+console.log("Cloudflare Workers Static Assets validation PASS: static Astro output, redirect parity, and header parity verified.");
