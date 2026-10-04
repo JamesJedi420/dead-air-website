@@ -101,8 +101,8 @@ if (sitemapText.includes("/subscribe/thanks/") || sitemapText.includes("/subscri
   fail("Noindex signup response pages must not appear in sitemap output.");
 }
 
-const netlifyConfig = await readFile(path.join(root, "netlify.toml"), "utf8");
-if (!netlifyConfig.includes(`Content-Security-Policy = "form-action 'self' https://www.aweber.com"`)) {
+const cloudflareHeaders = await readFile(path.join(root, "public", "_headers"), "utf8");
+if (!cloudflareHeaders.includes("Content-Security-Policy: form-action 'self' https://www.aweber.com")) {
   fail("Site headers do not restrict form submissions to self and AWeber.");
 }
 
