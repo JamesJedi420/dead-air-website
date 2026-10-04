@@ -19,27 +19,19 @@ npm run build
 
 The static production output is written to `dist/`.
 
-## Netlify Deployment
+## Cloudflare Deployment
 
-This repository is configured for the existing Netlify project named `dead-air-website`.
+Production is served from Cloudflare Workers Static Assets at the canonical origin `https://readdeadair.com`.
 
-Netlify settings:
+Production contract:
 
 - Build command: `npm run build`
-- Publish directory: `dist`
+- Static asset directory: `dist`
 - Node version: `22.12.0` or newer
+- Production source branch: `main`
+- Canonical host: `readdeadair.com`
 
-If the site is not linked locally yet:
-
-```bash
-netlify link --name dead-air-website
-```
-
-Then deploy through Netlify's Git integration or with:
-
-```bash
-netlify deploy --build
-```
+Cloudflare owns the production custom domain, HTTPS handling, and `www` canonicalization. The former Netlify project is retired infrastructure and is not a production deployment target.
 
 ## Architecture
 
@@ -99,7 +91,7 @@ The completed release evidence is recorded in `docs/editorial/da-001-release-che
 
 ## Repository Branch
 
-Development, pull requests, and Netlify production use `main`. GitHub's repository default branch must also be `main` so code search, review bots, and branch protections evaluate the production branch.
+Development and pull requests use `main`, and Cloudflare production follows `main`. GitHub's repository default branch must also be `main` so code search, review bots, and branch protections evaluate the production branch.
 
 ## Public Repository Boundaries
 

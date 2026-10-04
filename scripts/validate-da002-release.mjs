@@ -12,7 +12,7 @@ const storySourcePath = path.join(
   "da-002-the-name-in-the-room.md",
 );
 const cssPath = path.join(root, "src", "styles", "global.css");
-const netlifyConfigPath = path.join(root, "netlify.toml");
+const redirectsConfigPath = path.join(root, "public", "_redirects");
 const textExtensions = new Set([".html", ".xml", ".json", ".txt", ".js", ".css", ".map"]);
 
 const title = "The Name in the Room";
@@ -247,12 +247,14 @@ if (!/html\s*\{[^}]*font-size:\s*16px/s.test(css)) fail("Mobile root font-size r
 if (!/html\s*\{[^}]*line-height:\s*1\.65/s.test(css)) fail("Readable global line height is missing.");
 if (!/:focus-visible/.test(css)) fail("Visible keyboard focus styling is missing.");
 
-const netlifyConfig = await readFile(netlifyConfigPath, "utf8");
+const redirectsConfig = await readFile(redirectsConfigPath, "utf8");
+const redirectRules = redirectsConfig
+  .split(/\r?\n/)
+  .map((line) => line.trim())
+  .filter((line) => line && !line.startsWith("#"));
 for (const fromPath of [legacyRoute, `${legacyRoute}/`]) {
-  const blockPattern = new RegExp(
-    `\\[\\[redirects\\]\\][\\s\\S]*?from\\s*=\\s*"${fromPath.replaceAll("/", "\\/")}"[\\s\\S]*?to\\s*=\\s*"${route.replaceAll("/", "\\/")}"[\\s\\S]*?status\\s*=\\s*301`,
-  );
-  if (!blockPattern.test(netlifyConfig)) fail(`Missing permanent redirect from ${fromPath} to ${route}.`);
+  const expectedRule = `${fromPath} ${route} 301`;
+  if (!redirectRules.includes(expectedRule)) fail(`Missing permanent redirect from ${fromPath} to ${route}.`);
 }
 
 if (failures.length > 0) {
