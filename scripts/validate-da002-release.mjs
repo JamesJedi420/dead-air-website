@@ -89,7 +89,7 @@ if (!isPublished) {
     "DA-002",
     title,
     slug,
-    "dead-air-da002-the-name-in-the-room",
+    "dead-air-da-002-the-name-in-the-room",
     "Diane saw the second tripod",
     "Abby reached the stairwell landing before Evan touched the lever",
     "Miriam Danner",
