@@ -1,45 +1,55 @@
-# Cloudflare Pages Migration — 2026-10-01
+# Cloudflare Hosting Migration — 2026-10-01 to 2026-10-04
 
-Status: PRE-CUTOVER / NETLIFY REMAINS AUTHORITATIVE
+Status: CUTOVER VERIFIED / NETLIFY RETIRED FROM PRODUCTION RESPONSIBILITY
 
-Immutable starting point: `main` at `f5ea86f2e96599b97ef0a288e83e9f366b836902`.
+Immutable migration starting point: `main` at `f5ea86f2e96599b97ef0a288e83e9f366b836902`.
 
 ## Objective
 
-Migrate the existing Dead Air static Astro site from Netlify hosting to Cloudflare Pages without changing story manuscripts, canon, chronology, publication metadata, approved art, reader-facing copy, or release-state semantics. Netlify remains live and authoritative until the Cloudflare production copy passes the full Dead Air website release gate and the custom-domain cutover is explicitly completed.
+Migrate the existing Dead Air static Astro site from Netlify hosting to Cloudflare without changing story manuscripts, canon, chronology, publication metadata, approved art, reader-facing release-state semantics, or canonical URLs.
 
-## Cloudflare Pages build contract
+## Final hosting architecture
+
+The implementation ultimately uses Cloudflare Workers Static Assets rather than classic Cloudflare Pages.
 
 - Repository: `JamesJedi420/dead-air-website`
-- Migration branch for first proof: `migration/cloudflare-pages-f5ea`
-- Initial source baseline: `f5ea86f2e96599b97ef0a288e83e9f366b836902`
+- Production source branch: `main`
 - Framework/output: Astro static output
 - Build command: `npm run build`
 - Build output directory: `dist`
-- Node major version: `22` (repository `.nvmrc`); minimum application engine remains `>=22.12.0`
+- Node minimum: `>=22.12.0`
 - Canonical public site URL: `https://readdeadair.com`
-- No Pages Functions or `_worker.js` are authorized for this migration.
+- Production Worker: `dead-air-website`
+- No application Worker code, Pages Functions, or generated `_worker.js` is part of the site build.
 
-## Netlify parity translated for Pages
+`public/_redirects` carries path-level legacy redirects. Host-level canonicalization for HTTP→HTTPS and `www`→apex is handled by Cloudflare DNS and Redirect Rules.
 
-`public/_redirects` carries only the existing path-level legacy redirects. Netlify-hostname redirects remain on Netlify during migration because Cloudflare Pages `_redirects` does not provide equivalent domain-level redirect handling.
+`public/_headers` carries the site-wide security headers and immutable cache policy for `/_astro/*` assets.
 
-`public/_headers` carries the existing site-wide security headers and immutable cache policy for `/_astro/*` assets.
+## Completed release sequence
 
-`netlify.toml` remains untouched while Netlify is the live production host. It is not removed or weakened during pre-cutover work.
+1. Migration compatibility was developed and reviewed without changing the canonical production host.
+2. Repository-native build and post-build validation passed, including the Cloudflare static-hosting validator.
+3. Cloudflare deployment proof passed before DNS cutover.
+4. `readdeadair.com` registration was moved from Netlify-managed registration to the owner's direct registrar account.
+5. Authoritative nameservers were moved to Cloudflare and the zone became active.
+6. The apex hostname was attached to the `dead-air-website` Worker as a Custom Domain.
+7. Existing Netlify apex DNS records were removed only when required for the Worker Custom Domain.
+8. `www` was moved to a proxied Cloudflare placeholder record and canonicalized to the apex with a permanent Redirect Rule.
+9. A separate HTTP→HTTPS Redirect Rule was added so all HTTP/HTTPS × apex/www combinations resolve correctly.
+10. Fresh production verification passed on `https://readdeadair.com`, including DA-004 Content Warnings/source-note integrity, canonical metadata, legacy story redirects, RSS, sitemap, newsletter integration, HTTPS handling, `www` canonicalization, and path/query preservation.
+11. Netlify continuous builds were stopped and the Git repository was unlinked before repository cleanup work proceeded.
+12. Netlify Forms was disabled and obsolete Netlify environment configuration was removed.
+13. The Contact page was migrated away from Netlify Forms to the approved public contact address `deadaircasefiles@gmail.com`.
 
-## Release sequence
+## Retirement boundary
 
-1. Keep `main` at the immutable starting point while migration compatibility is developed on `migration/cloudflare-pages-f5ea`.
-2. Run the repository-native build and all existing post-build validators, including the Cloudflare static-migration validator.
-3. Open a draft migration PR so the normal GitHub release validation runs without changing `main`.
-4. Create a Cloudflare Pages project from the same GitHub repository. For the first proof, deploy the migration branch without attaching `readdeadair.com`.
-5. Verify the generated `*.pages.dev` deployment against the full Dead Air website release gate: complete rendered stories, section order, source/fictionalization notes, content warnings, metadata, canonical/Open Graph/social metadata, images/alt text, links, public indexes, `/feed.xml`, sitemap, responsive desktop/mobile presentation, keyboard accessibility, privacy/provenance boundaries, and absence of internal production material.
-6. DA-004 must additionally show exactly these warnings on the Cloudflare copy: `Family conflict involving a childhood deception`; `Anxiety and acute investigation stress`; `Nausea and bodily unease`. Its source/fictionalization note must appear separately, and no reader-facing `Revision` label or internal manuscript revision string may appear.
-7. Do not change DNS, detach the custom domain from Netlify, disable Netlify builds, or retire Netlify until the Cloudflare copy passes the complete gate.
-8. After proof passes, merge only the reviewed host-compatibility changes into `main`, configure Cloudflare Pages production to follow `main`, obtain a final production Pages proof, and then perform the explicit DNS/custom-domain cutover.
-9. Verify `https://readdeadair.com`, all public stories, redirects, security headers, `/feed.xml`, sitemap, and DA-004 again after DNS propagation. Netlify retirement occurs only after successful live verification.
+Netlify is no longer a production routing, DNS, form-processing, or Git-deployment dependency for Dead Air. Historical Netlify references in archived release records remain valid as provenance and should not be rewritten merely to normalize old records.
 
-## Cutover blockers
+The former `dead-air-website.netlify.app` hostname is legacy infrastructure only and is not a canonical or promotional URL.
 
-Any build failure, validator failure, mismatch in public story content, warning metadata, source-note placement, canonical metadata, redirect behavior, security headers, RSS/sitemap output, responsive rendering, accessibility, or privacy/provenance handling blocks cutover. A successful Cloudflare build alone is not release closure.
+Temporary Cloudflare migration hooks and API credentials must be revoked after cutover and must never be stored in repository history or publishing records.
+
+## Canon / manuscript effect
+
+NONE. The hosting migration and retirement change infrastructure and the public Contact interaction only. They do not alter story manuscripts, canon, continuity, chronology, approved art, paranormal claim ceilings, or publication authorization history.
