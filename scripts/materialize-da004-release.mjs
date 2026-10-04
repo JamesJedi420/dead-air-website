@@ -15,9 +15,9 @@ const desktopAssetPath = path.join(publicAssetDirectory, desktopAssetFilename);
 const mobileAssetPath = path.join(publicAssetDirectory, mobileAssetFilename);
 
 const sourceLock = JSON.parse(await readFile(sourceLockPath, "utf8"));
-const sourceGoogleDocId = "1YjOb7tfJeFGFOw7X57ZpQj2BO_Rv4FTNzJZygGVbi44";
-const sourceGoogleDocRevisionId = "ANLCKQk-8i0ll57762__B9O8siGgz153l9C3lRMEFqmxMlz7afaa2-88FueTYrb8SIOK4nEWtSVi2meFTikt-Pe13nVlfD_zIZBGEy1OzhQ";
-const approvedRevision = "Final Approved Story v1.12";
+const sourceGoogleDocId = "1yQyIrDThTYxSZO089Gb-CG8QQtghRTX479zcJhnPgAk";
+const sourceGoogleDocRevisionId = "ANLCKQmfTNnDl0RquNfbDqas1d7LoH_B-FSGPDh0R24pzcq9W7egLVUqv8AvQrs7MlS-39gIdxOQKYL2Szatx4R-m0a86GpCVqTcnnrz7PY";
+const approvedRevision = "Final Approved Story v1.13";
 const publicationDate = "2026-09-14";
 const approvedWebsiteCardSubtitle = "Eli brings his father to the Kestrel Hotel hoping for one paranormal event they can share. Then they hear a knock pattern from an old family story.";
 const approvedAlt = "An empty, warmly lit hotel corridor leads to a closed dark service door with a brass STAFF ONLY plaque.";
@@ -46,11 +46,11 @@ for (const [field, actual, expected] of [
   ["canonicalFragmentCount", sourceLock.canonicalFragmentCount, 10],
   ["lockStatus", sourceLock.lockStatus, "IMMUTABLE_APPROVED_SOURCE"],
   ["publicationDate", sourceLock.publicationDate, publicationDate],
-  ["publicPredecessorRevision", sourceLock.publicPredecessorRevision, "Final Approved Story v1.10"],
+  ["publicPredecessorRevision", sourceLock.publicPredecessorRevision, "Final Approved Story v1.12"],
 ]) {
   if (actual !== expected) throw new Error(`DA-004 source lock ${field} mismatch: expected ${JSON.stringify(expected)}, found ${JSON.stringify(actual)}.`);
 }
-if (sourceLock.publicReleaseAuthorized !== true) throw new Error("DA-004 v1.12 source lock must be publication-authorized for this release.");
+if (sourceLock.publicReleaseAuthorized !== false) throw new Error("DA-004 v1.13 corrective source lock must remain non-public until separate correction publication authorization.");
 
 const sha256 = (value) => createHash("sha256").update(value).digest("hex");
 const decodeReleaseAsset = async (prefix, chunkCount) => {
@@ -105,4 +105,4 @@ const frontmatter = `---\nslug: da-004-close-enough-to-recognize\ntitle: Close E
 
 await mkdir(path.dirname(outputPath), { recursive: true });
 await writeFile(outputPath, `${frontmatter}${body}`, "utf8");
-console.log(`DA-004 v1.12 edition materialized from authoritative source lock ${canonicalSourceSha256}; Content Warning Integrity correction applied; v3.0 responsive release art preserved; publicationDate=${publicationDate}; publicationAuthorized=true.`);
+console.log(`DA-004 v1.13 non-public corrective candidate materialized from authoritative source lock ${canonicalSourceSha256}; Content Warning Integrity correction and v3.0 responsive release art preserved; publicationDate=${publicationDate}; correctionPublicationAuthorized=false.`);
