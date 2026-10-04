@@ -11,8 +11,8 @@ const title = "Close Enough to Recognize";
 const summary = "Eli brings his father to the Kestrel Hotel hoping for one paranormal event they can share. Then they hear a knock pattern from an old family story.";
 const alt = "An empty, warmly lit hotel corridor leads to a closed dark service door with a brass STAFF ONLY plaque.";
 const publicationDate = "2026-09-14";
-const expectedSourceSha = "9322c834442738badb13764f831e6e4d9ccf24d4069871f9af2e31b6244d933a";
-const expectedRevision = "Final Approved Story v1.12";
+const expectedSourceSha = "2faf3f416afcb1f624d482d02954b92e25af57f35bfff8030b9d846765724944";
+const expectedRevision = "Final Approved Story v1.13";
 const canonicalUrl = `https://readdeadair.com/stories/${slug}/`;
 const hero = "/assets/da-004/da004_art001_v3_0_16x9_1600x900.webp";
 const mobile = "/assets/da-004/da004_art001_v3_0_2x3_1024x1536.webp";
@@ -26,6 +26,14 @@ const supersededWarningItems = [
   "Unexplained knocking and voice-like audio",
   "Contested hotel ghost lore",
   "Nighttime wandering in restricted-adjacent hotel corridors",
+];
+const approvedSpatialRepairs = [
+  "One knock sounded from the staff-door side of the junction.",
+  "Then two knocks sounded from the same side of the junction.",
+];
+const supersededSpatialPhrases = [
+  "One knock sounded from beyond the closed staff door beside the junction.",
+  "Then two knocks came from beyond the closed staff door.",
 ];
 const sourceNote = "Based on reported paranormal-investigation accounts. Some events, characters, and identifying details have been fictionalized.";
 const assets = [
@@ -44,10 +52,12 @@ const readText = async (relative) => readFile(path.join(dist, relative), "utf8")
 
 if (!(await exists(dist))) throw new Error("Astro dist directory missing.");
 const lock = JSON.parse(await readFile(lockPath, "utf8"));
-if (lock.canonicalSourceSha256 !== expectedSourceSha || lock.approvedRevision !== expectedRevision || lock.publicReleaseAuthorized !== true || lock.publicationDate !== publicationDate || lock.lockStatus !== "IMMUTABLE_APPROVED_SOURCE") throw new Error("DA-004 v1.12 source lock mismatch.");
+if (lock.canonicalSourceSha256 !== expectedSourceSha || lock.approvedRevision !== expectedRevision || lock.publicReleaseAuthorized !== false || lock.publicationDate !== publicationDate || lock.lockStatus !== "IMMUTABLE_APPROVED_SOURCE") throw new Error("DA-004 v1.13 non-public corrective source lock mismatch.");
 
 const sourceText = await readFile(source, "utf8");
 for (const value of [`slug: ${slug}`, `title: ${title}`, `summary: ${summary}`, "status: active", "draft: false", "previewOnly: false", `revision: ${expectedRevision}`, "suppressPublicRevision: true", `publicationDate: ${publicationDate}`, `coverAlt: \"${alt}\"`, `ogImageAlt: \"${alt}\"`, "## 1. Arrival", "## 10. Raw Audio"]) if (!sourceText.includes(value)) throw new Error(`DA-004 approved source missing ${value}`);
+for (const repair of approvedSpatialRepairs) if (!sourceText.includes(repair)) throw new Error(`DA-004 v1.13 approved spatial repair missing: ${repair}`);
+for (const stale of supersededSpatialPhrases) if (sourceText.includes(stale)) throw new Error(`DA-004 v1.12 superseded spatial wording remains: ${stale}`);
 for (const warning of approvedWarnings) if (!sourceText.includes(`  - ${warning}`)) throw new Error(`DA-004 approved source missing integrity-audited warning ${warning}`);
 for (const warning of supersededWarningItems) if (sourceText.includes(warning)) throw new Error(`Superseded/non-warning DA-004 content-note item remains in approved source: ${warning}`);
 if (sourceText.includes("contentNotes:") || sourceText.includes(sourceNote)) throw new Error("DA-004 source/fictionalization disclosure must not be embedded in the warning-box metadata.");
@@ -67,6 +77,8 @@ if (!(await exists(publicPage))) throw new Error("DA-004 publication story route
 if (await exists(previewPage)) throw new Error("DA-004 obsolete private preview route must not ship.");
 const html = await readFile(publicPage, "utf8");
 for (const value of [title, summary, alt, canonicalUrl, "fetchpriority=\"high\"", "loading=\"eager\"", "article:published_time"]) if (!html.includes(value)) throw new Error(`DA-004 publication missing ${value}`);
+for (const repair of approvedSpatialRepairs) if (!html.includes(repair)) throw new Error(`DA-004 v1.13 rendered spatial repair missing: ${repair}`);
+for (const stale of supersededSpatialPhrases) if (html.includes(stale)) throw new Error(`DA-004 v1.12 superseded spatial wording leaked into rendered candidate: ${stale}`);
 if (html.includes(expectedRevision) || html.includes("<dt>Revision</dt>")) throw new Error("DA-004 reader-facing page exposes an internal manuscript/revision label.");
 if (!/<aside[^>]*aria-label="Content warnings"[^>]*>[\s\S]*?<p class="eyebrow">Content Warnings<\/p>/.test(html)) throw new Error("DA-004 reader-facing warning box must use the approved Content Warnings label and accessibility name.");
 if (/aria-label="Content notes"/.test(html)) throw new Error("DA-004 reader-facing warning box still exposes the superseded Content Notes accessibility label.");
@@ -74,7 +86,7 @@ for (const warning of approvedWarnings) if (!html.includes(warning)) throw new E
 for (const warning of supersededWarningItems) if (html.includes(warning)) throw new Error(`Superseded/non-warning DA-004 content-note item remains reader-facing: ${warning}`);
 const sourceNoteOccurrences = html.split(sourceNote).length - 1;
 if (sourceNoteOccurrences !== 1) throw new Error(`Expected the separate standard source/fictionalization note exactly once, found ${sourceNoteOccurrences}.`);
-if (/noindex|nofollow|noarchive/i.test(html)) throw new Error("DA-004 publication no longer mirrors the currently public route semantics.");
+if (/noindex|nofollow|noarchive/i.test(html)) throw new Error("DA-004 publication candidate no longer mirrors the currently public route semantics.");
 for (const asset of assets) if (!html.includes(asset)) throw new Error(`DA-004 publication/structured data missing approved asset ${asset}`);
 if (html.includes(oldAlt) || oldAssetTokens.some((token) => html.includes(token))) throw new Error("Superseded DA-004 hero art/alt leaked into publication.");
 
@@ -93,4 +105,4 @@ if (!sitemapText.includes(`/stories/${slug}/`)) throw new Error("DA-004 missing 
 const forbiddenFeedTokens = ["previewOnly: true", "status: withheld", "publicReleaseAuthorized", "PTW-", "CPO-"];
 for (const token of forbiddenFeedTokens) if (feed.includes(token)) throw new Error(`Internal/withheld token leaked into RSS: ${token}`);
 
-console.log("DA-004 v1.12 publication validation PASS: authoritative source hash/revision retained internally, Content Warnings label and Content Warning Integrity exact copy, separate source note, public revision-label suppression, unchanged publication metadata/date, v3.0 responsive art, archive, RSS, sitemap, and leak controls confirmed.");
+console.log("DA-004 v1.13 non-public correction-candidate validation PASS: authoritative source hash/revision, exact two spatial repairs, Content Warnings integrity, separate source note, public revision-label suppression, unchanged publication metadata/date, v3.0 responsive art, archive, RSS, sitemap, and leak controls confirmed; merge/deploy authorization remains separate.");

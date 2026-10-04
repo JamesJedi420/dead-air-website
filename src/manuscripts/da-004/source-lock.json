@@ -1,17 +1,17 @@
 {
   "case": "DA-004",
   "title": "Close Enough to Recognize",
-  "approvedRevision": "Final Approved Story v1.12",
-  "authoritativeGoogleDocId": "1YjOb7tfJeFGFOw7X57ZpQj2BO_Rv4FTNzJZygGVbi44",
-  "authoritativeGoogleDocRevisionId": "ANLCKQk-8i0ll57762__B9O8siGgz153l9C3lRMEFqmxMlz7afaa2-88FueTYrb8SIOK4nEWtSVi2meFTikt-Pe13nVlfD_zIZBGEy1OzhQ",
-  "canonicalSourceSha256": "9322c834442738badb13764f831e6e4d9ccf24d4069871f9af2e31b6244d933a",
+  "approvedRevision": "Final Approved Story v1.13",
+  "authoritativeGoogleDocId": "1yQyIrDThTYxSZO089Gb-CG8QQtghRTX479zcJhnPgAk",
+  "authoritativeGoogleDocRevisionId": "ANLCKQmfTNnDl0RquNfbDqas1d7LoH_B-FSGPDh0R24pzcq9W7egLVUqv8AvQrs7MlS-39gIdxOQKYL2Szatx4R-m0a86GpCVqTcnnrz7PY",
+  "canonicalSourceSha256": "2faf3f416afcb1f624d482d02954b92e25af57f35bfff8030b9d846765724944",
   "sourceSnapshotFormat": "utf8-canonical-scene-fragments",
   "canonicalFragmentCount": 10,
   "sceneCount": 10,
   "lockStatus": "IMMUTABLE_APPROVED_SOURCE",
-  "publicReleaseAuthorized": true,
+  "publicReleaseAuthorized": false,
   "publicationDate": "2026-09-14",
-  "publicPredecessorRevision": "Final Approved Story v1.10",
-  "publicPredecessorCommit": "f5fbbc2bed48e013634c08e4923f21e0e02ffe9d",
-  "notes": "Final Approved Story v1.12 bounded publication-source reconciliation. The canonical source remains ten ordered UTF-8 scene fragments and differs from the v1.10 public predecessor only at the two separately approved sentences in the Scene 09→10 seam and final sentence. The authoritative Google Doc is v1.12; title, website/card subtitle, publicationDate, art, chronology metadata, continuity, and canon status remain unchanged."
+  "publicPredecessorRevision": "Final Approved Story v1.12",
+  "publicPredecessorCommit": "5cc74cae5732733377a0d3549aa7fb60dff19223",
+  "notes": "Non-public corrective source lock for Final Approved Story v1.13. The canonical source remains ten ordered UTF-8 scene fragments and differs from the v1.12 public predecessor only at the two separately approved spatial-localization sentences: Scene 08 replaces exact-source wording beyond the closed staff door with staff-door-side directional perception; Scene 09 replaces beyond-door wording with same-side-of-junction directional perception. The authoritative Google Doc is v1.13; title, website/card subtitle, publicationDate, art, chronology metadata, continuity, canon status, evidence state, and paranormal claim ceiling remain unchanged. This lock authorizes preparation and validation only; it does not authorize merge or production publication."
 }
