@@ -8,7 +8,7 @@ const baseUrl = process.env.VISUAL_BASE_URL ?? "http://127.0.0.1:4175";
 const slug = "da-004-close-enough-to-recognize";
 const storyPath = `/stories/${slug}/`;
 const title = "Close Enough to Recognize";
-const revision = "Final Approved Story v1.12";
+const revision = "Final Approved Story v1.13";
 const summary = "Eli brings his father to the Kestrel Hotel hoping for one paranormal event they can share. Then they hear a knock pattern from an old family story.";
 const alt = "An empty, warmly lit hotel corridor leads to a closed dark service door with a brass STAFF ONLY plaque.";
 const approvedWarnings = [
@@ -21,6 +21,14 @@ const supersededWarningItems = [
   "Unexplained knocking and voice-like audio",
   "Contested hotel ghost lore",
   "Nighttime wandering in restricted-adjacent hotel corridors",
+];
+const approvedSpatialRepairs = [
+  "One knock sounded from the staff-door side of the junction.",
+  "Then two knocks sounded from the same side of the junction.",
+];
+const supersededSpatialPhrases = [
+  "One knock sounded from beyond the closed staff door beside the junction.",
+  "Then two knocks came from beyond the closed staff door.",
 ];
 const sourceNote = "Based on reported paranormal-investigation accounts. Some events, characters, and identifying details have been fictionalized.";
 const heroPath = "/assets/da-004/da004_art001_v3_0_16x9_1600x900.webp";
@@ -42,8 +50,10 @@ const verify = async (page, label, isMobile) => {
   assert.equal(await page.title(), `${title} | Dead Air`);
   assert.equal(await page.getByText(revision, { exact: false }).count(), 0, "Internal manuscript revision must not be reader-facing.");
   assert.equal(await page.getByText("Revision", { exact: true }).count(), 0, "Reader-facing Revision metadata label must be suppressed.");
+  for (const repair of approvedSpatialRepairs) assert.equal(await page.getByText(repair, { exact: true }).count(), 1, `${label} approved v1.13 spatial repair missing.`);
+  for (const stale of supersededSpatialPhrases) assert.equal(await page.getByText(stale, { exact: true }).count(), 0, `${label} superseded v1.12 spatial wording remains.`);
   assert.equal(await page.locator('meta[name="description"]').getAttribute("content"), summary);
-  assert.equal(await page.locator('meta[name="robots"]').count(), 0, "Authorized publication must remain indexable on the canonical production route.");
+  assert.equal(await page.locator('meta[name="robots"]').count(), 0, "Non-public correction candidate must preserve the current canonical-route indexing semantics for publication proof.");
   const published = await page.locator('meta[property="article:published_time"]').getAttribute("content");
   assert(published?.startsWith("2026-09-14"), `Unexpected publication time ${published}`);
   assert.equal(await page.locator('link[rel="canonical"]').getAttribute("href"), `https://readdeadair.com${storyPath}`);
@@ -98,5 +108,5 @@ try {
   const dp = await desktop.newPage(); await verify(dp, "Desktop", false); await verifyPublicationSurfaces(dp);
   mobileContext = await browser.newContext({ ...devices["iPhone 13"] });
   const mp = await mobileContext.newPage(); await verify(mp, "iPhone 13", true);
-  console.log("DA-004 v1.12 publication proof PASS: authoritative revision retained internally but suppressed publicly, exact Content Warnings label and Content Warning Integrity copy, separate source note, unchanged publication date/canonical metadata, v3.0 responsive WebP art, exact alt, desktop/mobile crop, semantics, archive/feed surfaces, and ten story sections verified.");
+  console.log("DA-004 v1.13 non-public correction-candidate proof PASS: exact two spatial repairs, authoritative revision retained internally but suppressed publicly, exact Content Warnings label and Content Warning Integrity copy, separate source note, unchanged publication date/canonical metadata, v3.0 responsive WebP art, exact alt, desktop/mobile crop, semantics, archive/feed surfaces, and ten story sections verified; no merge/deploy action performed.");
 } finally { await mobileContext?.close(); await desktop?.close(); await browser.close(); }
