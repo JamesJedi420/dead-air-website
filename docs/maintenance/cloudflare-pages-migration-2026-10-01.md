@@ -41,6 +41,7 @@ The implementation ultimately uses Cloudflare Workers Static Assets rather than 
 11. Netlify continuous builds were stopped and the Git repository was unlinked before repository cleanup work proceeded.
 12. Netlify Forms was disabled and obsolete Netlify environment configuration was removed.
 13. The Contact page was migrated away from Netlify Forms to the approved public contact address `deadaircasefiles@gmail.com`.
+14. Cloudflare preview builds for non-production branches were disabled after the retirement PR's repository validation passed; production builds remain tied to `main`.
 
 ## Retirement boundary
 
