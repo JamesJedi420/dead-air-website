@@ -38,6 +38,47 @@ jobs:
         run: |
           npm install --no-save --package-lock=false playwright@1.55.0
           npx playwright install --with-deps chromium
+      - name: Enforce Lighthouse release thresholds
+        run: |
+          python3 -m http.server 4177 --directory dist > /tmp/dead-air-lighthouse-http.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          page='http://127.0.0.1:4177/stories/da-002-the-name-in-the-room/'
+          for attempt in {1..60}; do
+            if curl -fsS "$page" > /dev/null; then break; fi
+            if [ "$attempt" -eq 60 ]; then cat /tmp/dead-air-lighthouse-http.log; exit 1; fi
+            sleep 0.5
+          done
+          export CHROME_PATH="$(node -e "console.log(require('playwright').chromium.executablePath())")"
+          npx --yes lighthouse@12.6.1 "$page" \
+            --preset=desktop \
+            --only-categories=performance,accessibility,best-practices,seo \
+            --output=json \
+            --output-path=/tmp/dead-air-lighthouse.json \
+            --chrome-flags='--headless --no-sandbox' \
+            --quiet
+          node --input-type=module <<'NODE'
+          import { readFile } from 'node:fs/promises';
+          const report = JSON.parse(await readFile('/tmp/dead-air-lighthouse.json', 'utf8'));
+          const thresholds = {
+            performance: 0.80,
+            accessibility: 1.00,
+            'best-practices': 0.90,
+            seo: 1.00,
+          };
+          const failures = [];
+          for (const [category, threshold] of Object.entries(thresholds)) {
+            const score = report.categories?.[category]?.score;
+            if (typeof score !== 'number' || score < threshold) {
+              failures.push(`${category}: ${score ?? 'missing'} < ${threshold}`);
+            }
+          }
+          if (failures.length) {
+            console.error(`Lighthouse release thresholds failed:\n${failures.join('\n')}`);
+            process.exit(1);
+          }
+          console.log('Lighthouse release thresholds passed.');
+          NODE
       - name: Verify story sharing and resume reading
         run: |
           python3 -m http.server 4176 --directory dist > /tmp/dead-air-reader-tools-http.log 2>&1 &
